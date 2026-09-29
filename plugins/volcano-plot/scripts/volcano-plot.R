@@ -365,6 +365,10 @@ if (report_generated) {
 } else {
   manifest$sections <- manifest$sections[2:length(manifest$sections)]
 }
+# BLOCK-133（mojibake 加映二根治）：paste0 等拼接会剥掉字符串的 UTF-8 编码标记，
+# 未标记的 UTF-8 字节经 native 转码写盘即高位剥离乱码（字面量保标记故此前幸存）——
+# 序列化前对 manifest 全树字符叶统一重打 UTF-8 标记（实测码点完整，见 BLOCK-133 复现记录）。
+manifest <- rapply(manifest, function(x) { Encoding(x) <- "UTF-8"; x }, how = "replace", classes = "character")
 { .out_conn <- file("manifest.json", encoding = "UTF-8"); write(toJSON(manifest, auto_unbox = TRUE, pretty = TRUE), .out_conn); close(.out_conn) }
 
 cat("DONE\n")
