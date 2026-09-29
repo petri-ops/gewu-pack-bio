@@ -19,6 +19,14 @@
   "builtAgainst": {
     "r": "4.5"
   },
-  "platform": ["macos-arm64", "macos-x64", "windows-x64"],
-  "supportedPlatforms": ["macos-arm64", "macos-x64", "windows-x64"]
+  "platform": [
+    "macos-arm64",
+    "macos-x64",
+    "windows-x64"
+  ],
+  "supportedPlatforms": [
+    "macos-arm64",
+    "macos-x64",
+    "windows-x64"
+  ]
 }

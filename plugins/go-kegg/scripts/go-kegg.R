@@ -445,7 +445,7 @@ if (!is.null(up_genes)) {
     sprintf("\nDESeq2 input:\n  Up-regulated: %d\n  Down-regulated: %d\n  padj cutoff: %g\n  |log2FC| cutoff: %g\n",
             length(up_genes), length(down_genes), padj_cut, lfc_cut))
 }
-writeLines(summary_text, file.path(output_dir, "summary.txt"))
+{ .out_conn <- file(file.path(output_dir, "summary.txt"), encoding = "UTF-8"); writeLines(summary_text, .out_conn); close(.out_conn) }
 
 # ============================================================
 # 中间数据 (RDS for online replotting)
@@ -545,8 +545,7 @@ manifest <- list(
     sci_style = TRUE, dual_format = TRUE
   )
 )
-writeLines(toJSON(manifest, auto_unbox = TRUE, pretty = TRUE),
-           file.path(output_dir, "manifest.json"))
+{ .out_conn <- file(file.path(output_dir, "manifest.json"), encoding = "UTF-8"); writeLines(toJSON(manifest, auto_unbox = TRUE, pretty = TRUE), .out_conn); close(.out_conn) }
 
 # ============================================================
 # HTML 报告
@@ -573,7 +572,7 @@ if (file.exists(template_path)) {
 
   report_html <- gsub('<div class="fig">\\s*<img src="\\{\\{[^}]+\\}\\}" [^>]*>\\s*<div class="fig-caption">[^<]*</div>\\s*</div>',
                       '', report_html, perl = TRUE)
-  writeLines(report_html, file.path(output_dir, "report.html"))
+  { .out_conn <- file(file.path(output_dir, "report.html"), encoding = "UTF-8"); writeLines(report_html, .out_conn); close(.out_conn) }
   cat("[go-kegg] Report generated.\n")
 } else {
   cat("[go-kegg] Report template not found, skipping.\n")

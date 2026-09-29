@@ -210,10 +210,10 @@ if (gene_set == "GO_BP") {
 }
 
 if (is.null(gsea_res) || nrow(as.data.frame(gsea_res)) == 0) {
-  writeLines("No significantly enriched gene sets found.", file.path(output_dir, "summary.txt"))
+  { .out_conn <- file(file.path(output_dir, "summary.txt"), encoding = "UTF-8"); writeLines("No significantly enriched gene sets found.", .out_conn); close(.out_conn) }
   manifest <- list(files = list(list(name = "summary.txt", type = "text", label = "分析摘要")),
                    summary = list(n_enriched = 0, gene_set = gene_set))
-  writeLines(toJSON(manifest, auto_unbox = TRUE, pretty = TRUE), file.path(output_dir, "manifest.json"))
+  { .out_conn <- file(file.path(output_dir, "manifest.json"), encoding = "UTF-8"); writeLines(toJSON(manifest, auto_unbox = TRUE, pretty = TRUE), .out_conn); close(.out_conn) }
   cat("[gsea] No enriched gene sets. Exit OK.\n")
   quit(save = "no", status = 0)
 }
@@ -328,7 +328,7 @@ summary_text <- sprintf(
   length(gene_list), organism, gene_set, min_size, max_size,
   n_enriched, n_activated, n_suppressed
 )
-writeLines(summary_text, file.path(output_dir, "summary.txt"))
+{ .out_conn <- file(file.path(output_dir, "summary.txt"), encoding = "UTF-8"); writeLines(summary_text, .out_conn); close(.out_conn) }
 
 # ============================================================
 # Manifest (双格式 + RDS)
@@ -387,8 +387,7 @@ manifest <- list(
     sci_style = TRUE, dual_format = TRUE
   )
 )
-writeLines(toJSON(manifest, auto_unbox = TRUE, pretty = TRUE),
-           file.path(output_dir, "manifest.json"))
+{ .out_conn <- file(file.path(output_dir, "manifest.json"), encoding = "UTF-8"); writeLines(toJSON(manifest, auto_unbox = TRUE, pretty = TRUE), .out_conn); close(.out_conn) }
 
 # ============================================================
 # HTML 报告
@@ -415,7 +414,7 @@ if (file.exists(template_path)) {
 
   report_html <- gsub('<div class="fig">\\s*<img src="\\{\\{[^}]+\\}\\}" [^>]*>\\s*<div class="fig-caption">[^<]*</div>\\s*</div>',
                       '', report_html, perl = TRUE)
-  writeLines(report_html, file.path(output_dir, "report.html"))
+  { .out_conn <- file(file.path(output_dir, "report.html"), encoding = "UTF-8"); writeLines(report_html, .out_conn); close(.out_conn) }
   cat("[gsea] Report generated.\n")
 } else {
   cat("[gsea] Report template not found, skipping.\n")

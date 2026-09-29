@@ -9,9 +9,21 @@
   "description": "将 DESeq2、limma 或兼容差异结果表转换为稳定、可供下游插件消费的标准 DEG Artifact。不覆盖上游原始结果，不伪造缺失 p 值或 padj，缺少 padj 时阻断。ranked_genes 保留全部基因排序，不只保留显著基因。阈值属于参数和科学决策，必须记录。",
   "dagStep": "deg-standardization",
   "dagPosition": "midstream",
-  "downstream": ["volcano-plot", "pca-explorer", "go-kegg", "gsea"],
-  "supportedPlatforms": ["macos-arm64"],
-  "plannedPlatforms": ["macos-x64", "windows-x64", "linux-x64"],
+  "downstream": [
+    "volcano-plot",
+    "pca-explorer",
+    "go-kegg",
+    "gsea"
+  ],
+  "supportedPlatforms": [
+    "macos-arm64",
+    "windows-x64"
+  ],
+  "plannedPlatforms": [
+    "macos-x64",
+    "windows-x64",
+    "linux-x64"
+  ],
   "requiresBundle": false,
   "entryPoint": "scripts/deg-standardizer.R",
   "packages": {
@@ -87,14 +99,48 @@
     }
   ],
   "outputs": [
-    { "id": "deg_standardized", "type": "table", "label": "标准化 DEG 表", "filename": "deg_standardized.csv" },
-    { "id": "deg_up", "type": "table", "label": "显著上调基因", "filename": "deg_up.csv" },
-    { "id": "deg_down", "type": "table", "label": "显著下调基因", "filename": "deg_down.csv" },
-    { "id": "ranked_genes", "type": "table", "label": "排序基因列表 (全量)", "filename": "ranked_genes.csv" },
-    { "id": "filter_summary", "type": "json", "label": "过滤摘要", "filename": "filter_summary.json" },
-    { "id": "report", "type": "report", "label": "标准化报告", "filename": "report.html" }
+    {
+      "id": "deg_standardized",
+      "type": "table",
+      "label": "标准化 DEG 表",
+      "filename": "deg_standardized.csv"
+    },
+    {
+      "id": "deg_up",
+      "type": "table",
+      "label": "显著上调基因",
+      "filename": "deg_up.csv"
+    },
+    {
+      "id": "deg_down",
+      "type": "table",
+      "label": "显著下调基因",
+      "filename": "deg_down.csv"
+    },
+    {
+      "id": "ranked_genes",
+      "type": "table",
+      "label": "排序基因列表 (全量)",
+      "filename": "ranked_genes.csv"
+    },
+    {
+      "id": "filter_summary",
+      "type": "json",
+      "label": "过滤摘要",
+      "filename": "filter_summary.json"
+    },
+    {
+      "id": "report",
+      "type": "report",
+      "label": "标准化报告",
+      "filename": "report.html"
+    }
   ],
-  "states": ["valid", "warning", "blocked"],
+  "states": [
+    "valid",
+    "warning",
+    "blocked"
+  ],
   "failureModes": [
     {
       "code": "missing_required_file_inputs",

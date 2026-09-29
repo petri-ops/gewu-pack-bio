@@ -77,11 +77,9 @@ if (!runtime_ok) {
     message = "Required R packages (jsonlite, digest) not available",
     timestamp = format(Sys.time(), "%Y-%m-%dT%H:%M:%S%z")
   )
-  writeLines(toJSON(diag, auto_unbox = TRUE, pretty = TRUE),
-             file.path(output_dir, "validation_diagnostics.json"))
-  writeLines(toJSON(list(status = "blocked", failureMode = "runtime_not_ready"),
-                    auto_unbox = TRUE, pretty = TRUE),
-             file.path(output_dir, "design_summary.json"))
+  { .out_conn <- file(file.path(output_dir, "validation_diagnostics.json"), encoding = "UTF-8"); writeLines(toJSON(diag, auto_unbox = TRUE, pretty = TRUE), .out_conn); close(.out_conn) }
+  { .out_conn <- file(file.path(output_dir, "design_summary.json"), encoding = "UTF-8"); writeLines(toJSON(list(status = "blocked", failureMode = "runtime_not_ready"),
+                    auto_unbox = TRUE, pretty = TRUE), .out_conn); close(.out_conn) }
   # 空 manifest
   manifest <- list(
     pluginId = "sample-metadata-validator",
@@ -97,8 +95,7 @@ if (!runtime_ok) {
       replayCommand = paste("Rscript", script_path %||% "sample-metadata-validator.R", job_dir)
     )
   )
-  writeLines(toJSON(manifest, auto_unbox = TRUE, pretty = TRUE),
-             file.path(output_dir, "artifact-manifest.json"))
+  { .out_conn <- file(file.path(output_dir, "artifact-manifest.json"), encoding = "UTF-8"); writeLines(toJSON(manifest, auto_unbox = TRUE, pretty = TRUE), .out_conn); close(.out_conn) }
   cat("[sample-metadata-validator] BLOCKED: runtime_not_ready\n")
   quit(status = 1)
 }
@@ -485,8 +482,7 @@ if (diagnostics$status != "blocked") {
     canModel = diagnostics$summary$canModel %||% FALSE,
     warnings = diagnostics$warnings
   )
-  writeLines(toJSON(design_summary, auto_unbox = TRUE, pretty = TRUE),
-             file.path(output_dir, "design_summary.json"))
+  { .out_conn <- file(file.path(output_dir, "design_summary.json"), encoding = "UTF-8"); writeLines(toJSON(design_summary, auto_unbox = TRUE, pretty = TRUE), .out_conn); close(.out_conn) }
 } else {
   # blocked 状态也输出 design_summary
   design_summary <- list(
@@ -495,8 +491,7 @@ if (diagnostics$status != "blocked") {
     message = diagnostics$blockedMessage %||% "Validation blocked",
     canModel = FALSE
   )
-  writeLines(toJSON(design_summary, auto_unbox = TRUE, pretty = TRUE),
-             file.path(output_dir, "design_summary.json"))
+  { .out_conn <- file(file.path(output_dir, "design_summary.json"), encoding = "UTF-8"); writeLines(toJSON(design_summary, auto_unbox = TRUE, pretty = TRUE), .out_conn); close(.out_conn) }
 
   # 空对齐表
   write.csv(data.frame(sample = character(), source = character(),
@@ -506,8 +501,7 @@ if (diagnostics$status != "blocked") {
 }
 
 # validation_diagnostics.json (always)
-writeLines(toJSON(diagnostics, auto_unbox = TRUE, pretty = TRUE),
-           file.path(output_dir, "validation_diagnostics.json"))
+{ .out_conn <- file(file.path(output_dir, "validation_diagnostics.json"), encoding = "UTF-8"); writeLines(toJSON(diagnostics, auto_unbox = TRUE, pretty = TRUE), .out_conn); close(.out_conn) }
 
 # ============================================================
 # HTML 报告
@@ -609,7 +603,7 @@ generate_report <- function() {
 </body>
 </html>')
 
-  writeLines(html, file.path(output_dir, "report.html"))
+  { .out_conn <- file(file.path(output_dir, "report.html"), encoding = "UTF-8"); writeLines(html, .out_conn); close(.out_conn) }
 }
 
 generate_report()
@@ -683,8 +677,7 @@ manifest <- list(
   )
 )
 
-writeLines(toJSON(manifest, auto_unbox = TRUE, pretty = TRUE),
-           file.path(output_dir, "artifact-manifest.json"))
+{ .out_conn <- file(file.path(output_dir, "artifact-manifest.json"), encoding = "UTF-8"); writeLines(toJSON(manifest, auto_unbox = TRUE, pretty = TRUE), .out_conn); close(.out_conn) }
 
 # 保存 run-script.R 到 job_dir
 if (!is.na(script_path) && file.exists(script_path)) {

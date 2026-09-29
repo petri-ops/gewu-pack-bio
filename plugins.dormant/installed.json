@@ -16,39 +16,7 @@
     "type": "analysis-plugin"
   },
   {
-    "id": "deg-standardizer",
-    "version": "1.0.0",
-    "installedAt": "2026-09-12T05:00:15.132Z",
-    "platform": "windows-x64",
-    "language": "r",
-    "type": "analysis-plugin"
-  },
-  {
-    "id": "expression-qc",
-    "version": "1.0.0",
-    "installedAt": "2026-09-12T05:00:15.132Z",
-    "platform": "windows-x64",
-    "language": "r",
-    "type": "analysis-plugin"
-  },
-  {
     "id": "gene-correlation",
-    "version": "1.0.0",
-    "installedAt": "2026-09-12T05:00:15.132Z",
-    "platform": "windows-x64",
-    "language": "r",
-    "type": "analysis-plugin"
-  },
-  {
-    "id": "go-kegg",
-    "version": "1.0.0",
-    "installedAt": "2026-09-12T05:00:15.132Z",
-    "platform": "windows-x64",
-    "language": "r",
-    "type": "analysis-plugin"
-  },
-  {
-    "id": "gsea",
     "version": "1.0.0",
     "installedAt": "2026-09-12T05:00:15.132Z",
     "platform": "windows-x64",
@@ -61,14 +29,6 @@
     "installedAt": "2026-09-12T05:00:15.132Z",
     "platform": "windows-x64",
     "language": "python",
-    "type": "analysis-plugin"
-  },
-  {
-    "id": "sample-metadata-validator",
-    "version": "1.0.0",
-    "installedAt": "2026-09-12T05:00:15.132Z",
-    "platform": "windows-x64",
-    "language": "r",
     "type": "analysis-plugin"
   },
   {
@@ -89,14 +49,6 @@
   },
   {
     "id": "seurat-standard",
-    "version": "1.0.0",
-    "installedAt": "2026-09-12T05:00:15.132Z",
-    "platform": "windows-x64",
-    "language": "r",
-    "type": "analysis-plugin"
-  },
-  {
-    "id": "volcano-plot",
     "version": "1.0.0",
     "installedAt": "2026-09-12T05:00:15.132Z",
     "platform": "windows-x64",

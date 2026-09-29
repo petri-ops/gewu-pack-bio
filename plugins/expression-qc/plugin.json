@@ -9,9 +9,18 @@
   "description": "检查表达/counts 矩阵的数据质量：基因×样本方向、非数值列、NA/Inf、负counts、小数counts、重复gene ID、全零基因、低表达基因比例、library size、样本相关性、样本离群、PCA与设计分组关系、metadata对齐状态。只做QC和质量门，不执行差异表达，不自动删除样本。",
   "dagStep": "qc",
   "dagPosition": "midstream",
-  "downstream": ["deseq2"],
-  "supportedPlatforms": ["macos-arm64"],
-  "plannedPlatforms": ["macos-x64", "windows-x64", "linux-x64"],
+  "downstream": [
+    "deseq2"
+  ],
+  "supportedPlatforms": [
+    "macos-arm64",
+    "windows-x64"
+  ],
+  "plannedPlatforms": [
+    "macos-x64",
+    "windows-x64",
+    "linux-x64"
+  ],
   "requiresBundle": false,
   "entryPoint": "scripts/expression-qc.R",
   "packages": {
@@ -65,17 +74,66 @@
     }
   ],
   "outputs": [
-    { "id": "qc_summary", "type": "json", "label": "QC 摘要", "filename": "qc_summary.json" },
-    { "id": "gene_filter_statistics", "type": "table", "label": "基因过滤统计", "filename": "gene_filter_statistics.csv" },
-    { "id": "sample_library_size", "type": "table", "label": "Library size", "filename": "sample_library_size.csv" },
-    { "id": "sample_correlation", "type": "table", "label": "样本相关性矩阵", "filename": "sample_correlation.csv" },
-    { "id": "sample_correlation_png", "type": "image", "label": "相关性热图", "filename": "sample_correlation.png" },
-    { "id": "pca_coordinates", "type": "table", "label": "PCA 坐标", "filename": "pca_coordinates.csv" },
-    { "id": "pca_png", "type": "image", "label": "PCA 图", "filename": "pca.png" },
-    { "id": "validated_counts", "type": "table", "label": "过滤后 counts", "filename": "validated_counts.csv" },
-    { "id": "report", "type": "report", "label": "QC 报告", "filename": "report.html" }
+    {
+      "id": "qc_summary",
+      "type": "json",
+      "label": "QC 摘要",
+      "filename": "qc_summary.json"
+    },
+    {
+      "id": "gene_filter_statistics",
+      "type": "table",
+      "label": "基因过滤统计",
+      "filename": "gene_filter_statistics.csv"
+    },
+    {
+      "id": "sample_library_size",
+      "type": "table",
+      "label": "Library size",
+      "filename": "sample_library_size.csv"
+    },
+    {
+      "id": "sample_correlation",
+      "type": "table",
+      "label": "样本相关性矩阵",
+      "filename": "sample_correlation.csv"
+    },
+    {
+      "id": "sample_correlation_png",
+      "type": "image",
+      "label": "相关性热图",
+      "filename": "sample_correlation.png"
+    },
+    {
+      "id": "pca_coordinates",
+      "type": "table",
+      "label": "PCA 坐标",
+      "filename": "pca_coordinates.csv"
+    },
+    {
+      "id": "pca_png",
+      "type": "image",
+      "label": "PCA 图",
+      "filename": "pca.png"
+    },
+    {
+      "id": "validated_counts",
+      "type": "table",
+      "label": "过滤后 counts",
+      "filename": "validated_counts.csv"
+    },
+    {
+      "id": "report",
+      "type": "report",
+      "label": "QC 报告",
+      "filename": "report.html"
+    }
   ],
-  "states": ["valid", "warning", "blocked"],
+  "states": [
+    "valid",
+    "warning",
+    "blocked"
+  ],
   "failureModes": [
     {
       "code": "missing_required_file_inputs",

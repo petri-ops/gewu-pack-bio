@@ -9,9 +9,19 @@
   "description": "在进入表达 QC 和差异分析之前，验证 counts 矩阵和 metadata 是否能够支持指定的实验设计与 contrast。检查样本对齐、重复、分组完整性、重复数、混淆设计等。",
   "dagStep": "input-validation",
   "dagPosition": "upstream",
-  "downstream": ["expression-qc", "deseq2"],
-  "supportedPlatforms": ["macos-arm64"],
-  "plannedPlatforms": ["macos-x64", "windows-x64", "linux-x64"],
+  "downstream": [
+    "expression-qc",
+    "deseq2"
+  ],
+  "supportedPlatforms": [
+    "macos-arm64",
+    "windows-x64"
+  ],
+  "plannedPlatforms": [
+    "macos-x64",
+    "windows-x64",
+    "linux-x64"
+  ],
   "requiresBundle": false,
   "entryPoint": "scripts/sample-metadata-validator.R",
   "packages": {
@@ -70,13 +80,42 @@
     }
   ],
   "outputs": [
-    { "id": "validated_metadata", "type": "table", "label": "对齐后的 metadata", "filename": "validated_metadata.csv" },
-    { "id": "sample_alignment", "type": "table", "label": "样本对齐详情", "filename": "sample_alignment.csv" },
-    { "id": "design_summary", "type": "json", "label": "设计摘要", "filename": "design_summary.json" },
-    { "id": "validation_diagnostics", "type": "json", "label": "校验诊断", "filename": "validation_diagnostics.json" },
-    { "id": "report", "type": "report", "label": "校验报告", "filename": "report.html" }
+    {
+      "id": "validated_metadata",
+      "type": "table",
+      "label": "对齐后的 metadata",
+      "filename": "validated_metadata.csv"
+    },
+    {
+      "id": "sample_alignment",
+      "type": "table",
+      "label": "样本对齐详情",
+      "filename": "sample_alignment.csv"
+    },
+    {
+      "id": "design_summary",
+      "type": "json",
+      "label": "设计摘要",
+      "filename": "design_summary.json"
+    },
+    {
+      "id": "validation_diagnostics",
+      "type": "json",
+      "label": "校验诊断",
+      "filename": "validation_diagnostics.json"
+    },
+    {
+      "id": "report",
+      "type": "report",
+      "label": "校验报告",
+      "filename": "report.html"
+    }
   ],
-  "states": ["valid", "warning", "blocked"],
+  "states": [
+    "valid",
+    "warning",
+    "blocked"
+  ],
   "failureModes": [
     {
       "code": "missing_required_file_inputs",

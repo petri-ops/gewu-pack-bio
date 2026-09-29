@@ -353,8 +353,7 @@ if (diagnostics$status != "blocked") {
     nonSignificantGenes = n_total - n_sig,
     note = if (n_sig == 0) "No significant genes — valid empty result" else NULL
   )
-  writeLines(toJSON(filter_summary, auto_unbox = TRUE, pretty = TRUE),
-             file.path(output_dir, "filter_summary.json"))
+  { .out_conn <- file(file.path(output_dir, "filter_summary.json"), encoding = "UTF-8"); writeLines(toJSON(filter_summary, auto_unbox = TRUE, pretty = TRUE), .out_conn); close(.out_conn) }
 
   diagnostics$summary$rankedGenesFile <- "ranked_genes.csv"
   diagnostics$summary$rankedGenesCount <- nrow(ranked)
@@ -362,15 +361,14 @@ if (diagnostics$status != "blocked") {
 
 # filter_summary.json (always, even if blocked)
 if (diagnostics$status == "blocked") {
-  writeLines(toJSON(list(
+  { .out_conn <- file(file.path(output_dir, "filter_summary.json"), encoding = "UTF-8"); writeLines(toJSON(list(
     status = "blocked",
     failureMode = diagnostics$failureMode,
     message = diagnostics$blockedMessage %||% "",
     padjThreshold = padj_threshold,
     effectThreshold = effect_threshold,
     sourceMethod = source_method
-  ), auto_unbox = TRUE, pretty = TRUE),
-  file.path(output_dir, "filter_summary.json"))
+  ), auto_unbox = TRUE, pretty = TRUE), .out_conn); close(.out_conn) }
 }
 
 # ============================================================
@@ -480,7 +478,7 @@ generate_report <- function() {
 </body>
 </html>')
 
-  writeLines(html, file.path(output_dir, "report.html"))
+  { .out_conn <- file(file.path(output_dir, "report.html"), encoding = "UTF-8"); writeLines(html, .out_conn); close(.out_conn) }
 }
 
 generate_report()
@@ -551,8 +549,7 @@ manifest <- list(
   )
 )
 
-writeLines(toJSON(manifest, auto_unbox = TRUE, pretty = TRUE),
-           file.path(output_dir, "artifact-manifest.json"))
+{ .out_conn <- file(file.path(output_dir, "artifact-manifest.json"), encoding = "UTF-8"); writeLines(toJSON(manifest, auto_unbox = TRUE, pretty = TRUE), .out_conn); close(.out_conn) }
 
 # 保存 run-script.R
 if (!is.na(script_path) && file.exists(script_path)) {

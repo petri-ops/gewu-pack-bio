@@ -354,6 +354,6 @@ if (report_generated) {
 } else {
   manifest$sections <- manifest$sections[2:length(manifest$sections)]
 }
-write(toJSON(manifest, auto_unbox = TRUE, pretty = TRUE), "manifest.json")
+{ .out_conn <- file("manifest.json", encoding = "UTF-8"); write(toJSON(manifest, auto_unbox = TRUE, pretty = TRUE), .out_conn); close(.out_conn) }
 
 cat("DONE\n")

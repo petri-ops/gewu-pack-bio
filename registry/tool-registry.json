@@ -12,26 +12,6 @@
       ],
       "sizeLimitMB": 100
     },
-    "go-kegg": {
-      "displayName": "GO/KEGG ORA",
-      "script": "go-kegg.R",
-      "lang": "r",
-      "description": "GO / KEGG 富集分析(超几何检验,clusterProfiler)",
-      "csvInputs": [
-        "genes"
-      ],
-      "sizeLimitMB": 100
-    },
-    "gsea": {
-      "displayName": "GSEA",
-      "script": "gsea.R",
-      "lang": "r",
-      "description": "Gene Set Enrichment Analysis(GSEA,fgsea/clusterProfiler)",
-      "csvInputs": [
-        "ranked_list"
-      ],
-      "sizeLimitMB": 100
-    },
     "km-survival": {
       "displayName": "KM 生存",
       "script": "km-survival.R",
@@ -234,7 +214,5 @@
       "sizeLimitMB": 500
     }
   },
-  "TOOL_ALIASES": {
-    "enrichment": "go-kegg"
-  }
+  "TOOL_ALIASES": {}
 }

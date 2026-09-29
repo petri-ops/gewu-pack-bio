@@ -75,8 +75,7 @@ if (!(platform_id %in% supported_platforms)) {
                      paste(supported_platforms, collapse = ", ")),
     timestamp = format(Sys.time(), "%Y-%m-%dT%H:%M:%S%z")
   )
-  writeLines(toJSON(diag, auto_unbox = TRUE, pretty = TRUE),
-             file.path(output_dir, "qc_summary.json"))
+  { .out_conn <- file(file.path(output_dir, "qc_summary.json"), encoding = "UTF-8"); writeLines(toJSON(diag, auto_unbox = TRUE, pretty = TRUE), .out_conn); close(.out_conn) }
   manifest <- list(
     pluginId = "expression-qc",
     pluginVersion = "1.0.0",
@@ -90,8 +89,7 @@ if (!(platform_id %in% supported_platforms)) {
       replayCommand = paste("Rscript", script_path %||% "expression-qc.R", job_dir)
     )
   )
-  writeLines(toJSON(manifest, auto_unbox = TRUE, pretty = TRUE),
-             file.path(output_dir, "artifact-manifest.json"))
+  { .out_conn <- file(file.path(output_dir, "artifact-manifest.json"), encoding = "UTF-8"); writeLines(toJSON(manifest, auto_unbox = TRUE, pretty = TRUE), .out_conn); close(.out_conn) }
   cat("[expression-qc] BLOCKED: platform_not_supported\n")
   quit(status = 1)
 }
@@ -105,8 +103,7 @@ if (!runtime_ok) {
     message = "Required R packages (jsonlite, digest) not available",
     timestamp = format(Sys.time(), "%Y-%m-%dT%H:%M:%S%z")
   )
-  writeLines(toJSON(diag, auto_unbox = TRUE, pretty = TRUE),
-             file.path(output_dir, "qc_summary.json"))
+  { .out_conn <- file(file.path(output_dir, "qc_summary.json"), encoding = "UTF-8"); writeLines(toJSON(diag, auto_unbox = TRUE, pretty = TRUE), .out_conn); close(.out_conn) }
   manifest <- list(
     pluginId = "expression-qc",
     pluginVersion = "1.0.0",
@@ -120,8 +117,7 @@ if (!runtime_ok) {
       replayCommand = paste("Rscript", script_path %||% "expression-qc.R", job_dir)
     )
   )
-  writeLines(toJSON(manifest, auto_unbox = TRUE, pretty = TRUE),
-             file.path(output_dir, "artifact-manifest.json"))
+  { .out_conn <- file(file.path(output_dir, "artifact-manifest.json"), encoding = "UTF-8"); writeLines(toJSON(manifest, auto_unbox = TRUE, pretty = TRUE), .out_conn); close(.out_conn) }
   cat("[expression-qc] BLOCKED: runtime_not_ready\n")
   quit(status = 1)
 }
@@ -517,8 +513,7 @@ if (diagnostics$status != "blocked") {
 # ============================================================
 
 # qc_summary.json (always)
-writeLines(toJSON(diagnostics, auto_unbox = TRUE, pretty = TRUE),
-           file.path(output_dir, "qc_summary.json"))
+{ .out_conn <- file(file.path(output_dir, "qc_summary.json"), encoding = "UTF-8"); writeLines(toJSON(diagnostics, auto_unbox = TRUE, pretty = TRUE), .out_conn); close(.out_conn) }
 
 # ============================================================
 # HTML 报告
@@ -644,7 +639,7 @@ generate_report <- function() {
 </body>
 </html>')
 
-  writeLines(html, file.path(output_dir, "report.html"))
+  { .out_conn <- file(file.path(output_dir, "report.html"), encoding = "UTF-8"); writeLines(html, .out_conn); close(.out_conn) }
 }
 
 generate_report()
@@ -721,8 +716,7 @@ manifest <- list(
   )
 )
 
-writeLines(toJSON(manifest, auto_unbox = TRUE, pretty = TRUE),
-           file.path(output_dir, "artifact-manifest.json"))
+{ .out_conn <- file(file.path(output_dir, "artifact-manifest.json"), encoding = "UTF-8"); writeLines(toJSON(manifest, auto_unbox = TRUE, pretty = TRUE), .out_conn); close(.out_conn) }
 
 # 保存 run-script.R
 if (!is.na(script_path) && file.exists(script_path)) {

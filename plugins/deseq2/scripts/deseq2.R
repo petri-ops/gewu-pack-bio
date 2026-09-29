@@ -321,7 +321,7 @@ summary_text <- sprintf(
   ref, sum(coldata[[design_col]] == ref),
   nrow(counts), padj_cut, lfc_cut, nrow(sig), n_up, n_down
 )
-writeLines(summary_text, file.path(output_dir, "summary.txt"))
+{ .out_conn <- file(file.path(output_dir, "summary.txt"), encoding = "UTF-8"); writeLines(summary_text, .out_conn); close(.out_conn) }
 
 up_genes <- sig[sig$log2FoldChange > 0, ]
 down_genes <- sig[sig$log2FoldChange < 0, ]
@@ -385,8 +385,7 @@ manifest <- list(
     dual_format = TRUE
   )
 )
-writeLines(toJSON(manifest, auto_unbox = TRUE, pretty = TRUE),
-           file.path(output_dir, "manifest.json"))
+{ .out_conn <- file(file.path(output_dir, "manifest.json"), encoding = "UTF-8"); writeLines(toJSON(manifest, auto_unbox = TRUE, pretty = TRUE), .out_conn); close(.out_conn) }
 
 # ============================================================
 # HTML 报告 (从模板 base64 内嵌)
@@ -454,7 +453,7 @@ if (file.exists(template_path)) {
       report_html <- gsub(paste0("https://biof3.com/api/platform/tools/demo/deseq2/", img), data_uri, report_html, fixed = TRUE)
     }
   }
-  writeLines(report_html, file.path(output_dir, "report.html"))
+  { .out_conn <- file(file.path(output_dir, "report.html"), encoding = "UTF-8"); writeLines(report_html, .out_conn); close(.out_conn) }
   cat("[deseq2] Report generated.\n")
 } else {
   cat("[deseq2] Report template not found, skipping.\n")
