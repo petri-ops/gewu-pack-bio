@@ -19,7 +19,10 @@
       "label": "物种",
       "type": "select",
       "default": "human",
-      "options": ["human", "mouse"],
+      "options": [
+        "human",
+        "mouse"
+      ],
       "hint": "首期预构建覆盖 human(org.Hs) 与 mouse(org.Mm)，其余物种按需自备"
     },
     {
@@ -27,14 +30,26 @@
       "label": "分析类型",
       "type": "select",
       "default": "all",
-      "options": ["all", "GO", "GO-BP", "GO-MF", "GO-CC", "KEGG"]
+      "options": [
+        "all",
+        "GO",
+        "GO-BP",
+        "GO-MF",
+        "GO-CC",
+        "KEGG"
+      ]
     },
     {
       "id": "gene_id_type",
       "label": "基因 ID 类型",
       "type": "select",
       "default": "SYMBOL",
-      "options": ["SYMBOL", "ENSEMBL", "ENTREZID", "auto"]
+      "options": [
+        "SYMBOL",
+        "ENSEMBL",
+        "ENTREZID",
+        "auto"
+      ]
     },
     {
       "id": "enrich_pvalue",
@@ -70,53 +85,250 @@
     }
   ],
   "outputs": [
-    { "id": "go_bp_results", "filename": "go_bp_results.csv", "type": "table", "label": "GO-BP 结果表" },
-    { "id": "kegg_results", "filename": "kegg_results.csv", "type": "table", "label": "KEGG 结果表", "required": false },
-    { "id": "go_bp_dotplot", "filename": "go_bp_dotplot.png", "type": "plot", "label": "GO-BP 气泡图" },
-    { "id": "kegg_dotplot", "filename": "kegg_dotplot.png", "type": "plot", "label": "KEGG 气泡图", "required": false },
-    { "id": "report", "filename": "report.html", "type": "report", "label": "解读报告" }
+    {
+      "id": "go_bp_results",
+      "filename": "go_bp_results.csv",
+      "type": "table",
+      "label": "GO-BP 结果表"
+    },
+    {
+      "id": "kegg_results",
+      "filename": "kegg_results.csv",
+      "type": "table",
+      "label": "KEGG 结果表",
+      "required": false
+    },
+    {
+      "id": "go_bp_dotplot",
+      "filename": "go_bp_dotplot.png",
+      "type": "plot",
+      "label": "GO-BP 气泡图"
+    },
+    {
+      "id": "kegg_dotplot",
+      "filename": "kegg_dotplot.png",
+      "type": "plot",
+      "label": "KEGG 气泡图",
+      "required": false
+    },
+    {
+      "id": "report",
+      "filename": "report.html",
+      "type": "report",
+      "label": "解读报告"
+    }
   ],
   "tutorialUrl": "/docs/bulk-rnaseq/enrichment",
   "demoDataUrl": "/demo-data/go-kegg",
   "estimatedMinutes": 3,
-  "packages": ["clusterProfiler", "enrichplot", "DOSE", "org.Hs.eg.db", "KEGGREST", "png"],
+  "packages": [
+    "clusterProfiler",
+    "enrichplot",
+    "DOSE",
+    "org.Hs.eg.db",
+    "KEGGREST",
+    "png"
+  ],
   "color": "#0891b2",
   "resultStudio": {
     "contractVersion": 1,
     "descriptorVersion": 1,
     "semanticType": "functional_enrichment",
-    "entity": { "type": "enriched_term", "idField": "term_id", "fields": { "term_id": "string", "description": "string", "gene_ratio": "string", "pvalue": "number", "p_adjust": "number", "gene_ids": "string", "up_gene_count": "number|null", "down_gene_count": "number|null", "direction": "string" } },
-    "source": { "strategy": "execution_snapshot_per_artifact", "entryPoint": "scripts/go-kegg.R" },
-    "independentScriptPathTemplate": "analysis/scripts/{artifactFamilyId}/{revisionId}/{artifactId}.R",
-    "inputBindings": [{ "inputId": "deg_table", "required": true, "acceptsArtifactTypes": ["table"], "semanticRole": "gene_set_or_differential_expression_table" }],
-    "parameters": {
-      "species": { "type": "select", "default": "human", "options": ["human", "mouse"] },
-      "analysis_type": { "type": "select", "default": "all", "options": ["all", "GO", "GO-BP", "GO-MF", "GO-CC", "KEGG"] },
-      "gene_id_type": { "type": "select", "default": "SYMBOL", "options": ["SYMBOL", "ENSEMBL", "ENTREZID", "auto"] },
-      "enrich_pvalue": { "type": "number", "default": 0.05, "minimum": 0, "maximum": 1 },
-      "enrich_qvalue": { "type": "number", "default": 0.2, "minimum": 0, "maximum": 1 },
-      "top_n": { "type": "number", "default": 20, "minimum": 1 },
-      "padj_cutoff": { "type": "number", "default": 0.05, "minimum": 0, "maximum": 1 },
-      "lfc_cutoff": { "type": "number", "default": 1, "minimum": 0 }
+    "entity": {
+      "type": "enriched_term",
+      "idField": "term_id",
+      "fields": {
+        "term_id": "string",
+        "description": "string",
+        "gene_ratio": "string",
+        "pvalue": "number",
+        "p_adjust": "number",
+        "gene_ids": "string",
+        "up_gene_count": "number|null",
+        "down_gene_count": "number|null",
+        "direction": "string"
+      }
     },
-    "parameterImpacts": { "species": "workflow", "analysis_type": "workflow", "gene_id_type": "workflow", "enrich_pvalue": "scientific", "enrich_qvalue": "scientific", "top_n": "data", "padj_cutoff": "scientific", "lfc_cutoff": "scientific" },
-    "actions": ["select_terms", "select_genes", "derive_gene_set", "recompute"],
+    "source": {
+      "strategy": "execution_snapshot_per_artifact",
+      "entryPoint": "scripts/go-kegg.R"
+    },
+    "independentScriptPathTemplate": "analysis/scripts/{artifactFamilyId}/{revisionId}/{artifactId}.R",
+    "inputBindings": [
+      {
+        "inputId": "deg_table",
+        "required": true,
+        "acceptsArtifactTypes": [
+          "table"
+        ],
+        "semanticRole": "gene_set_or_differential_expression_table"
+      }
+    ],
+    "parameters": {
+      "species": {
+        "type": "select",
+        "default": "human",
+        "options": [
+          "human",
+          "mouse"
+        ]
+      },
+      "analysis_type": {
+        "type": "select",
+        "default": "all",
+        "options": [
+          "all",
+          "GO",
+          "GO-BP",
+          "GO-MF",
+          "GO-CC",
+          "KEGG"
+        ]
+      },
+      "gene_id_type": {
+        "type": "select",
+        "default": "SYMBOL",
+        "options": [
+          "SYMBOL",
+          "ENSEMBL",
+          "ENTREZID",
+          "auto"
+        ]
+      },
+      "enrich_pvalue": {
+        "type": "number",
+        "default": 0.05,
+        "minimum": 0,
+        "maximum": 1
+      },
+      "enrich_qvalue": {
+        "type": "number",
+        "default": 0.2,
+        "minimum": 0,
+        "maximum": 1
+      },
+      "top_n": {
+        "type": "number",
+        "default": 20,
+        "minimum": 1
+      },
+      "padj_cutoff": {
+        "type": "number",
+        "default": 0.05,
+        "minimum": 0,
+        "maximum": 1
+      },
+      "lfc_cutoff": {
+        "type": "number",
+        "default": 1,
+        "minimum": 0
+      }
+    },
+    "parameterImpacts": {
+      "species": "workflow",
+      "analysis_type": "workflow",
+      "gene_id_type": "workflow",
+      "enrich_pvalue": "scientific",
+      "enrich_qvalue": "scientific",
+      "top_n": "data",
+      "padj_cutoff": "scientific",
+      "lfc_cutoff": "scientific"
+    },
+    "actions": [
+      "select_terms",
+      "select_genes",
+      "derive_gene_set",
+      "recompute"
+    ],
     "artifacts": [
-      { "id": "go_bp_results", "type": "table", "filename": "go_bp_results.csv", "interaction": "interactive" },
-      { "id": "kegg_results", "type": "table", "filename": "kegg_results.csv", "required": false, "interaction": "interactive" },
-      { "id": "go_bp_dotplot", "type": "plot", "filename": "go_bp_dotplot.png", "interaction": "interactive" },
-      { "id": "kegg_dotplot", "type": "plot", "filename": "kegg_dotplot.png", "required": false, "interaction": "interactive" },
-      { "id": "report", "type": "report", "filename": "report.html", "interaction": "noninteractive" }
+      {
+        "id": "go_bp_results",
+        "type": "table",
+        "filename": "go_bp_results.csv",
+        "interaction": "interactive"
+      },
+      {
+        "id": "kegg_results",
+        "type": "table",
+        "filename": "kegg_results.csv",
+        "required": false,
+        "interaction": "interactive"
+      },
+      {
+        "id": "go_bp_dotplot",
+        "type": "plot",
+        "filename": "go_bp_dotplot.png",
+        "interaction": "interactive"
+      },
+      {
+        "id": "kegg_dotplot",
+        "type": "plot",
+        "filename": "kegg_dotplot.png",
+        "required": false,
+        "interaction": "interactive"
+      },
+      {
+        "id": "report",
+        "type": "report",
+        "filename": "report.html",
+        "interaction": "noninteractive"
+      }
     ],
     "interactionMappings": [
-      { "artifactId": "go_bp_results", "mode": "table", "entityType": "pathway", "idField": "ID" },
-      { "artifactId": "kegg_results", "mode": "table", "entityType": "pathway", "idField": "ID" },
-      { "artifactId": "go_bp_dotplot", "mode": "scatter", "dataArtifactId": "go_bp_results", "entityType": "pathway", "idField": "ID", "xField": "GeneRatio", "yField": "p.adjust", "yTransform": "neg_log10" },
-      { "artifactId": "kegg_dotplot", "mode": "scatter", "dataArtifactId": "kegg_results", "entityType": "pathway", "idField": "ID", "xField": "GeneRatio", "yField": "p.adjust", "yTransform": "neg_log10" }
+      {
+        "artifactId": "go_bp_results",
+        "mode": "table",
+        "entityType": "pathway",
+        "idField": "ID"
+      },
+      {
+        "artifactId": "kegg_results",
+        "mode": "table",
+        "entityType": "pathway",
+        "idField": "ID"
+      },
+      {
+        "artifactId": "go_bp_dotplot",
+        "mode": "scatter",
+        "dataArtifactId": "go_bp_results",
+        "entityType": "pathway",
+        "idField": "ID",
+        "xField": "GeneRatio",
+        "yField": "p.adjust",
+        "yTransform": "neg_log10"
+      },
+      {
+        "artifactId": "kegg_dotplot",
+        "mode": "scatter",
+        "dataArtifactId": "kegg_results",
+        "entityType": "pathway",
+        "idField": "ID",
+        "xField": "GeneRatio",
+        "yField": "p.adjust",
+        "yTransform": "neg_log10"
+      }
     ],
-    "validator": { "id": "functional_enrichment_result_truth_v1", "checks": ["artifact_truth_valid", "script_sha256", "input_sha256", "output_sha256", "stable_term_id", "empty_result_is_valid", "finite_statistics"] },
-    "goldenFixture": { "path": "golden-revisions/result-studio-v1.json" },
-    "upgradePolicy": { "sameMajor": "compatible_if_contract_digests_match", "contractDrift": "migration_required", "missingMigration": "read_only_legacy" }
+    "validator": {
+      "id": "functional_enrichment_result_truth_v1",
+      "checks": [
+        "artifact_truth_valid",
+        "script_sha256",
+        "input_sha256",
+        "output_sha256",
+        "stable_term_id",
+        "empty_result_is_valid",
+        "finite_statistics"
+      ]
+    },
+    "goldenFixture": {
+      "path": "golden-revisions/result-studio-v1.json",
+      "sourceScriptSha256": "f67e7cdb3337b9fecd12d440e01691172b3a913b2c5c57c790e33d2aad1e0a06"
+    },
+    "upgradePolicy": {
+      "sameMajor": "compatible_if_contract_digests_match",
+      "contractDrift": "migration_required",
+      "missingMigration": "read_only_legacy"
+    }
   },
   "failureModes": [
     {
