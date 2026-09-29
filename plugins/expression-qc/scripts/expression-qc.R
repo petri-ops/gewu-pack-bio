@@ -63,7 +63,7 @@ arch <- Sys.info()[["machine"]]
 platform_norm <- tolower(platform)
 if (platform_norm == "darwin") platform_norm <- "macos"
 platform_id <- paste0(platform_norm, "-", tolower(arch))
-supported_platforms <- c("macos-arm64")
+supported_platforms <- c("macos-arm64", "windows-x86-64", "windows-x86_64")
 
 if (!(platform_id %in% supported_platforms)) {
   diag <- list(

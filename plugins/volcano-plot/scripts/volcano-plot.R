@@ -34,6 +34,17 @@ canonicalize_png <- function(file_path, text = NULL) {
 # 读参数
 params <- fromJSON(file.path(work_dir, "params.json"))
 deg_path <- params$deg_table
+# 兜底：HTTP 直跑路径 params 不携带文件名（MCP 路径有 rewrite）；jobDir 顶层
+# 上传件按输入 id 前缀发现（与 deseq2「以 counts 开头」同款约定）。
+deg_path_fallback <- function() {
+  candidates <- list.files(work_dir, pattern = "^deg_table[.](csv|tsv|txt)$", full.names = TRUE)
+  if (length(candidates) > 0) return(candidates[[1]])
+  list.files(work_dir, pattern = "^deg[.](csv|tsv|txt)$", full.names = TRUE)[[1]]
+}
+if (is.null(deg_path) || is.na(deg_path) || length(deg_path) == 0 || !nzchar(deg_path)[1] || !file.exists(deg_path)) {
+  deg_path <- tryCatch(deg_path_fallback(), error = function(e) NULL)
+}
+if (is.null(deg_path) || length(deg_path) == 0 || is.na(deg_path)) stop("No DEG input file found")
 gene_col  <- params$gene_col  %||% params$gene_id_column  %||% "gene"
 lfc_col   <- params$lfc_col   %||% params$lfc_column     %||% NULL
 pval_col  <- params$pval_col  %||% params$pval_column    %||% "padj"

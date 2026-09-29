@@ -104,9 +104,12 @@ if (organism == "mmu") {
 # ============================================================
 # Read input
 # ============================================================
-input_file <- list.files(job_dir, pattern = "^ranked|^genes|^deg_table|^input",
-                         full.names = TRUE)[1]
-if (is.na(input_file)) {
+input_file <- list.files(job_dir, pattern = "^ranked[.]|^genes[.]|^deg_table[.]|^input[.]",
+                         full.names = TRUE)
+input_file <- input_file[!file.info(input_file)$isdir]
+input_file <- input_file[1]
+# input_file length guard（character(0) 不触发 is.na，直下 read 会崩）
+if (length(input_file) == 0 || is.na(input_file)) {
   input_file <- list.files(job_dir, pattern = "\\.(csv|tsv|txt)$",
                            full.names = TRUE)[1]
 }
