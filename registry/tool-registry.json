@@ -14,7 +14,7 @@
     },
     "km-survival": {
       "displayName": "KM 生存",
-      "script": "km-survival.R",
+      "script": "",
       "lang": "r",
       "description": "Kaplan-Meier 生存曲线 + log-rank 检验",
       "csvInputs": [
@@ -25,7 +25,7 @@
     },
     "lasso-cox": {
       "displayName": "LASSO Cox",
-      "script": "lasso-cox.R",
+      "script": "",
       "lang": "r",
       "description": "LASSO Cox 风险评分模型(glmnet + survival)",
       "csvInputs": [
@@ -36,7 +36,7 @@
     },
     "bindea-immune": {
       "displayName": "免疫浸润",
-      "script": "bindea-immune.R",
+      "script": "",
       "lang": "r",
       "description": "免疫浸润分析(ssGSEA/CIBERSORT,Bindea 28 类)",
       "csvInputs": [
@@ -58,7 +58,7 @@
     },
     "complexheatmap": {
       "displayName": "ComplexHeatmap",
-      "script": "complexheatmap.R",
+      "script": "",
       "lang": "r",
       "description": "复杂热图绘制(ComplexHeatmap)",
       "csvInputs": [
@@ -90,7 +90,7 @@
     },
     "maftools-mutation": {
       "displayName": "maftools",
-      "script": "maftools-mutation.R",
+      "script": "",
       "lang": "r",
       "description": "体细胞突变分析(maftools,MAF + signature)",
       "csvInputs": [
@@ -100,7 +100,7 @@
     },
     "ml-feature-select": {
       "displayName": "ML 特征选择",
-      "script": "ml-feature-select.R",
+      "script": "",
       "lang": "r",
       "description": "特征选择 5 法对比(方差 / 单因素 / mRMR / Boruta / RFE)+ 韦恩图共识",
       "csvInputs": [
@@ -111,7 +111,7 @@
     },
     "ml-classifier": {
       "displayName": "ML 分类器",
-      "script": "ml-classifier.R",
+      "script": "",
       "lang": "r",
       "description": "经典 ML 分类(LR / SVM / RF / XGBoost 4 算法)+ 全套评估(ROC / PR / Calibration / DCA)",
       "csvInputs": [
@@ -122,7 +122,7 @@
     },
     "rsf-survival": {
       "displayName": "随机生存森林",
-      "script": "rsf-survival.R",
+      "script": "",
       "lang": "r",
       "description": "随机生存森林 RSF 预后建模(randomForestSRC + timeROC + VIMP)",
       "csvInputs": [
@@ -133,7 +133,7 @@
     },
     "shap-explain": {
       "displayName": "SHAP 可解释性",
-      "script": "shap-explain.R",
+      "script": "",
       "lang": "r",
       "description": "SHAP 模型可解释性(全局 summary + 单样本 force + 依赖图)",
       "csvInputs": [],
@@ -141,7 +141,7 @@
     },
     "consensus-cluster": {
       "displayName": "一致性聚类",
-      "script": "consensus-cluster.R",
+      "script": "",
       "lang": "r",
       "description": "无监督亚型发现(ConsensusClusterPlus + CDF + Δarea + Silhouette)",
       "csvInputs": [
@@ -152,7 +152,7 @@
     },
     "ml-scvi-annotate": {
       "displayName": "scVI 自动注释",
-      "script": "scvi_annotation",
+      "script": "",
       "lang": "python",
       "description": "单细胞 scVI 整合 + UMAP/Leiden 聚类(scvi-tools)",
       "csvInputs": [],
@@ -160,7 +160,7 @@
     },
     "mo-mofa": {
       "displayName": "MOFA2 因子分析",
-      "script": "mo-mofa.R",
+      "script": "",
       "lang": "r",
       "description": "多组学因子分析(MOFA2,方差分解 + 因子权重 + 因子散点)",
       "csvInputs": [
@@ -172,7 +172,7 @@
     },
     "mo-snf": {
       "displayName": "SNF 网络融合",
-      "script": "mo-snf.R",
+      "script": "",
       "lang": "r",
       "description": "相似性网络融合亚型发现(SNFtool,谱聚类 + NMI/ARI 验证)",
       "csvInputs": [
@@ -183,7 +183,7 @@
     },
     "spatial-standard": {
       "displayName": "Spatial Standard",
-      "script": "spatial_standard",
+      "script": "",
       "lang": "python",
       "description": "空间转录组标准流程(scanpy + Squidpy: QC → 聚类 → UMAP → 邻域富集 → 空间高变基因 Moran's I)",
       "csvInputs": [],
@@ -191,7 +191,7 @@
     },
     "spatial-svg": {
       "displayName": "空间高变基因 (SVG)",
-      "script": "spatial_svg",
+      "script": "",
       "lang": "python",
       "description": "空间高变基因检测(Squidpy: Moran's I + Geary's C + Sepal 三方法 + 韦恩图共识)",
       "csvInputs": [],
@@ -199,7 +199,7 @@
     },
     "spatial-deconv": {
       "displayName": "空间细胞解卷积",
-      "script": "spatial_deconv",
+      "script": "",
       "lang": "python",
       "description": "基于 Tangram 的细胞类型空间解卷积(单细胞参考集 → 每 spot 细胞类型丰度)",
       "csvInputs": [],
@@ -207,7 +207,7 @@
     },
     "spatial-lr": {
       "displayName": "空间配体受体",
-      "script": "spatial_lr",
+      "script": "",
       "lang": "python",
       "description": "LIANA 空间感知 bivariate 配体-受体分析(无需细胞注释,直接在邻居 spot 上算 LR 共现)",
       "csvInputs": [],
