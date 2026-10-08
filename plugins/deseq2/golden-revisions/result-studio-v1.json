@@ -3,7 +3,7 @@
   "pluginId": "deseq2",
   "pluginVersion": "1.0.0",
   "descriptorVersion": 1,
-  "sourceScriptSha256": "1bce89817333c63c3c223519dcc1a36e96aca65601eb2c974f443556bf126f53",
+  "sourceScriptSha256": "a9e662875bc373bf3dfa5a50f88bd75c7e04d87ca631d05e5e4fd43c0e7a10d4",
   "inputBindingDigest": "42937e704e3fca8dd421dfaa0e5522740a28696556e360205d826fded3966776",
   "artifactContractDigest": "f5ce38f6ba8079d559b3a1527ae751cce56320bc0063d8c93f624a8778c5256b",
   "revisionSourceStrategy": "execution_snapshot_per_artifact",

@@ -19,6 +19,14 @@
 #   - ggplot2 系图: theme_biof3() + biof3_palette() + ggsave_biof3()
 #   - grid 系图 (pheatmap, plotMA, plotDispEsts): save_grid_biof3()
 #   - 配色: biof3_palette_div() (蓝-白-红, 火山/热图二极用)
+#
+# 2026-10-08 BLOCK-146 C#6: 多因子 design（parse_design_terms）
+#   - design 直收 R 公式（如 "~ batch + condition"），对照 desktop 契约
+#     core/shared-backend/scientific-task-planner.js designFormula/designTerms
+#   - 公式最后一项 = contrast 列（对齐 planner groups 末项约定），contrast 限两水平
+#   - 单列旧形态（裸列名 / "~ condition"）向后兼容
+#   - preflight 逐项 fail-closed：缺 "~" 前缀的多因子 / 非法公式符号（数字列名）/
+#     未知列，全部带中文可操作消息主动拦截
 # ============================================================
 
 suppressMessages({
@@ -54,13 +62,30 @@ cat("[deseq2] Starting pipeline (SCI style v2026-05-25)\n")
 
 # Read params
 params <- fromJSON(file.path(job_dir, "params.json"))
-normalize_design_col <- function(x) {
-  x <- trimws(as.character(x %||% "condition"))
-  x <- sub("^~\\s*", "", x)
-  if (!nzchar(x)) "condition" else x
+# design 公式解析（BLOCK-146 C#6）：R 公式 → 因子项向量。
+#   "~ batch + condition" → c("batch", "condition")；单列旧形态向后兼容；
+#   缺 "~" 的多因子、非法公式符号（数字列名等）fail-closed（中文可操作消息）。
+parse_design_terms <- function(x) {
+  x <- trimws(as.character(x %||% ""))
+  if (!nzchar(x)) return("condition")
+  if (!grepl("^~", x) && grepl("+", x, fixed = TRUE)) {
+    stop("[deseq2] design 公式 '", x, "' 缺少 '~' 前缀。多因子设计请使用 R 公式语法，"
+      "如 '~ batch + condition'（协变量在前、分组列在最后）。", call. = FALSE)
+  }
+  terms <- trimws(strsplit(sub("^~[[:space:]]*", "", x), "+", fixed = TRUE)[[1]])
+  terms <- terms[nzchar(terms)]
+  if (length(terms) == 0) return("condition")
+  invalid <- terms[!grepl("^[A-Za-z.][A-Za-z0-9._]*$", terms)]
+  if (length(invalid) > 0) {
+    stop("[deseq2] design 公式项 '", paste(invalid, collapse = "', '"),
+      "' 不是合法的 R 公式符号（数字列名（如 '2024'）等须在 coldata 中改名后使用）。", call. = FALSE)
+  }
+  terms
 }
 
-design_col <- normalize_design_col(params$design %||% params$design_col %||% "condition")
+design_terms <- parse_design_terms(params$design %||% params$design_col %||% "condition")
+design_col <- design_terms[length(design_terms)]
+design_formula_text <- paste0("~ ", paste(design_terms, collapse = " + "))
 ref <- params$contrast_ref %||% params$ref %||% "Control"
 treat <- params$contrast_treat %||% params$treat %||% "Treatment"
 padj_cut <- as.numeric(params$padj_cutoff %||% params$padj_threshold %||% 0.05)
@@ -104,13 +129,14 @@ if (length(aligned) == 0) {
 }
 cat(sprintf("[deseq2] Preflight: %d/%d counts 列名与 coldata 行名对齐\n", length(aligned), ncol(counts_raw)))
 
-# Preflight 2: design column must exist
-if (!design_col %in% colnames(coldata_raw)) {
+# Preflight 2: every design term must exist in coldata（逐项 fail-closed）
+missing_terms <- design_terms[!design_terms %in% colnames(coldata_raw)]
+if (length(missing_terms) > 0) {
   available <- paste(colnames(coldata_raw), collapse=", ")
   stop(paste0(
-    "[deseq2] design 列 '", design_col, "' 不存在于 coldata。",
+    "[deseq2] design 公式项 '", paste(missing_terms, collapse="', '"), "' 不存在于 coldata。",
     "可用的列名: ", available,
-    "。请在 Job 参数中设置正确的 design 列名，或确保 coldata 包含 '", design_col, "' 列。"
+    "。请在 Job 参数中设置正确的 design 公式，或确保 coldata 包含所需列。"
   ))
 }
 
@@ -145,7 +171,7 @@ if (any(round(counts_raw) < 0)) {
 }
 
 cat(sprintf("[deseq2] Preflight passed: %d samples (%s=%d, %s=%d), design='%s'\n",
-  ncol(counts_raw), ref, n_ref, treat, n_treat, design_col))
+  ncol(counts_raw), ref, n_ref, treat, n_treat, design_formula_text))
 
 # Apply sample alignment
 counts <- counts_raw[, aligned, drop = FALSE]
@@ -156,6 +182,10 @@ counts <- round(counts)
 storage.mode(counts) <- "integer"
 
 coldata[[design_col]] <- factor(coldata[[design_col]], levels = c(ref, treat))
+# 多因子：其余 design 项（协变量）转 factor——DESeq2 的 design 变量不许 character
+for (term in design_terms[design_terms != design_col]) {
+  if (is.character(coldata[[term]])) coldata[[term]] <- factor(coldata[[term]])
+}
 
 # Filter low-expression genes
 keep <- rowSums(counts >= min_count) >= ncol(counts) * 0.3
@@ -165,7 +195,7 @@ cat(sprintf("[deseq2] Samples: %d, Genes after filter: %d\n", ncol(counts), nrow
 
 # DESeq2
 dds <- DESeqDataSetFromMatrix(countData = counts, colData = coldata,
-                               design = as.formula(paste0("~ ", design_col)))
+                               design = as.formula(design_formula_text))
 dds <- DESeq(dds)
 res <- results(dds, contrast = c(design_col, treat, ref))
 res_shrink <- lfcShrink(dds, coef = paste0(design_col, "_", treat, "_vs_", ref), type = "apeglm", quiet = TRUE)
@@ -409,7 +439,7 @@ if (file.exists(template_path)) {
   report_html <- gsub("{{SIG_GENES}}", as.character(nrow(sig)), report_html, fixed = TRUE)
   report_html <- gsub("{{UP}}", as.character(n_up), report_html, fixed = TRUE)
   report_html <- gsub("{{DOWN}}", as.character(n_down), report_html, fixed = TRUE)
-  report_html <- gsub("{{DESIGN}}", design_col, report_html, fixed = TRUE)
+  report_html <- gsub("{{DESIGN}}", design_formula_text, report_html, fixed = TRUE)
   report_html <- gsub("{{REF}}", ref, report_html, fixed = TRUE)
   report_html <- gsub("{{TREAT}}", treat, report_html, fixed = TRUE)
   report_html <- gsub("{{PADJ}}", formatC(padj_cut, format = "g"), report_html, fixed = TRUE)

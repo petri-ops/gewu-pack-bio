@@ -22,10 +22,10 @@
     },
     {
       "id": "design",
-      "label": "设计公式（design 列名）",
+      "label": "设计公式（R 公式，如 ~ batch + condition）",
       "type": "text",
       "default": "condition",
-      "hint": "默认 'condition'，与 coldata.csv 中的列名一致"
+      "hint": "R 公式语法：协变量在前、分组列在最后（最后一项为 contrast 列，限两水平）；单列名（如 condition）向后兼容"
     },
     {
       "id": "contrast_ref",
@@ -285,11 +285,19 @@
     },
     {
       "code": "design_column_missing",
-      "title": "design 列不存在",
-      "description": "传入的 design 列名在 coldata 中不存在。R 脚本不再静默回退。",
+      "title": "design 公式项不存在",
+      "description": "design 公式中的因子项（列名）在 coldata 中不存在。R 脚本不再静默回退。",
       "recoverable": true,
-      "suggestedFix": "检查 coldata 的列名，在 Job 参数中设置正确的 design 列名。",
-      "detect": "design 列.*不存在|design column.*not found|可用的列名"
+      "suggestedFix": "检查 coldata 的列名，在 Job 参数中设置正确的 design 公式（如 ~ batch + condition）。",
+      "detect": "design 公式项.*不存在|design 列.*不存在|design column.*not found|可用的列名"
+    },
+    {
+      "code": "design_formula_invalid",
+      "title": "design 公式非法",
+      "description": "design 不是合法的 R 公式：多因子缺 '~' 前缀，或公式项是非法符号（如数字列名 '2024'）。",
+      "recoverable": true,
+      "suggestedFix": "使用 R 公式语法（协变量在前、分组列在最后），数字列名须在 coldata 中改名后使用。",
+      "detect": "缺少 '~' 前缀|不是合法的 R 公式符号"
     },
     {
       "code": "contrast_level_missing",
