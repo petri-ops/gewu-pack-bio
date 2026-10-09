@@ -98,3 +98,19 @@ test('deseq2.R injects the DEG results table', () => {
     'deseq2.R should replace the {{DEG_TABLE}} token with <tr> rows built from sig'
   );
 });
+
+// ── 3. 报告图缺位兜底（BLOCK-150 C 轨 ⑬ — B7 复核补录）─────────
+// 本地 PNG 缺位时，demo 锚点 URL 原样留在报告中（deseq2.R 仅在文件存在时
+// 才替换为 data URI）。desktop 报告预览 iframe 为 sandbox="allow-same-origin"
+// （脚本禁用），模板内联 onerror 不会触发——兜底只能走纯 CSS：把未被替换
+// 的 demo URL 呈现为虚线占位框 + 缺位说明文案。
+test('report template carries CSS fallback for unsubstituted demo plot URLs', () => {
+  assert.ok(
+    template.includes('img[src^="https://biof3.com/"]'),
+    'template missing the attribute-selector fallback for unsubstituted demo plot URLs'
+  );
+  assert.ok(
+    template.includes('该图表在本次运行中缺位'),
+    'template missing the explanatory copy for the missing-plot fallback'
+  );
+});

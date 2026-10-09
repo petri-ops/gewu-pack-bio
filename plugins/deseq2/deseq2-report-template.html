@@ -49,6 +49,26 @@
   .deg-table .down { color: var(--warn); font-weight: 600; }
   .deg-table .more { text-align: center; color: var(--muted); font-style: italic; }
   .footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 11px; color: var(--muted); }
+  /* ── 报告图缺位兜底（BLOCK-150 C 轨 ⑬）────────────────────────────
+     https://biof3.com/... 锚点 URL 会在运行时被 deseq2.R 替换为本地 PNG 的
+     base64 data URI；若某张图缺位（未生成/生成失败），锚点 URL 原样保留，
+     下方的属性选择器把它呈现为虚线占位框与说明文案。纯 CSS 实现：desktop
+     报告预览 iframe 为 sandbox="allow-same-origin"（脚本禁用），模板内联
+     onerror 不会触发，只能走样式兜底。data URI 替换后选择器不再命中，
+     正常图零影响。 */
+  img[src^="https://biof3.com/"] {
+    min-height: 88px;
+    border: 1px dashed var(--warn) !important; /* 压过 img 内联 style 的实线边框 */
+    background: var(--surface);
+    color: var(--muted);
+    font-size: 13px;
+    padding: 10px 14px;
+  }
+  img[src^="https://biof3.com/"]::before {
+    content: "⚠ 该图表在本次运行中缺位——未生成对应图片文件，此处不展示示例占位图。可重跑工具补全；差异基因明细见下表与 deg_table.csv。";
+    display: block;
+    margin-bottom: 6px;
+  }
   </style>
 </head>
 <body>

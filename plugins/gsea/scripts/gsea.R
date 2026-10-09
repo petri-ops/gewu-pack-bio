@@ -17,6 +17,23 @@
 #   - waterfall 配色: biof3_palette_div(2 极) 红激活 / 蓝抑制
 # ============================================================
 
+# ---- 缺包守卫（BLOCK-150 ⑦；对照 deg-standardizer 运行时检查范式：缺什么+怎么补）----
+required_pkgs <- c("clusterProfiler", "enrichplot", "ggplot2", "jsonlite", "DOSE")
+missing_pkgs <- required_pkgs[!vapply(required_pkgs, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing_pkgs) > 0) {
+  stop(sprintf(
+    paste0(
+      "[gsea] 缺少必需的 R 包：%s。\n",
+      "请补装后重试——CRAN 包执行 install.packages(c(%s))；",
+      "Bioconductor 包（clusterProfiler/enrichplot/DOSE/org.*.eg.db 等）执行 BiocManager::install(c(%s))。\n",
+      "插件完整依赖清单见 environment.json。"
+    ),
+    paste(missing_pkgs, collapse = ", "),
+    paste0('"', missing_pkgs, '"', collapse = ", "),
+    paste0('"', missing_pkgs, '"', collapse = ", ")
+  ))
+}
+
 suppressMessages({
   library(clusterProfiler)
   library(enrichplot)
@@ -92,10 +109,16 @@ cat(sprintf("  organism=%s, gene_set=%s, size %d-%d\n",
             organism, gene_set, min_size, max_size))
 
 if (organism == "mmu") {
+  if (!requireNamespace("org.Mm.eg.db", quietly = TRUE)) {
+    stop("[gsea] 缺少必需的 R 包：org.Mm.eg.db（mouse 注释数据库）。请执行 BiocManager::install(\"org.Mm.eg.db\") 后重试。")
+  }
   suppressMessages(library(org.Mm.eg.db))
   orgdb <- org.Mm.eg.db
   kegg_org <- "mmu"
 } else {
+  if (!requireNamespace("org.Hs.eg.db", quietly = TRUE)) {
+    stop("[gsea] 缺少必需的 R 包：org.Hs.eg.db（human 注释数据库）。请执行 BiocManager::install(\"org.Hs.eg.db\") 后重试。")
+  }
   suppressMessages(library(org.Hs.eg.db))
   orgdb <- org.Hs.eg.db
   kegg_org <- "hsa"
@@ -201,6 +224,11 @@ if (gene_set == "GO_BP") {
     run_kegg_gsea(entrez_list, kegg_org, min_size, max_size),
     error = function(e) { cat(sprintf("  gseKEGG failed: %s\n", e$message)); NULL })
 } else if (gene_set == "Hallmark") {
+  # 守卫先于 tryCatch：msigdbr 缺包若落进 tryCatch 会静默降级成「无显著富集」，
+  # 用户无从知道是基因集来源缺失而非生物学结论（BLOCK-150 ⑦）。
+  if (!requireNamespace("msigdbr", quietly = TRUE)) {
+    stop("[gsea] 缺少必需的 R 包：msigdbr（Hallmark 基因集来源）。请执行 install.packages(\"msigdbr\") 后重试。")
+  }
   tryCatch({
     suppressMessages(library(msigdbr))
     species_name <- if (organism == "mmu") "Mus musculus" else "Homo sapiens"

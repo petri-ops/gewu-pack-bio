@@ -9,6 +9,23 @@
 # 输出: 火山图 PNG/PDF + 分类结果表 CSV
 # ============================================================
 
+# ---- 缺包守卫（BLOCK-150 ⑦；对照 deg-standardizer 运行时检查范式：缺什么+怎么补）----
+required_pkgs <- c("ggplot2", "ggrepel", "jsonlite")
+missing_pkgs <- required_pkgs[!vapply(required_pkgs, requireNamespace, logical(1), quietly = TRUE)]
+if (length(missing_pkgs) > 0) {
+  stop(sprintf(
+    paste0(
+      "[volcano-plot] 缺少必需的 R 包：%s。\n",
+      "请补装后重试——CRAN 包执行 install.packages(c(%s))；",
+      "Bioconductor 包（clusterProfiler/enrichplot/DOSE/org.*.eg.db 等）执行 BiocManager::install(c(%s))。\n",
+      "插件完整依赖清单见 environment.json。"
+    ),
+    paste(missing_pkgs, collapse = ", "),
+    paste0('"', missing_pkgs, '"', collapse = ", "),
+    paste0('"', missing_pkgs, '"', collapse = ", ")
+  ))
+}
+
 suppressMessages({
   library(ggplot2)
   library(ggrepel)
