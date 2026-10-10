@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "biof3://plugins/cellchat/input.schema.json",
+  "$id": "petri://plugins/cellchat/input.schema.json",
   "title": "cellchat input schema",
-  "description": "JSON schema for params.json passed to cellchat.R via BioF3 dispatcher. Compatible with biof3-r-runtime CellChat>=1.6.0 + Seurat>=5.0.",
+  "description": "JSON schema for params.json passed to cellchat.R via Petri dispatcher. Compatible with petri-r-runtime CellChat>=1.6.0 + Seurat>=5.0.",
   "type": "object",
   "additionalProperties": true,
   "required": ["seurat_rds", "cell_type_col"],

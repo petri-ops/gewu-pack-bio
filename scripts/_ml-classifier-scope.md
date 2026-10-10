@@ -6,7 +6,7 @@
 
 ## Version targeted
 
-- BioF3 R 容器: `R 4.5.x`
+- Petri R 容器: `R 4.5.x`
 - 关键包: `caret` / `glmnet` / `e1071` / `randomForest` / `xgboost` / `pROC`
 
 ## Canonical workflow source

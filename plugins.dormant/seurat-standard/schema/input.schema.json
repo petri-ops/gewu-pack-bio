@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "biof3://plugins/seurat-standard/input.schema.json",
+  "$id": "petri://plugins/seurat-standard/input.schema.json",
   "title": "seurat-standard input schema",
-  "description": "JSON schema for params.json passed to seurat-standard.R via BioF3 dispatcher. Compatible with biof3-r-runtime Seurat>=5.0.0 + SeuratObject>=5.0.0.",
+  "description": "JSON schema for params.json passed to seurat-standard.R via Petri dispatcher. Compatible with petri-r-runtime Seurat>=5.0.0 + SeuratObject>=5.0.0.",
   "type": "object",
   "additionalProperties": true,
   "required": ["matrix_file"],

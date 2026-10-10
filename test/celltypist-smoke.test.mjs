@@ -73,7 +73,7 @@ test('environment.json 存在且 packages.python 至少含 scanpy + anndata + ce
   assert.ok(env.packages.python.scanpy, 'environment.json packages.python.scanpy missing');
   assert.ok(env.packages.python.anndata, 'environment.json packages.python.anndata missing');
   assert.ok(env.packages.python.celltypist, 'environment.json packages.python.celltypist missing');
-  // celltypist 不是 biof3-py-runtime 已装包 → environment.json 必须显式 declares
+  // celltypist 不是 petri-py-runtime 已装包 → environment.json 必须显式 declares
   assert.equal(env.packages.python.celltypist, '>=1.6', 'celltypist must be >=1.6');
   // 标记 requiresBootstrap
   assert.ok(env.policy.requiresBootstrap.includes('celltypist'),
@@ -102,7 +102,7 @@ test('install.json 存在且声明 pip-bootstrap 触发 celltypist install', () 
   const i = JSON.parse(readFileSync(path, 'utf8'));
   assert.equal(i.schemaVersion, 1, 'install.json schemaVersion mismatch');
   assert.equal(i.pluginId, 'celltypist');
-  // celltypist 不在 biof3-py-runtime → install.json 必须是 pip-bootstrap
+  // celltypist 不在 petri-py-runtime → install.json 必须是 pip-bootstrap
   assert.equal(i.policy, 'pip-bootstrap', 'install policy must be pip-bootstrap (celltypist extension)');
   assert.ok(Array.isArray(i.steps) && i.steps.length > 0,
     'install.steps must contain pip-install step');
@@ -110,8 +110,8 @@ test('install.json 存在且声明 pip-bootstrap 触发 celltypist install', () 
   assert.equal(step.kind, 'pip-install', 'install step must be pip-install');
   assert.equal(step.package, 'celltypist', 'install package must be celltypist');
   assert.ok(step.versionSpec.includes('1.6'), 'versionSpec must pin >=1.6');
-  assert.equal(step.installInRuntime, true, 'install must be in biof3-py-runtime');
-  assert.equal(step.runtime, 'biof3-py-runtime', 'install target must be biof3-py-runtime');
+  assert.equal(step.installInRuntime, true, 'install must be in petri-py-runtime');
+  assert.equal(step.runtime, 'petri-py-runtime', 'install target must be petri-py-runtime');
 });
 
 test('scripts/celltypist.py 存在且为合法 Python 入口', () => {
@@ -123,7 +123,7 @@ test('scripts/celltypist.py 存在且为合法 Python 入口', () => {
   assert.ok(body.startsWith('#!/usr/bin/env python3'), 'should have shebang');
   assert.ok(
     body.includes('sys.argv[1]') || body.includes('commandArgs'),
-    'should honor BioF3 dispatcher contract'
+    'should honor Petri dispatcher contract'
   );
   assert.ok(
     body.includes('_canonicalize_png') && body.includes('Pillow'),
@@ -235,7 +235,7 @@ test('placeholder PNG 存在且 > 200 bytes（hash rewrite 后稳定输出）', 
   // 2nd run via the generator script (write+rewrite)
   const { execSync } = require('node:child_process');
   // BLOCK-83 P4 跨平台：Windows 用 PATH 上的 python
-  const PYTHON = process.platform === 'win32' ? 'python' : '/Applications/anaconda3/envs/biof3-py-runtime/bin/python3';
+  const PYTHON = process.platform === 'win32' ? 'python' : '/Applications/anaconda3/envs/petri-py-runtime/bin/python3';
   execSync(PYTHON + ' ' +
     resolve(pluginDir, 'tools/figures/generate_placeholder_figure.py'), { stdio: 'ignore' });
   const h2 = createHash('sha256').update(readFileSync(path)).digest('hex');
@@ -272,7 +272,7 @@ test('README.md 存在且包含 G0 阶段纪律用语（"dev Electron 边界内 
   // 必须显式声明 celltypist 是 extension package (PyPI bootstrap)
   assert.ok(
     body.includes('celltypist') && (body.includes('PyPI') || body.includes('bootstrap') || body.includes('install.json')),
-    'README.md must declare celltypist as PyPI bootstrap extension (not in biof3-py-runtime baseline)'
+    'README.md must declare celltypist as PyPI bootstrap extension (not in petri-py-runtime baseline)'
   );
 });
 
@@ -335,7 +335,7 @@ test('plugin.json 与 environment.json 的 packages.python 完全一致（含 ce
   }
 });
 
-test('celltypist 既不是 biof3-py-runtime 基础包, install.json 必须 bootstrap', () => {
+test('celltypist 既不是 petri-py-runtime 基础包, install.json 必须 bootstrap', () => {
   // py-runtime-requirements.txt 不应包含 celltypist
   const pyReq = readFileSync(
     resolve(repoRoot, 'plugins/py-runtime-requirements.txt'),
@@ -343,7 +343,7 @@ test('celltypist 既不是 biof3-py-runtime 基础包, install.json 必须 boots
   );
   assert.ok(
     !/^celltypist\s*>=/m.test(pyReq),
-    'biof3-py-runtime-requirements.txt must NOT include celltypist (celltypist is an extension package)'
+    'petri-py-runtime-requirements.txt must NOT include celltypist (celltypist is an extension package)'
   );
   // install.json 必须声明 pip-bootstrap
   const install = JSON.parse(readFileSync(resolve(pluginDir, 'install.json'), 'utf8'));

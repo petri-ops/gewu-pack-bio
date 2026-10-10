@@ -34,8 +34,8 @@ job_dir   <- args[1]
 output_dir <- file.path(job_dir, "output")
 dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
 
-# ★ Load BioF3 SCI 主题 (提供 theme_biof3 / ggsave_biof3 / save_grid_biof3)
-source(file.path(job_dir, "_biof3-theme.R"))
+# ★ Load Petri SCI 主题 (提供 theme_petri / ggsave_petri / save_grid_petri)
+source(file.path(job_dir, "_petri-theme.R"))
 
 cat("[__TOOL_ID__] Starting pipeline\n")
 
@@ -58,16 +58,16 @@ params <- fromJSON(file.path(job_dir, "params.json"))
 # ============================================================
 # 3. 可视化 (双格式 PNG + PDF, 遵守 4 条死规则)
 # ============================================================
-# --- 3a. ggplot 系图: ggsave_biof3() ---
+# --- 3a. ggplot 系图: ggsave_petri() ---
 # p <- ggplot(df, aes(x, y)) +
 #   geom_point() +
-#   theme_biof3() +
-#   scale_color_manual(values = biof3_palette(n))
-# ggsave_biof3(p, "result_scatter", width = 6, height = 4.5)
+#   theme_petri() +
+#   scale_color_manual(values = petri_palette(n))
+# ggsave_petri(p, "result_scatter", width = 6, height = 4.5)
 #
-# --- 3b. grid 系图 (ComplexHeatmap / pheatmap / base R): save_grid_biof3() ---
-# save_grid_biof3("result_heatmap", width = 6, height = 4.5, expr = {
-#   pheatmap(mat, color = biof3_palette_div(100))
+# --- 3b. grid 系图 (ComplexHeatmap / pheatmap / base R): save_grid_petri() ---
+# save_grid_petri("result_heatmap", width = 6, height = 4.5, expr = {
+#   pheatmap(mat, color = petri_palette_div(100))
 # })
 
 # ============================================================

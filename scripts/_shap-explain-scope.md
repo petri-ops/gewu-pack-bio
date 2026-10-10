@@ -6,7 +6,7 @@
 
 ## Version targeted
 
-- BioF3 R 容器: `R 4.5.x`
+- Petri R 容器: `R 4.5.x`
 - 关键包: `iml` (kernel SHAP) / 各模型包
 
 ## Canonical workflow source

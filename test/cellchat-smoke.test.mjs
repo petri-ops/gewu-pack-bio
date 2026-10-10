@@ -115,7 +115,7 @@ test('scripts/cellchat.R 存在且为合法 R 入口', () => {
   assert.ok(body.startsWith('#!/usr/bin/env Rscript'), 'should have shebang');
   assert.ok(
     body.includes('commandArgs') && body.includes('job_dir'),
-    'should honor BioF3 dispatcher contract (commandArgs trailingOnly = TRUE)'
+    'should honor Petri dispatcher contract (commandArgs trailingOnly = TRUE)'
   );
   assert.ok(
     body.includes('canonicalize_png') && body.includes('png::writePNG'),

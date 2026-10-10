@@ -10,15 +10,15 @@
   6. UMAP (基于 latent) + 按 batch 着色
   7. 落盘: 8 outputs + training_loss + report.html
 
-契约 (BioF3 调度器):
+契约 (Petri 调度器):
   - sys.argv[1] = job_dir (含 params.json + input file)
   - 输出全部写入 job_dir/output/
   - PNG 通过 PIL.Image.save 重写以稳定 hash (与 R png::writePNG 同义)
 
 G0 阶段纪律:
-  - 仅以 dev Electron 边界内 Python runtime 跑 scvi-tools 1.0+ (biof3-py-runtime + pip install)
+  - 仅以 dev Electron 边界内 Python runtime 跑 scvi-tools 1.0+ (petri-py-runtime + pip install)
   - 不触发 packaged / Provider / GA / dist staleness (G1+)
-  - 不修改 biof3-py-runtime 制品本身；额外依赖走 install.json 步骤
+  - 不修改 petri-py-runtime 制品本身；额外依赖走 install.json 步骤
   - CPU 模式避免触发 GPU 依赖链
 """
 
@@ -54,7 +54,7 @@ def _canonicalize_png(path: Path) -> None:
 
 
 def _read_params(job_dir: Path) -> dict:
-    """读取 BioF3 调度器塞进 job_dir 的 params.json.
+    """读取 Petri 调度器塞进 job_dir 的 params.json.
 
     关键字段 (与 tool-definition.json 对齐):
       - batch_key (str, default "batch")
@@ -135,7 +135,7 @@ class _LossTracker:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="scvi-tools plugin entry")
-    parser.add_argument("job_dir", help="BioF3 Job 目录")
+    parser.add_argument("job_dir", help="Petri Job 目录")
     args = parser.parse_args()
     job_dir = Path(args.job_dir).resolve()
 
@@ -183,8 +183,8 @@ def main() -> int:
         import matplotlib.pyplot as plt  # noqa: F401
     except ImportError as exc:
         msg = (
-            f"[scvi-tools] biof3-py-runtime 缺少 scvi-tools>=1.0 / torch>=2.0: {exc}。"
-            "请在 biof3-py-runtime venv 内部执行 install.json 步骤："
+            f"[scvi-tools] petri-py-runtime 缺少 scvi-tools>=1.0 / torch>=2.0: {exc}。"
+            "请在 petri-py-runtime venv 内部执行 install.json 步骤："
             "`pip install scvi-tools torch`。"
         )
         print(msg, file=sys.stderr)
@@ -452,7 +452,7 @@ def main() -> int:
         "<li><code>qc_summary.csv</code> — QC summary</li>"
         "</ul>"
         "<p style=\"color:#666;font-size:12px;margin-top:24px;\">"
-        "G0 dev Electron 边界内 verified · biof3-py-runtime + scvi-tools≥1.0 + torch ≥2.0 (CPU) · "
+        "G0 dev Electron 边界内 verified · petri-py-runtime + scvi-tools≥1.0 + torch ≥2.0 (CPU) · "
         "PHASE 1 BLOCK-11 SUB-1.5</p>"
         "</body></html>"
     )

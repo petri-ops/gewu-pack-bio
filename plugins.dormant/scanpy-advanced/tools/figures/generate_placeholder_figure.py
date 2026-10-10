@@ -5,7 +5,7 @@ This produces a single 1×1 PNG that is then read + re-saved via Pillow
 on the R side, Pillow Image.save on the Python side).
 
 Run:
-    /path/to/biof3-py-runtime/bin/python3 generate_placeholder_figure.py
+    /path/to/petri-py-runtime/bin/python3 generate_placeholder_figure.py
 
 Idempotent: re-running produces byte-identical output (modulo the read+save
 hash-rewrite loop), so the file's sha256 stays stable for Result Studio

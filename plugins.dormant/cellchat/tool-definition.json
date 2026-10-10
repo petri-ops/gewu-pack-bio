@@ -111,9 +111,9 @@
     {
       "code": "runtime_not_ready",
       "title": "R 运行时缺包（CellChat / igraph / ComplexHeatmap / NMF）",
-      "description": "biof3-r-runtime 未装 CellChat 或其依赖（igraph / ComplexHeatmap / circlize / NMF / ggalluvial）；脚本会 fail-fast 并给出 install 指引。",
+      "description": "petri-r-runtime 未装 CellChat 或其依赖（igraph / ComplexHeatmap / circlize / NMF / ggalluvial）；脚本会 fail-fast 并给出 install 指引。",
       "recoverable": true,
-      "suggestedFix": "执行 install.json 中的 BiocManager::install('CellChat') 一次性补齐；或在 biof3-r-runtime 路径前缀下运行 install.sh。CellChat 安装体积较大（~120MB 含数据库），按需在 r-spatial bundle 内预置。",
+      "suggestedFix": "执行 install.json 中的 BiocManager::install('CellChat') 一次性补齐；或在 petri-r-runtime 路径前缀下运行 install.sh。CellChat 安装体积较大（~120MB 含数据库），按需在 r-spatial bundle 内预置。",
       "detect": "there is no package called .CellChat. \\| ImportError .* CellChat \\| biocLite \\| ModuleNotFoundError"
     },
     {

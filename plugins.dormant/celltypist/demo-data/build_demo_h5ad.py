@@ -8,7 +8,7 @@ e3d6c0f0226479e52c5e8d8d03e2be392466766d25d07c326d0cd0982e2c35bc); we re-build
 here with a separate codepath so celltypist fixture stays self-contained.
 
 Run:
-    /Applications/anaconda3/envs/biof3-py-runtime/bin/python3 resources/built-in-plugins/celltypist/demo-data/build_demo_h5ad.py
+    /Applications/anaconda3/envs/petri-py-runtime/bin/python3 resources/built-in-plugins/celltypist/demo-data/build_demo_h5ad.py
 
 Idempotent: re-running produces byte-identical output (relies on deterministic
 RNG seed=42, no time/pickle metadata).
@@ -28,7 +28,7 @@ def build() -> Path:
         import anndata as ad
         import pandas as pd
     except ImportError as exc:
-        print(f"[demo-data build] biof3-py-runtime missing dependency: {exc}", file=sys.stderr)
+        print(f"[demo-data build] petri-py-runtime missing dependency: {exc}", file=sys.stderr)
         print("[demo-data build] Run within an environment with anndata installed.", file=sys.stderr)
         sys.exit(1)
 

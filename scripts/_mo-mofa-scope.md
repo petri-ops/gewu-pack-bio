@@ -6,7 +6,7 @@
 
 ## Version targeted
 
-- BioF3 R 容器: `R 4.5.x`
+- Petri R 容器: `R 4.5.x`
 - 关键包: `MOFA2`（Bioconductor）
 
 ## Canonical workflow source

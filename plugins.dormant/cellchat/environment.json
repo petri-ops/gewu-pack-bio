@@ -31,6 +31,6 @@
     "recordPackageVersions": true,
     "recordRuntimeVersion": true,
     "cellchatDbPrefetch": true,
-    "comment": "CellChat 本体不在 biof3-r-runtime 显式清单（r-runtime-packages.txt 26 包）；通过 install.json 的 BiocManager::install('CellChat') 一次性补齐；运行时不访问外部网络（CellChatDB.human/mouse 已随 CellChat 包内置）。"
+    "comment": "CellChat 本体不在 petri-r-runtime 显式清单（r-runtime-packages.txt 26 包）；通过 install.json 的 BiocManager::install('CellChat') 一次性补齐；运行时不访问外部网络（CellChatDB.human/mouse 已随 CellChat 包内置）。"
   }
 }

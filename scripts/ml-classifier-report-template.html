@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ML 分类器 - 结果解读报告 | BioF3</title>
+  <title>ML 分类器 - 结果解读报告 | Petri</title>
   <style>
   :root { --text: #17201d; --muted: #5c6b64; --border: #dfe8e3; --surface: #f8faf9; --primary: #2e8555; --code-bg: #f4f7f5; --warn: #d97706; --info: #2563eb; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -34,7 +34,7 @@
   .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px; text-align: center; }
   .stat-card .value { font-size: 22px; font-weight: 700; color: var(--primary); }
   .stat-card .label { font-size: 12px; color: var(--muted); margin-top: 4px; }
-  .biof3-wm { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27300%27 height=%27200%27%3E%3Ctext x=%2750%25%27 y=%2750%25%27 dominant-baseline=%27middle%27 text-anchor=%27middle%27 font-family=%27Arial%27 font-size=%2728%27 font-weight=%27800%27 fill=%27%232e8555%27 opacity=%270.04%27 transform=%27rotate(-25 150 100)%27%3EBioF3%3C/text%3E%3Ctext x=%2750%25%27 y=%2770%25%27 dominant-baseline=%27middle%27 text-anchor=%27middle%27 font-family=%27Arial%27 font-size=%2710%27 font-weight=%27700%27 fill=%27%232e8555%27 opacity=%270.035%27 transform=%27rotate(-25 150 100)%27%3ESHENGXIN F3%3C/text%3E%3C/svg%3E"); }
+  .petri-wm { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27300%27 height=%27200%27%3E%3Ctext x=%2750%25%27 y=%2750%25%27 dominant-baseline=%27middle%27 text-anchor=%27middle%27 font-family=%27Arial%27 font-size=%2728%27 font-weight=%27800%27 fill=%27%232e8555%27 opacity=%270.04%27 transform=%27rotate(-25 150 100)%27%3EPetri%3C/text%3E%3Ctext x=%2750%25%27 y=%2770%25%27 dominant-baseline=%27middle%27 text-anchor=%27middle%27 font-family=%27Arial%27 font-size=%2710%27 font-weight=%27700%27 fill=%27%232e8555%27 opacity=%270.035%27 transform=%27rotate(-25 150 100)%27%3ESHENGXIN F3%3C/text%3E%3C/svg%3E"); }
   .nav-wrap { position: fixed; left: 0; top: 0; bottom: 0; width: 200px; background: #f8faf9; border-right: 1px solid #dfe8e3; padding: 20px 12px; overflow-y: auto; font-size: 12px; z-index: 50; transition: transform .2s; box-shadow: 2px 0 8px rgba(0,0,0,.06); }
   .nav-wrap.hidden { transform: translateX(-100%); box-shadow: none; }
   .nav-toggle { position: fixed; left: 8px; top: 8px; z-index: 60; background: #fff; border: 1px solid #dfe8e3; border-radius: 4px; width: 28px; height: 28px; cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; }
@@ -46,15 +46,15 @@
 </head>
 <body>
 <button class="nav-toggle" onclick="var n=document.querySelector('.nav-wrap'),r=document.querySelector('.report');n.classList.toggle('hidden');r.classList.toggle('full');this.textContent=n.classList.contains('hidden')?'☰':'✕'" title="切换目录">☰</button>
-<div class="biof3-wm" aria-hidden="true"></div>
+<div class="petri-wm" aria-hidden="true"></div>
 <nav class="nav-wrap" id="reportNav"><div class="nav-title">目录</div></nav>
 
 <div class="report">
 
 <header class="report-header">
-  <div class="eyebrow">BioF3 分析工具 · 结果解读报告</div>
+  <div class="eyebrow">Petri 分析工具 · 结果解读报告</div>
   <h1>ML 分类器（4 算法对比）</h1>
-  <p class="meta">工具版本：caret / glmnet / e1071 / randomForest / xgboost · 报告模板 v1.0 · 生成于 BioF3 在线分析平台</p>
+  <p class="meta">工具版本：caret / glmnet / e1071 / randomForest / xgboost · 报告模板 v1.0 · 生成于 Petri 在线分析平台</p>
 </header>
 
 <!-- ============================================================ -->
@@ -162,12 +162,12 @@ model was saved as an RDS object for downstream SHAP analysis.
   <li>Kuhn M. Building Predictive Models in R Using the caret Package. <em>JSS</em>. 2008;28(5):1-26.</li>
   <li>Chen T, Guestrin C. XGBoost: A Scalable Tree Boosting System. <em>KDD</em>. 2016.</li>
   <li>Robin X, et al. pROC: an open-source package for R to analyze and compare ROC curves. <em>BMC Bioinformatics</em>. 2011;12:77.</li>
-  <li><a href="https://biof3.com/docs/ml/module02">BioF3 教程：机器学习分类器</a></li>
+  <li><a href="https://petri.com/docs/ml/module02">Petri 教程：机器学习分类器</a></li>
 </ul>
 
 <div class="footer">
-  <p>本报告由 BioF3 在线分析平台自动生成，仅供学习参考。如需用于正式发表，请结合实际数据和实验设计进行调整。</p>
-  <p>BioF3 - AI 陪伴的全组学学习与实战平台 · <a href="https://biof3.com">biof3.com</a></p>
+  <p>本报告由 Petri 在线分析平台自动生成，仅供学习参考。如需用于正式发表，请结合实际数据和实验设计进行调整。</p>
+  <p>Petri - AI 陪伴的全组学学习与实战平台 · <a href="https://petri.com">petri.com</a></p>
 </div>
 
 </div><!-- /.report -->

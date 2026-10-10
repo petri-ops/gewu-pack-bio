@@ -6,7 +6,7 @@
 # Output: fused network heatmap / subtype assignment / eigen-gap /
 #         NMI+ARI validation (if known_labels provided)
 #
-# BioF3 SCI visual style: theme_biof3(), biof3_palette(), ggsave_biof3()
+# Petri SCI visual style: theme_petri(), petri_palette(), ggsave_petri()
 # ============================================================
 
 suppressMessages({
@@ -35,7 +35,7 @@ job_dir <- args[1]
 output_dir <- file.path(job_dir, "output")
 dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
 
-source(file.path(job_dir, "_biof3-theme.R"))
+source(file.path(job_dir, "_petri-theme.R"))
 
 cat("[mo-snf] Starting SNF multi-omics fusion (SCI style)\n")
 
@@ -146,8 +146,8 @@ cat("[mo-snf] Plotting fused network heatmap...\n")
 ord <- order(clusters)
 W_ord <- W_fused[ord, ord]
 
-hm_pal <- biof3_palette_seq(100, option = "ylorbr")
-save_grid_biof3(file.path(output_dir, "fused_network_heatmap"), width = 7, height = 6, expr = {
+hm_pal <- petri_palette_seq(100, option = "ylorbr")
+save_grid_petri(file.path(output_dir, "fused_network_heatmap"), width = 7, height = 6, expr = {
   pheatmap(W_ord,
            color = hm_pal,
            border_color = NA,
@@ -176,8 +176,8 @@ p_egap <- ggplot(egap_df, aes(x = k, y = gap)) +
   annotate("text", x = optimal_k, y = max(egap, na.rm = TRUE) * 0.9,
            label = paste("Optimal k =", optimal_k), color = "#ef4444", hjust = -0.1) +
   labs(title = "Eigen-gap (Spectral Clustering)", x = "k (clusters)", y = "Eigen-gap") +
-  theme_biof3()
-ggsave_biof3(p_egap, file.path(output_dir, "eigen_gap"), width = 6, height = 4.5)
+  theme_petri()
+ggsave_petri(p_egap, file.path(output_dir, "eigen_gap"), width = 6, height = 4.5)
 
 # ============================================================
 # NMI / ARI validation (if known_labels provided)

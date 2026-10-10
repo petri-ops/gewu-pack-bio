@@ -237,7 +237,7 @@ render_contract <- list(
 )
 render_contract_json <- toJSON(render_contract, auto_unbox = TRUE, null = "null")
 ggsave("volcano.png", p, width = plot_width, height = plot_height, dpi = export_dpi, bg = "white")
-canonicalize_png("volcano.png", text = c(BioF3RenderContract = render_contract_json))
+canonicalize_png("volcano.png", text = c(PetriRenderContract = render_contract_json))
 svg("volcano.svg", width = plot_width, height = plot_height, bg = "white")
 print(p)
 dev.off()
@@ -247,7 +247,7 @@ if (is.na(svg_start)) stop("[volcano-plot] generated SVG lacks an svg root")
 render_contract_hex <- paste(sprintf("%02x", as.integer(charToRaw(render_contract_json))), collapse = "")
 svg_lines <- append(
   svg_lines,
-  sprintf('<metadata id="biof3-render-contract" data-json-hex="%s"/>', render_contract_hex),
+  sprintf('<metadata id="petri-render-contract" data-json-hex="%s"/>', render_contract_hex),
   after = svg_start
 )
 writeLines(svg_lines, "volcano.svg", useBytes = TRUE)

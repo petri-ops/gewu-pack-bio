@@ -6,7 +6,7 @@
 
 ## Version targeted
 
-- BioF3 R 容器: `R 4.5.x`
+- Petri R 容器: `R 4.5.x`
 - 关键包: `survival 3.x` / `survminer 0.4+` / `timeROC 0.4+`
 
 ## Canonical workflow source

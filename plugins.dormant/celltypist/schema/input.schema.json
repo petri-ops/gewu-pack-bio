@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "biof3://plugins/celltypist/input.schema.json",
+  "$id": "petri://plugins/celltypist/input.schema.json",
   "title": "celltypist input schema",
-  "description": "JSON schema for params.json passed to celltypist.py via BioF3 dispatcher. Compatible with celltypist>=1.6 in biof3-py-runtime.",
+  "description": "JSON schema for params.json passed to celltypist.py via Petri dispatcher. Compatible with celltypist>=1.6 in petri-py-runtime.",
   "type": "object",
   "additionalProperties": true,
   "required": ["anndata_file"],

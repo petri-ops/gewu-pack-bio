@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- ★ 修改：替换工具名 + 标题 -->
-  <title>{{TOOL_TITLE}} — 结果解读报告 | BioF3</title>
+  <title>{{TOOL_TITLE}} — 结果解读报告 | Petri</title>
   <style>
   /* ============================================================
-     BioF3 报告通用样式 v1.0
+     Petri 报告通用样式 v1.0
      提取自 DESeq2 报告模板，所有工具共享此 CSS
 
      ⚠️ 复制此模板开发新工具时的硬约束（违反任何一条都会导致渲染异常）:
@@ -88,7 +88,7 @@
   .wechat-float .info strong { display: block; font-size: 12px; color: #17201d; margin-bottom: 2px; }
 
   /* 水印 */
-  .biof3-wm { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27300%27 height=%27200%27%3E%3Ctext x=%2750%25%27 y=%2750%25%27 dominant-baseline=%27middle%27 text-anchor=%27middle%27 font-family=%27Arial%27 font-size=%2728%27 font-weight=%27800%27 fill=%27%232e8555%27 opacity=%270.04%27 transform=%27rotate(-25 150 100)%27%3EBioF3%3C/text%3E%3Ctext x=%2750%25%27 y=%2770%25%27 dominant-baseline=%27middle%27 text-anchor=%27middle%27 font-family=%27Arial%27 font-size=%2710%27 font-weight=%27700%27 fill=%27%232e8555%27 opacity=%270.035%27 transform=%27rotate(-25 150 100)%27%3ESHENGXIN F3%3C/text%3E%3C/svg%3E"); }
+  .petri-wm { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27300%27 height=%27200%27%3E%3Ctext x=%2750%25%27 y=%2750%25%27 dominant-baseline=%27middle%27 text-anchor=%27middle%27 font-family=%27Arial%27 font-size=%2728%27 font-weight=%27800%27 fill=%27%232e8555%27 opacity=%270.04%27 transform=%27rotate(-25 150 100)%27%3EPetri%3C/text%3E%3Ctext x=%2750%25%27 y=%2770%25%27 dominant-baseline=%27middle%27 text-anchor=%27middle%27 font-family=%27Arial%27 font-size=%2710%27 font-weight=%27700%27 fill=%27%232e8555%27 opacity=%270.035%27 transform=%27rotate(-25 150 100)%27%3ESHENGXIN F3%3C/text%3E%3C/svg%3E"); }
 
   /* 侧边导航 — overlay 模式，不影响内容布局 */
   .nav-wrap { position: fixed; left: 0; top: 0; bottom: 0; width: 200px; background: #f8faf9; border-right: 1px solid #dfe8e3; padding: 20px 12px; overflow-y: auto; font-size: 12px; z-index: 50; transition: transform .2s; box-shadow: 2px 0 8px rgba(0,0,0,.06); }
@@ -118,7 +118,7 @@
 <button class="nav-toggle" onclick="var n=document.querySelector('.nav-wrap'),r=document.querySelector('.report');n.classList.toggle('hidden');r.classList.toggle('full');this.textContent=n.classList.contains('hidden')?'☰':'✕'" title="切换目录">☰</button>
 
 <!-- 水印 -->
-<div class="biof3-wm" aria-hidden="true"></div>
+<div class="petri-wm" aria-hidden="true"></div>
 
 <!-- 侧边目录（JS 自动填充） -->
 <nav class="nav-wrap" id="reportNav"><div class="nav-title">目录</div></nav>
@@ -134,10 +134,10 @@
     <img src="{{WECHAT_QR_BASE64}}" alt="微信公众号">
     <div class="info"><strong>生信F3</strong>AI 陪伴的全组学<br>学习与实战平台</div>
   </div>
-  <div class="eyebrow">BioF3 分析工具 · 结果解读报告</div>
+  <div class="eyebrow">Petri 分析工具 · 结果解读报告</div>
   <!-- ★ 修改工具标题 -->
   <h1>{{TOOL_TITLE}}</h1>
-  <p class="meta">工具版本：{{TOOL_VERSION}} · 报告模板 v1.0 · 生成于 BioF3 在线分析平台</p>
+  <p class="meta">工具版本：{{TOOL_VERSION}} · 报告模板 v1.0 · 生成于 Petri 在线分析平台</p>
 </header>
 
 <!-- ★ 第一节：分析概览 ——————————————————————— -->
@@ -219,13 +219,13 @@
 <ul>
   <li>文献引用 1</li>
   <li>文献引用 2</li>
-  <li><a href="https://biof3.com">BioF3 教程链接</a></li>
+  <li><a href="https://petri.com">Petri 教程链接</a></li>
 </ul>
 
 <!-- 页脚 -->
 <div class="footer">
-  <p>本报告由 BioF3 在线分析平台自动生成，仅供学习参考。如需用于正式发表，请结合实际数据和实验设计进行调整。</p>
-  <p>BioF3 — AI 陪伴的全组学学习与实战平台 · <a href="https://biof3.com">biof3.com</a></p>
+  <p>本报告由 Petri 在线分析平台自动生成，仅供学习参考。如需用于正式发表，请结合实际数据和实验设计进行调整。</p>
+  <p>Petri — AI 陪伴的全组学学习与实战平台 · <a href="https://petri.com">petri.com</a></p>
 </div>
 
 </div><!-- /.report -->

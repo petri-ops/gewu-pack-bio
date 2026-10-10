@@ -1,7 +1,7 @@
 # CellChat 工具范围卡（步骤 0 落地）
 
 > tool-dev "步骤 0：工具范围与官方文档" 第四个落地实例
-> 第二个使用 SCI 视觉风格规范 (theme_biof3 + ggsave_biof3) 的工具
+> 第二个使用 SCI 视觉风格规范 (theme_petri + ggsave_petri) 的工具
 
 ## Tool ID
 
@@ -9,7 +9,7 @@
 
 ## Version targeted
 
-- BioF3 R 容器: R 4.5.1
+- Petri R 容器: R 4.5.1
 - `CellChat 2.2.0` / `NMF 0.28` / `ggalluvial 0.12.5` / `future 1.69.0`
 - `circlize 0.4.17` / `ComplexHeatmap 2.24.1`（CellChat 内部依赖）
 
@@ -79,7 +79,7 @@
 
 ## Demo 数据
 
-- 来源: PBMC 3k 全基因 normalized matrix（基于 BioF3 seurat-standard demo 派生）
+- 来源: PBMC 3k 全基因 normalized matrix（基于 Petri seurat-standard demo 派生）
 - 维度: 9821 基因 × 605 cells
 - Cell types: 9 个 PBMC canonical（Naive_CD4_T / Memory_CD4 / CD14_Mono / B / CD8_T / FCGR3A_Mono / NK / DC / Platelet）
 - 文件:
@@ -96,7 +96,7 @@
 
 - [x] CellChat single-dataset analysis vignette
 - [x] CellChat 2.2.0 NEWS / API doc
-- [x] BioF3 自己的教程 `docs/single-cell/module07.md`
+- [x] Petri 自己的教程 `docs/single-cell/module07.md`
 
 ## 已知风险
 
@@ -113,5 +113,5 @@
 - 步骤 2: 更新 `_data.ts` 工具定义
 - 步骤 3: `routes/tools.js` 已注册 ✅
 - 步骤 4: `index.tsx` `TOOL_COLORS` + `REPORT_URLS` 已注册 ✅
-- 步骤 5: 编写 `cellchat.R`（按 SCI 风格规范用 _biof3-theme.R）
+- 步骤 5: 编写 `cellchat.R`（按 SCI 风格规范用 _petri-theme.R）
 - 步骤 6-14: 按流程走

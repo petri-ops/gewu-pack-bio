@@ -1,6 +1,6 @@
 # scanpy-advanced
 
-> **科学子问题**: 在给定 AnnData 输入下，单细胞 RNA-seq 标准 高级分析管线能否在 biof3-py-runtime (dev Electron 边界内) 跑通 QC → normalize → HVG → PCA → UMAP → Leiden → markers？
+> **科学子问题**: 在给定 AnnData 输入下，单细胞 RNA-seq 标准 高级分析管线能否在 petri-py-runtime (dev Electron 边界内) 跑通 QC → normalize → HVG → PCA → UMAP → Leiden → markers？
 
 ## 职责
 
@@ -53,7 +53,7 @@ sample-metadata-validator → scanpy-advanced → (future: celltypist / cellchat
 
 **dev Electron 边界内 verified**（G0 阶段）：
 
-- biof3-py-runtime v1.0.0 已装 `scanpy>=1.9` + `anndata>=0.9` + `numpy/pandas/scipy/matplotlib/seaborn/Pillow`（见 `resources/built-in-plugins/py-runtime-requirements.txt`）
+- petri-py-runtime v1.0.0 已装 `scanpy>=1.9` + `anndata>=0.9` + `numpy/pandas/scipy/matplotlib/seaborn/Pillow`（见 `resources/built-in-plugins/py-runtime-requirements.txt`）
 - 不依赖额外 pip 安装（PHASE 1 SUB-1.1 任务边界内 runtime **不扩展**）
 - 离线可执行；产出 progress.json 驱动 UI 进度条
 
@@ -61,7 +61,7 @@ sample-metadata-validator → scanpy-advanced → (future: celltypist / cellchat
 
 ## Python 包依赖
 
-- scanpy ≥ 1.9（biof3-py-runtime 声明）
+- scanpy ≥ 1.9（petri-py-runtime 声明）
 - anndata ≥ 0.9
 - numpy ≥ 1.24
 - pandas ≥ 2.0
@@ -78,7 +78,7 @@ sample-metadata-validator → scanpy-advanced → (future: celltypist / cellchat
 ## 关联 Skill
 
 - **PHASE 1 SUB-1.6**：`sc-analysis-standard` skill 在 SUB-1.6 子批才创建，**不动**（单工作包串行纪律）
-- 本插件 standalone 可被任意 `biof3-py-runtime` Python 调用链直接消费
+- 本插件 standalone 可被任意 `petri-py-runtime` Python 调用链直接消费
 
 ## 注意
 

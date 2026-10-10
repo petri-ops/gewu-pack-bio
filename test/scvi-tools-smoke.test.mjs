@@ -109,7 +109,7 @@ test('install.json 存在且声明 install-required + pip install 步骤', () =>
   assert.equal(
     i.policy,
     'install-required',
-    'install.json policy must be install-required (scvi-tools/torch not in biof3-py-runtime)'
+    'install.json policy must be install-required (scvi-tools/torch not in petri-py-runtime)'
   );
   assert.ok(Array.isArray(i.steps), 'install.steps should be array');
   assert.ok(i.steps.length > 0, 'install.steps must have at least 1 pip install step');
@@ -130,7 +130,7 @@ test('scripts/scvi-tools.py 存在且为合法 Python 入口', () => {
   assert.ok(body.startsWith('#!/usr/bin/env python3'), 'should have shebang');
   assert.ok(
     body.includes('sys.argv[1]') || body.includes('commandArgs'),
-    'should honor BioF3 dispatcher contract'
+    'should honor Petri dispatcher contract'
   );
   assert.ok(
     body.includes('_canonicalize_png') && body.includes('Pillow'),

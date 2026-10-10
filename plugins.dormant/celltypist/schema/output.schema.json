@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "biof3://plugins/celltypist/output.schema.json",
+  "$id": "petri://plugins/celltypist/output.schema.json",
   "title": "celltypist output schema",
   "description": "JSON schema for the 8 expected outputs from celltypist.py (files written to <jobDir>/output/).",
   "type": "object",

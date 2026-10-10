@@ -13,7 +13,7 @@
 #   - ARI validation (if known_labels provided)
 #   - Subtype assignment table
 #
-# BioF3 SCI visual style: theme_biof3(), biof3_palette(), ggsave_biof3()
+# Petri SCI visual style: theme_petri(), petri_palette(), ggsave_petri()
 # ============================================================
 
 suppressMessages({
@@ -42,7 +42,7 @@ job_dir <- args[1]
 output_dir <- file.path(job_dir, "output")
 dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
 
-source(file.path(job_dir, "_biof3-theme.R"))
+source(file.path(job_dir, "_petri-theme.R"))
 
 cat("[consensus-cluster] Starting consensus clustering (SCI style)\n")
 
@@ -128,8 +128,8 @@ p_delta <- ggplot(metrics_df, aes(x = k, y = delta_area)) +
   annotate("text", x = optimal_k, y = max(delta_area, na.rm = TRUE) * 0.9,
            label = paste("Optimal k =", optimal_k), color = "#ef4444", hjust = -0.1) +
   labs(title = "Delta Area (Consensus CDF)", x = "k (clusters)", y = "Δ Area") +
-  theme_biof3()
-ggsave_biof3(p_delta, file.path(output_dir, "delta_area"), width = 6, height = 4.5)
+  theme_petri()
+ggsave_petri(p_delta, file.path(output_dir, "delta_area"), width = 6, height = 4.5)
 
 # CDF plot
 p_cdf <- ggplot(metrics_df, aes(x = k, y = cdf)) +
@@ -137,8 +137,8 @@ p_cdf <- ggplot(metrics_df, aes(x = k, y = cdf)) +
   geom_point(size = 2, color = "#0f766e") +
   geom_vline(xintercept = optimal_k, linetype = "dashed", color = "#ef4444") +
   labs(title = "CDF (Cumulative Distribution Function)", x = "k (clusters)", y = "CDF") +
-  theme_biof3()
-ggsave_biof3(p_cdf, file.path(output_dir, "cdf_plot"), width = 6, height = 4.5)
+  theme_petri()
+ggsave_petri(p_cdf, file.path(output_dir, "cdf_plot"), width = 6, height = 4.5)
 
 # ============================================================
 # Consensus matrix heatmaps (for k = 2:max_k, panel)
@@ -169,7 +169,7 @@ for (k in k_vals) {
   consensus_plots[[as.character(k)]] <- p_cm
 }
 
-save_grid_biof3(file.path(output_dir, "consensus_matrices"), width = 12, height = 10, expr = {
+save_grid_petri(file.path(output_dir, "consensus_matrices"), width = 12, height = 10, expr = {
   grid.arrange(grobs = lapply(consensus_plots, ggplotGrob), ncol = 3,
                top = textGrob("Consensus Matrices", gp = gpar(fontsize = 14, fontface = "bold")))
 })
@@ -194,8 +194,8 @@ p_sil <- ggplot(sil_df, aes(x = k, y = silhouette)) +
   geom_point(size = 2, color = "#0f766e") +
   geom_vline(xintercept = optimal_k, linetype = "dashed", color = "#ef4444") +
   labs(title = "Silhouette Score", x = "k (clusters)", y = "Mean Silhouette") +
-  theme_biof3()
-ggsave_biof3(p_sil, file.path(output_dir, "silhouette"), width = 6, height = 4.5)
+  theme_petri()
+ggsave_petri(p_sil, file.path(output_dir, "silhouette"), width = 6, height = 4.5)
 
 # ============================================================
 # Subtype assignment (for optimal k)
@@ -222,7 +222,7 @@ pca_df <- data.frame(
   stringsAsFactors = FALSE
 )
 
-pca_pal <- biof3_palette(optimal_k)
+pca_pal <- petri_palette(optimal_k)
 p_pca <- ggplot(pca_df, aes(x = PC1, y = PC2, color = cluster, label = sample)) +
   geom_point(size = 2, alpha = 0.7) +
   scale_color_manual(values = pca_pal) +
@@ -230,8 +230,8 @@ p_pca <- ggplot(pca_df, aes(x = PC1, y = PC2, color = cluster, label = sample)) 
        x = sprintf("PC1 (%.1f%%)", summary(pca_res)$importance[2, 1] * 100),
        y = sprintf("PC2 (%.1f%%)", summary(pca_res)$importance[2, 2] * 100),
        color = "Subtype") +
-  theme_biof3()
-ggsave_biof3(p_pca, file.path(output_dir, "pca_projection"), width = 6.5, height = 5)
+  theme_petri()
+ggsave_petri(p_pca, file.path(output_dir, "pca_projection"), width = 6.5, height = 5)
 
 # ============================================================
 # ARI validation (if known_labels provided)

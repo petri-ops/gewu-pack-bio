@@ -94,7 +94,7 @@ render_contract <- list(
   baseFontSize = base_font_size
 )
 render_contract_json <- toJSON(render_contract, auto_unbox = TRUE, null = "null")
-canonicalize_png("heatmap.png", text = c(BioF3RenderContract = render_contract_json))
+canonicalize_png("heatmap.png", text = c(PetriRenderContract = render_contract_json))
 
 pdf("heatmap.pdf", width = 7, height = 6)
 pheatmap(

@@ -128,9 +128,9 @@
     {
       "code": "runtime_not_ready",
       "title": "scvi-tools / torch 未安装",
-      "description": "biof3-py-runtime 未装 scvi-tools >=1.0 或 torch >=2.0；install.json 步骤未执行。",
+      "description": "petri-py-runtime 未装 scvi-tools >=1.0 或 torch >=2.0；install.json 步骤未执行。",
       "recoverable": true,
-      "suggestedFix": "在 biof3-py-runtime venv 内部执行 `pip install scvi-tools torch` (install.json 步骤)；或确认 runtime 制品已扩展。",
+      "suggestedFix": "在 petri-py-runtime venv 内部执行 `pip install scvi-tools torch` (install.json 步骤)；或确认 runtime 制品已扩展。",
       "detect": "ImportError: No module named scvi \\| ModuleNotFoundError: No module named torch \\| scvi-tools 缺少依赖"
     },
     {

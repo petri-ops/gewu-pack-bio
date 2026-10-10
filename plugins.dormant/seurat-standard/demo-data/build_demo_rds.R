@@ -11,7 +11,7 @@
 #   - 满足：min.cells=3 + min.features=1（小 fixture 用 1 让全部 270 cells 保留）
 #
 # 运行:
-#   /path/to/biof3-r-runtime/bin/Rscript build_demo_rds.R
+#   /path/to/petri-r-runtime/bin/Rscript build_demo_rds.R
 # ============================================================
 
 suppressMessages({
@@ -55,7 +55,7 @@ rownames(X) <- gene_names
 colnames(X) <- cell_barcodes
 
 # Build Seurat object — use min.features = 1 so all 270 cells stay
-obj <- CreateSeuratObject(counts = X, project = "biof3-pbmc3k-mini",
+obj <- CreateSeuratObject(counts = X, project = "petri-pbmc3k-mini",
                           min.cells = 3, min.features = 1)
 obj$simulated_cluster <- cluster_labels
 

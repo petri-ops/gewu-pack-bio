@@ -14,11 +14,11 @@
 #   6. 中间数据保存 (vst_matrix / coldata_info / dispersion_data)
 #   7. HTML 报告 + manifest
 #
-# 2026-05-25: 升级到 BioF3 SCI 视觉风格规范
+# 2026-05-25: 升级到 Petri SCI 视觉风格规范
 #   - 全图 PNG + PDF 双格式 (300dpi PNG, Cairo PDF 矢量)
-#   - ggplot2 系图: theme_biof3() + biof3_palette() + ggsave_biof3()
-#   - grid 系图 (pheatmap, plotMA, plotDispEsts): save_grid_biof3()
-#   - 配色: biof3_palette_div() (蓝-白-红, 火山/热图二极用)
+#   - ggplot2 系图: theme_petri() + petri_palette() + ggsave_petri()
+#   - grid 系图 (pheatmap, plotMA, plotDispEsts): save_grid_petri()
+#   - 配色: petri_palette_div() (蓝-白-红, 火山/热图二极用)
 #
 # 2026-10-08 BLOCK-146 C#6: 多因子 design（parse_design_terms）
 #   - design 直收 R 公式（如 "~ batch + condition"），对照 desktop 契约
@@ -55,8 +55,8 @@ job_dir <- args[1]
 output_dir <- file.path(job_dir, "output")
 dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
 
-# ★ Load BioF3 SCI 主题 (tools.js 自动复制到 jobDir)
-source(file.path(job_dir, "_biof3-theme.R"))
+# ★ Load Petri SCI 主题 (tools.js 自动复制到 jobDir)
+source(file.path(job_dir, "_petri-theme.R"))
 
 cat("[deseq2] Starting pipeline (SCI style v2026-05-25)\n")
 
@@ -220,7 +220,7 @@ cat("[deseq2] Step 5a: volcano...\n")
 res_df$sig <- ifelse(!is.na(res_df$padj) & res_df$padj < padj_cut & res_df$log2FoldChange > lfc_cut, "Up",
               ifelse(!is.na(res_df$padj) & res_df$padj < padj_cut & res_df$log2FoldChange < -lfc_cut, "Down", "NS"))
 top <- head(res_df[res_df$sig != "NS", ], 15)
-volcano_pal <- biof3_palette_div(3)  # 蓝-白-红 → 用 Down/NS/Up 三档
+volcano_pal <- petri_palette_div(3)  # 蓝-白-红 → 用 Down/NS/Up 三档
 
 p_vol <- ggplot(res_df, aes(log2FoldChange, -log10(padj), color = sig)) +
   geom_point(size = 0.6, alpha = 0.5) +
@@ -230,8 +230,8 @@ p_vol <- ggplot(res_df, aes(log2FoldChange, -log10(padj), color = sig)) +
   geom_hline(yintercept = -log10(padj_cut), linetype = "dashed", color = "gray40") +
   labs(title = sprintf("Volcano (%d up, %d down)", n_up, n_down),
        x = expression(log[2]~"Fold Change"), y = expression(-log[10]~italic(P)[adj])) +
-  theme_biof3()
-ggsave_biof3(p_vol, file.path(output_dir, "volcano"), width = 6.5, height = 5)
+  theme_petri()
+ggsave_petri(p_vol, file.path(output_dir, "volcano"), width = 6.5, height = 5)
 
 # ============================================================
 # Step 5b: PCA (ggplot2 系)
@@ -246,7 +246,7 @@ vsd <- if (nrow(dds) < 1000) {
 }
 pca_data <- plotPCA(vsd, intgroup = design_col, returnData = TRUE)
 pca_var <- round(100 * attr(pca_data, "percentVar"))
-pca_pal <- biof3_palette(2)  # 2 个组用 NPG 前 2 色
+pca_pal <- petri_palette(2)  # 2 个组用 NPG 前 2 色
 
 p_pca <- ggplot(pca_data, aes(PC1, PC2, color = group)) +
   geom_point(size = 3.5, alpha = 0.85) +
@@ -255,29 +255,29 @@ p_pca <- ggplot(pca_data, aes(PC1, PC2, color = group)) +
        x = paste0("PC1 (", pca_var[1], "%)"),
        y = paste0("PC2 (", pca_var[2], "%)"),
        color = design_col) +
-  theme_biof3()
-ggsave_biof3(p_pca, file.path(output_dir, "pca"), width = 6, height = 4.5)
+  theme_petri()
+ggsave_petri(p_pca, file.path(output_dir, "pca"), width = 6, height = 4.5)
 
 # ============================================================
 # Step 5c: Library Size barplot (ggplot2 系)
 # ============================================================
 cat("[deseq2] Step 5c: library_size...\n")
 lib_df <- data.frame(sample = colnames(counts), millions = colSums(counts) / 1e6, group = coldata[[design_col]])
-lib_pal <- biof3_palette(2)
+lib_pal <- petri_palette(2)
 
 p_lib <- ggplot(lib_df, aes(sample, millions, fill = group)) +
   geom_col(width = 0.75) +
   scale_fill_manual(values = lib_pal) +
   labs(title = "Library Size", x = NULL, y = "Reads (millions)", fill = design_col) +
-  theme_biof3() +
+  theme_petri() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 9))
-ggsave_biof3(p_lib, file.path(output_dir, "library_size"), width = 6, height = 4.5)
+ggsave_petri(p_lib, file.path(output_dir, "library_size"), width = 6, height = 4.5)
 
 # ============================================================
 # Step 5d: Dispersion plot (base R / grid 系)
 # ============================================================
 cat("[deseq2] Step 5d: dispersion...\n")
-save_grid_biof3(file.path(output_dir, "dispersion"), width = 6.5, height = 5, expr = {
+save_grid_petri(file.path(output_dir, "dispersion"), width = 6.5, height = 5, expr = {
   par(mar = c(4.5, 4.5, 2, 1), bty = "l")
   plotDispEsts(dds, main = "Dispersion Estimates",
                cex.main = 1.1, cex.lab = 1.0, cex.axis = 0.9)
@@ -287,7 +287,7 @@ save_grid_biof3(file.path(output_dir, "dispersion"), width = 6.5, height = 5, ex
 # Step 5e: MA plot (base R / grid 系)
 # ============================================================
 cat("[deseq2] Step 5e: MA plot...\n")
-save_grid_biof3(file.path(output_dir, "ma_plot"), width = 6.5, height = 5, expr = {
+save_grid_petri(file.path(output_dir, "ma_plot"), width = 6.5, height = 5, expr = {
   par(mar = c(4.5, 4.5, 2, 1), bty = "l")
   plotMA(res_shrink, main = "MA Plot (apeglm-shrunken)",
          ylim = c(-5, 5),
@@ -303,8 +303,8 @@ sampleDistMatrix <- as.matrix(sampleDists)
 rownames(sampleDistMatrix) <- paste0(colnames(counts), " (", coldata[[design_col]], ")")
 colnames(sampleDistMatrix) <- rownames(sampleDistMatrix)
 
-dist_colors <- biof3_palette_seq(50, option = "ylorbr")  # 浅黄→深棕，单极
-save_grid_biof3(file.path(output_dir, "sample_distance"), width = 7, height = 6, expr = {
+dist_colors <- petri_palette_seq(50, option = "ylorbr")  # 浅黄→深棕，单极
+save_grid_petri(file.path(output_dir, "sample_distance"), width = 7, height = 6, expr = {
   pheatmap(sampleDistMatrix,
            main = "Sample Distance (VST Euclidean)",
            color = dist_colors,
@@ -323,13 +323,13 @@ if (length(top50) > 2) {
   mat <- assay(vsd)[top50, ]
   mat_z <- t(scale(t(mat)))
   anno_col <- data.frame(Group = coldata[[design_col]], row.names = colnames(mat))
-  group_pal <- biof3_palette(2)
+  group_pal <- petri_palette(2)
   names(group_pal) <- levels(coldata[[design_col]])
   anno_colors <- list(Group = group_pal)
 
-  heat_pal <- biof3_palette_div(100)  # 蓝-白-红，DEG z-score 标准
+  heat_pal <- petri_palette_div(100)  # 蓝-白-红，DEG z-score 标准
 
-  save_grid_biof3(file.path(output_dir, "heatmap"), width = 7, height = 8.5, expr = {
+  save_grid_petri(file.path(output_dir, "heatmap"), width = 7, height = 8.5, expr = {
     pheatmap(mat_z,
              annotation_col = anno_col,
              annotation_colors = anno_colors,
@@ -423,9 +423,9 @@ manifest <- list(
 template_path <- file.path(job_dir, "report-template.html")
 if (!file.exists(template_path)) {
   # 平台安全兜底：从宿主注入的内置插件资源目录解析（main.js 启动 r-server 时设置
-  # BIOF3_BUILT_IN_PLUGINS_DIR=resources/built-in-plugins），不再硬编码 POSIX 路径
+  # PETRI_BUILT_IN_PLUGINS_DIR=resources/built-in-plugins），不再硬编码 POSIX 路径
   # （/opt/... 在 Windows 与 macOS app bundle 上均不存在）。
-  built_in_dir <- Sys.getenv("BIOF3_BUILT_IN_PLUGINS_DIR", "")
+  built_in_dir <- Sys.getenv("PETRI_BUILT_IN_PLUGINS_DIR", "")
   if (nzchar(built_in_dir)) {
     candidate <- file.path(built_in_dir, "deseq2", "deseq2-report-template.html")
     if (file.exists(candidate)) template_path <- candidate
@@ -479,8 +479,8 @@ if (file.exists(template_path)) {
     if (file.exists(img_path)) {
       b64 <- base64enc::base64encode(img_path)
       data_uri <- paste0("data:image/png;base64,", b64)
-      report_html <- gsub(paste0("https://biof3.com/api/r/tools/demo/deseq2/", img), data_uri, report_html, fixed = TRUE)
-      report_html <- gsub(paste0("https://biof3.com/api/platform/tools/demo/deseq2/", img), data_uri, report_html, fixed = TRUE)
+      report_html <- gsub(paste0("https://petri.com/api/r/tools/demo/deseq2/", img), data_uri, report_html, fixed = TRUE)
+      report_html <- gsub(paste0("https://petri.com/api/platform/tools/demo/deseq2/", img), data_uri, report_html, fixed = TRUE)
     }
   }
   { .out_conn <- file(file.path(output_dir, "report.html"), encoding = "UTF-8"); writeLines(report_html, .out_conn); close(.out_conn) }

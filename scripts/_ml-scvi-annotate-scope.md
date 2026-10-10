@@ -6,7 +6,7 @@
 
 ## Version targeted
 
-- BioF3 Python 容器: `Python 3.11+`
+- Petri Python 容器: `Python 3.11+`
 - 关键包: `scvi-tools` / `scanpy` / `scikit-learn` / `anndata`
 
 ## Canonical workflow source

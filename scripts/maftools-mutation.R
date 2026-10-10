@@ -8,8 +8,8 @@
 #   Mayakonda A et al. (2018). Maftools: efficient and comprehensive analysis of
 #   somatic variants in cancer. Genome Research 28:1747-1756.
 #
-# 第三个使用 BioF3 SCI 视觉风格规范的工具.
-# 注意: maftools 全是 base R 绘图, 不能套 theme_biof3(); 全部用 save_grid_biof3()
+# 第三个使用 Petri SCI 视觉风格规范的工具.
+# 注意: maftools 全是 base R 绘图, 不能套 theme_petri(); 全部用 save_grid_petri()
 # 把 base R plot 块包装成 PNG + PDF 双格式输出.
 #
 # Steps (in-scope) — Tutorial 主流程 7 步:
@@ -59,7 +59,7 @@ job_dir <- args[1]
 output_dir <- file.path(job_dir, "output")
 dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
 
-source(file.path(job_dir, "_biof3-theme.R"))
+source(file.path(job_dir, "_petri-theme.R"))
 
 cat("[maftools] Starting pipeline\n")
 cat("[maftools] maftools:", as.character(packageVersion("maftools")), "\n")
@@ -121,7 +121,7 @@ if (n_samples < 5) {
 
 # ---- Step 2: plotmafSummary ----
 cat("[maftools] Step 2: plotmafSummary...\n")
-save_grid_biof3(file.path(output_dir, "maf_summary"),
+save_grid_petri(file.path(output_dir, "maf_summary"),
                  width = 12, height = 7, expr = {
   plotmafSummary(maf = laml, rmOutlier = TRUE,
                  addStat = "median", dashboard = TRUE, titvRaw = FALSE)
@@ -148,7 +148,7 @@ if (!is.null(clin_path)) {
 
 if (!is.null(clin_features)) cat(sprintf("  Using clinical features: %s\n", paste(clin_features, collapse = ", ")))
 
-save_grid_biof3(file.path(output_dir, "oncoplot"),
+save_grid_petri(file.path(output_dir, "oncoplot"),
                  width = max(10, top_n_oncoplot * 0.5 + 6),
                  height = max(8, top_n_oncoplot * 0.3 + 4), expr = {
   oncoplot(maf = laml, top = top_n_oncoplot,
@@ -160,7 +160,7 @@ save_grid_biof3(file.path(output_dir, "oncoplot"),
 # ---- Step 4: plotTiTv ----
 cat("[maftools] Step 4: plotTiTv...\n")
 laml.titv <- titv(maf = laml, plot = FALSE, useSyn = TRUE)
-save_grid_biof3(file.path(output_dir, "titv"),
+save_grid_petri(file.path(output_dir, "titv"),
                  width = 9, height = 6, expr = {
   plotTiTv(res = laml.titv)
 })
@@ -181,7 +181,7 @@ for (i in seq_along(top_genes)) {
   cat(sprintf("    [%d/%d] %s ... ", i, length(top_genes), g))
   out_file <- file.path(output_dir, sprintf("lollipop_top%d", i))
   ok <- tryCatch({
-    save_grid_biof3(out_file, width = 9, height = 5, expr = {
+    save_grid_petri(out_file, width = 9, height = 5, expr = {
       lollipopPlot(maf = laml, gene = g,
                     AACol = "Protein_Change",
                     showMutationRate = TRUE,
@@ -199,7 +199,7 @@ for (i in seq_along(top_genes)) {
 # ---- Step 6: somaticInteractions ----
 cat("[maftools] Step 6: somaticInteractions...\n")
 inter_result <- NULL
-save_grid_biof3(file.path(output_dir, "somatic_interactions"),
+save_grid_petri(file.path(output_dir, "somatic_interactions"),
                  width = 9, height = 7, expr = {
   inter <- somaticInteractions(maf = laml, top = 25, pvalue = c(0.05, 0.1))
   assign("inter_result", inter, envir = .GlobalEnv)
@@ -260,7 +260,7 @@ if (requireNamespace(bsg_pkg, quietly = TRUE)) {
       cat(sprintf("  Extracted %d signatures\n", n_signatures))
 
       # Plot signatures
-      save_grid_biof3(file.path(output_dir, "mutation_signature"),
+      save_grid_petri(file.path(output_dir, "mutation_signature"),
                        width = 11, height = max(4, n_signatures * 2.5), expr = {
         plotSignatures(nmfRes = sig_decompose, contributions = TRUE,
                         title_size = 1.0, sig_db = "SBS")
@@ -274,7 +274,7 @@ if (requireNamespace(bsg_pkg, quietly = TRUE)) {
       }, error = function(e) NULL)
 
       if (!is.null(cosmic_compare)) {
-        save_grid_biof3(file.path(output_dir, "signature_cosmic_compare"),
+        save_grid_petri(file.path(output_dir, "signature_cosmic_compare"),
                          width = max(10, n_signatures * 3 + 4),
                          height = 6, expr = {
           # Heatmap of cosine similarity vs COSMIC
@@ -283,7 +283,7 @@ if (requireNamespace(bsg_pkg, quietly = TRUE)) {
             par(mar = c(8, 5, 3, 2))
             top_cos <- sort(apply(mat, 2, max), decreasing = TRUE)[1:min(15, ncol(mat))]
             mat_top <- mat[, names(top_cos), drop = FALSE]
-            image(t(mat_top), col = biof3_palette_seq(50, "ylorbr"),
+            image(t(mat_top), col = petri_palette_seq(50, "ylorbr"),
                   axes = FALSE, main = "Cosine similarity to COSMIC v3 SBS")
             axis(1, at = seq(0, 1, length.out = ncol(mat_top)),
                  labels = colnames(mat_top), las = 2, cex.axis = 0.8)

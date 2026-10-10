@@ -1,7 +1,7 @@
 # maftools 工具范围卡（步骤 0 落地）
 
 > tool-dev "步骤 0：工具范围与官方文档" 第五个落地实例
-> 第三个使用 SCI 视觉风格规范的工具（base R 系，全部用 `save_grid_biof3()` 双格式）
+> 第三个使用 SCI 视觉风格规范的工具（base R 系，全部用 `save_grid_petri()` 双格式）
 
 ## Tool ID
 
@@ -41,7 +41,7 @@
 
 > `_data.ts` description: "maftools v2 突变景观分析: MAF 概览 → Oncoplot → TiTv → Lollipop → 互斥共现 → Mutational Signature。SCI 风格双格式输出（PNG + PDF）。不含: TCGA cohort 对比、Drug-Gene 互作、生存分析（用 KM 工具）。"
 
-## Default params (按官方 + BioF3 SCI 默认)
+## Default params (按官方 + Petri SCI 默认)
 
 | 参数 | 默认 | 说明 |
 |------|------|------|
@@ -95,12 +95,12 @@
 
 - [x] maftools Bioconductor vignette 主流程
 - [x] customizing oncoplots vignette
-- [x] BioF3 自己的教程 `docs/genomics/module04` 突变分析
+- [x] Petri 自己的教程 `docs/genomics/module04` 突变分析
 - [x] 容器版本验证：maftools 2.24.0
 
 ## 已知风险
 
-1. **maftools 全是 base R 绘图**：所有图必须用 `save_grid_biof3()` 双格式包装，**不能套 theme_biof3()**（base R 不接 ggplot2 主题）。这是 `_biof3-theme.R` helper 的另一个验证场景
+1. **maftools 全是 base R 绘图**：所有图必须用 `save_grid_petri()` 双格式包装，**不能套 theme_petri()**（base R 不接 ggplot2 主题）。这是 `_petri-theme.R` helper 的另一个验证场景
 2. **mutational signature 对小数据集不稳**：< 100 样本时 `extractSignatures()` 可能拒绝 / 输出空。脚本里加 `tryCatch`，失败时跳过 signature 部分
 3. **lollipop 基因要有蛋白域注释**：`lollipopPlot()` 内部查 protein domains，对一些非编码 / 罕见基因会失败。脚本里 `tryCatch` 兜住
 4. **OOM**：MAF 数据集本身很小，`oncoplot` / `titv` 都不耗内存；mutational signature 是 NMF，但 LAML 193 样本 < 1 分钟可跑完

@@ -9,7 +9,7 @@
 
 ## Version targeted
 
-- BioF3 R runtime: `R 4.5.2`
+- Petri R runtime: `R 4.5.2`
 - 关键包版本（已 `Rscript packageVersion()` 验证）:
   - `WGCNA 1.74`
   - `flashClust 1.1-4`
@@ -36,7 +36,7 @@
 
 ## Out-of-scope (不做)
 
-- ❌ **Tutorial II Trait Association 进阶**（GO enrichment 内置 — 用户可以把 module 基因导出到 BioF3 GO/KEGG 工具）
+- ❌ **Tutorial II Trait Association 进阶**（GO enrichment 内置 — 用户可以把 module 基因导出到 Petri GO/KEGG 工具）
 - ❌ **Tutorial III Consensus Networks**（多数据集共识，独立工具）
 - ❌ **Block-wise 大数据集模式**（>20k 基因；本工具限 5000-10000 基因）
 - ❌ **Module preservation analysis**（需要 validation 数据集）
@@ -57,7 +57,7 @@
 | `mergeCutHeight` | `0.25` | 官方默认（合并相似模块的高度阈值）|
 | `power` | **auto** | 跑 `pickSoftThreshold(c(1:10, seq(12,30,2)))` 找 R² ≥ 0.85 的最小 power; 找不到则取 R² 最大的 |
 | `deepSplit` | `2` | 官方默认（0-4，越大越细分）|
-| `maxBlockSize` | `5000` | BioF3 限定（防止超大网络 OOM）|
+| `maxBlockSize` | `5000` | Petri 限定（防止超大网络 OOM）|
 | `randomSeed` | `54321` | 官方默认 |
 
 **偏离官方默认的注解**:
@@ -107,14 +107,14 @@
 ## 工具间数据联动
 
 - ❌ 上游不导入（WGCNA 是入口工具，需要 raw expression 矩阵）
-- ✅ 下游可被导入: 用户可以把任意模块的基因列表（从 `module_assignment.csv` 筛颜色）导出到 BioF3 的 GO/KEGG 工具或 GSEA 工具做功能富集
+- ✅ 下游可被导入: 用户可以把任意模块的基因列表（从 `module_assignment.csv` 筛颜色）导出到 Petri 的 GO/KEGG 工具或 GSEA 工具做功能富集
 
 ## 已读官方文档（T1 检查清单）
 
 - [x] WGCNA Tutorial I (network construction + module detection) — Horvath lab UCLA
-- [x] BioF3 自己的教程 `docs/integration/module04` 对照口径（用 power=8 / unsigned，是 BioF3 自己的选择，**工具默认跟官方更新的 signed**，文档说明可调）
+- [x] Petri 自己的教程 `docs/integration/module04` 对照口径（用 power=8 / unsigned，是 Petri 自己的选择，**工具默认跟官方更新的 signed**，文档说明可调）
 - [x] `blockwiseModules` rdocumentation 默认参数（power=6 是占位，用户必须用 pickSoftThreshold 自动选）
-- [x] BioF3 runtime 版本验证: WGCNA 1.74 / R 4.5.2（2026-07-19 demo 真流程）
+- [x] Petri runtime 版本验证: WGCNA 1.74 / R 4.5.2（2026-07-19 demo 真流程）
 
 ## 已知风险
 

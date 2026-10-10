@@ -6,7 +6,7 @@
 # Output: global SHAP importance / beeswarm / force plot / dependence plots
 #
 # Uses iml::Shapley (kernel SHAP) with automatic model-type detection.
-# BioF3 SCI visual style: theme_biof3(), biof3_palette(), ggsave_biof3()
+# Petri SCI visual style: theme_petri(), petri_palette(), ggsave_petri()
 # ============================================================
 
 suppressMessages({
@@ -33,7 +33,7 @@ job_dir <- args[1]
 output_dir <- file.path(job_dir, "output")
 dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
 
-source(file.path(job_dir, "_biof3-theme.R"))
+source(file.path(job_dir, "_petri-theme.R"))
 
 cat("[shap-explain] Starting SHAP explainability (SCI style)\n")
 
@@ -211,8 +211,8 @@ p_global <- ggplot(shap_global, aes(x = reorder(feature, mean_abs_shap), y = mea
   geom_col(fill = "#0f766e", width = 0.7) +
   labs(title = "SHAP Global Importance", x = "Feature", y = "Mean |SHAP|") +
   coord_flip() +
-  theme_biof3()
-ggsave_biof3(p_global, file.path(output_dir, "global_importance"), width = 6, height = 7)
+  theme_petri()
+ggsave_petri(p_global, file.path(output_dir, "global_importance"), width = 6, height = 7)
 
 # ============================================================
 # Beeswarm plot
@@ -222,8 +222,8 @@ p_bee <- ggplot(shap_df, aes(x = phi, y = reorder(feature, phi, FUN = function(x
   geom_point(size = 1.2, alpha = 0.6, position = position_jitter(height = 0.2)) +
   scale_color_gradient2(low = "#3b82f6", mid = "white", high = "#ef4444", midpoint = 0) +
   labs(title = "SHAP Beeswarm", x = "SHAP value", y = "Feature", color = "Feature value") +
-  theme_biof3()
-ggsave_biof3(p_bee, file.path(output_dir, "beeswarm"), width = 7, height = 6)
+  theme_petri()
+ggsave_petri(p_bee, file.path(output_dir, "beeswarm"), width = 7, height = 6)
 
 # ============================================================
 # Force plot (single sample)
@@ -239,8 +239,8 @@ p_force <- ggplot(sample_shap, aes(x = reorder(feature, abs(phi)), y = phi, fill
   scale_fill_manual(values = c("Push up" = "#ef4444", "Push down" = "#3b82f6")) +
   labs(title = sprintf("SHAP Force Plot (sample %d)", sid), x = "Feature", y = "SHAP value", fill = NULL) +
   coord_flip() +
-  theme_biof3()
-ggsave_biof3(p_force, file.path(output_dir, "force_plot"), width = 6, height = 7)
+  theme_petri()
+ggsave_petri(p_force, file.path(output_dir, "force_plot"), width = 6, height = 7)
 
 # ============================================================
 # Dependence plots (top 4 features)
@@ -254,12 +254,12 @@ for (feat in top4) {
     geom_point(alpha = 0.5, color = "#0f766e") +
     geom_smooth(method = "loess", se = FALSE, color = "#ef4444", linewidth = 0.8) +
     labs(title = feat, x = "Feature value", y = "SHAP value") +
-    theme_biof3()
+    theme_petri()
   pd_plots[[feat]] <- p_dep
 }
 
 library(gridExtra)
-save_grid_biof3(file.path(output_dir, "dependence"), width = 10, height = 8, expr = {
+save_grid_petri(file.path(output_dir, "dependence"), width = 10, height = 8, expr = {
   grid.arrange(grobs = lapply(pd_plots, ggplotGrob), ncol = 2,
                top = textGrob("SHAP Dependence (top 4 features)", gp = gpar(fontsize = 14, fontface = "bold")))
 })

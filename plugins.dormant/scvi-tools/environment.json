@@ -28,5 +28,5 @@
     "recordRuntimeVersion": true,
     "device": "cpu"
   },
-  "notes": "scvi-tools + torch 不在 biof3-py-runtime 基础栈中（见 PHASE 0 runtime inventory）。本插件声明二者作为额外依赖；install.json 提供 pip install 步骤，**在 biof3-py-runtime venv 内部**执行。CPU 模式避免触发 GPU 依赖链（GPU/MPS 验证属 G1+ 阶段）。dev Electron 边界内 verified 时段 scvi-tools 1.4.2 + torch 2.13.0 实测可训练。"
+  "notes": "scvi-tools + torch 不在 petri-py-runtime 基础栈中（见 PHASE 0 runtime inventory）。本插件声明二者作为额外依赖；install.json 提供 pip install 步骤，**在 petri-py-runtime venv 内部**执行。CPU 模式避免触发 GPU 依赖链（GPU/MPS 验证属 G1+ 阶段）。dev Electron 边界内 verified 时段 scvi-tools 1.4.2 + torch 2.13.0 实测可训练。"
 }

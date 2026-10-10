@@ -18,7 +18,7 @@
 #  10. PNG 重写（png::writePNG(png::readPNG(f), f)）以稳定 sha256
 #
 # 2026-08-18: SUB-1.4 BLOCK-11 PHASE 1 落地
-#   - runtime: biof3-r-runtime (CellChat 通过 BiocManager::install 一次性补齐)
+#   - runtime: petri-r-runtime (CellChat 通过 BiocManager::install 一次性补齐)
 #   - 不外推 packaged / Provider / GA / dist staleness (G1+)
 #   - 不引 CRAN 网络下载（CellChatDB 已随包内置）
 # ============================================================
@@ -70,8 +70,8 @@ if (is.na(job_dir) || !nzchar(job_dir)) stop("[cellchat] job_dir argument missin
 output_dir <- file.path(job_dir, "output")
 dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
 
-# ★ Load BioF3 SCI 主题（若已塞到 jobDir；本插件不强依赖 theme 函数）
-theme_path <- file.path(job_dir, "_biof3-theme.R")
+# ★ Load Petri SCI 主题（若已塞到 jobDir；本插件不强依赖 theme 函数）
+theme_path <- file.path(job_dir, "_petri-theme.R")
 if (file.exists(theme_path)) {
   source(theme_path)
 }
@@ -126,7 +126,7 @@ tryCatch({
   })
 }, error = function(e) {
   msg <- paste0(
-    "[cellchat] biof3-r-runtime 缺少 CellChat / igraph / ComplexHeatmap / circlize / NMF: ",
+    "[cellchat] petri-r-runtime 缺少 CellChat / igraph / ComplexHeatmap / circlize / NMF: ",
     conditionMessage(e),
     "。请执行 install.json 中的 BiocManager::install('CellChat')。"
   )
@@ -421,7 +421,7 @@ report_html <- paste0(
   "<li><code>bubble_plot.png</code> — pathway bubble (sources × targets)</li>",
   "<li><code>cellchat_object.rds</code> — CellChat object (for downstream netAnalysis_*)</li>",
   "</ul>",
-  "<p class=\"footer\">G0 dev Electron 边界内 verified · biof3-r-runtime R 4.5.2 · ",
+  "<p class=\"footer\">G0 dev Electron 边界内 verified · petri-r-runtime R 4.5.2 · ",
   "CellChat 1.6.1 · PHASE 1 BLOCK-11 SUB-1.4</p>",
   "</body></html>"
 )

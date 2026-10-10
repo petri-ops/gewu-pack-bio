@@ -1,6 +1,6 @@
 # scvi-tools
 
-> **科学子问题**：在给定 AnnData 输入下，scvi-tools 的 scVI 变分自编码器能否在 biof3-py-runtime + 扩展依赖（scvi-tools>=1.0 + torch>=2.0）边界内训练 + 提取 latent embedding + 标准化表达 + UMAP 用于批次整合？
+> **科学子问题**：在给定 AnnData 输入下，scvi-tools 的 scVI 变分自编码器能否在 petri-py-runtime + 扩展依赖（scvi-tools>=1.0 + torch>=2.0）边界内训练 + 提取 latent embedding + 标准化表达 + UMAP 用于批次整合？
 
 ## 职责
 
@@ -55,11 +55,11 @@ sample-metadata-validator → scanpy-advanced → scvi-tools（深度生成批�
 
 **dev Electron 边界内 verified**（G0 阶段）：
 
-- biof3-py-runtime v1.0.0 基础栈 + `pip install scvi-tools torch` 扩展（`install.json` 步骤）
+- petri-py-runtime v1.0.0 基础栈 + `pip install scvi-tools torch` 扩展（`install.json` 步骤）
 - 实测版本：scvi-tools 1.4.2 + torch 2.13.0（macOS arm64, Python 3.11.9, CPU）
 - 270 cells × 100 vars demo fixture 训练 5 epochs → `(270, 10)` latent + `(270, 100)` normalized expression
 - 设备策略：**CPU**（避免引入 GPU 依赖链；GPU/MPS 验证属 G1+ 阶段）
-- 不修改 biof3-py-runtime 制品本身（扩展走 install.json 步骤在 biof3-py-runtime venv 内部执行）
+- 不修改 petri-py-runtime 制品本身（扩展走 install.json 步骤在 petri-py-runtime venv 内部执行）
 
 > **G0 阶段纪律（按 AGENTS.md "当前阶段纪律"）**：本插件仅在 dev Electron 边界内 verified；packaged / Provider / GA / dist staleness 属 G1+ 阶段事项，按本阶段纪律**不外推**。`qualificationEligible: false` 是当前 G0 开发期常态，不是缺陷、不被视为缺口。
 
@@ -67,27 +67,27 @@ sample-metadata-validator → scanpy-advanced → scvi-tools（深度生成批�
 
 | Package | 版本 | 来源 |
 |---|---|---|
-| scanpy | ≥ 1.9 | biof3-py-runtime 基础栈 |
-| anndata | ≥ 0.9 | biof3-py-runtime 基础栈 |
-| numpy | ≥ 1.24 | biof3-py-runtime 基础栈 |
-| pandas | ≥ 2.0 | biof3-py-runtime 基础栈 |
-| scipy | ≥ 1.10 | biof3-py-runtime 基础栈 |
-| matplotlib | ≥ 3.7 | biof3-py-runtime 基础栈 |
-| seaborn | ≥ 0.12 | biof3-py-runtime 基础栈 |
-| Pillow | ≥ 9.0 | biof3-py-runtime 基础栈 |
+| scanpy | ≥ 1.9 | petri-py-runtime 基础栈 |
+| anndata | ≥ 0.9 | petri-py-runtime 基础栈 |
+| numpy | ≥ 1.24 | petri-py-runtime 基础栈 |
+| pandas | ≥ 2.0 | petri-py-runtime 基础栈 |
+| scipy | ≥ 1.10 | petri-py-runtime 基础栈 |
+| matplotlib | ≥ 3.7 | petri-py-runtime 基础栈 |
+| seaborn | ≥ 0.12 | petri-py-runtime 基础栈 |
+| Pillow | ≥ 9.0 | petri-py-runtime 基础栈 |
 | **scvi-tools** | **≥ 1.0** | **额外 pip install（install.json）** |
 | **torch** | **≥ 2.0** | **额外 pip install（install.json）** |
 
-> scvi-tools + torch 不在 biof3-py-runtime 基础栈中（PHASE 0 runtime inventory §6.1 + §3 已确认）。在 venv 内部执行 `pip install scvi-tools torch` 即可（实测 macOS arm64 ~5min，scvi-tools 1.4.2 + torch 2.13.0）。
+> scvi-tools + torch 不在 petri-py-runtime 基础栈中（PHASE 0 runtime inventory §6.1 + §3 已确认）。在 venv 内部执行 `pip install scvi-tools torch` 即可（实测 macOS arm64 ~5min，scvi-tools 1.4.2 + torch 2.13.0）。
 
 ## Runtime 扩展决策
 
 按 `agent-tools/block-11-bioSkills-integration-plan-v0.2.md` §6.1，本插件在 SUB-1.5 启动时已**显式裁决**：
 
-- **不修改 biof3-py-runtime 制品本身**（避免 147MB → ~600MB 体积膨胀）
-- **走 install.json 步骤**：biof3-py-runtime venv 内部 `pip install scvi-tools torch`
+- **不修改 petri-py-runtime 制品本身**（避免 147MB → ~600MB 体积膨胀）
+- **走 install.json 步骤**：petri-py-runtime venv 内部 `pip install scvi-tools torch`
 - **CPU 模式**：避免触发 GPU 依赖链（GPU/MPS 验证属 G1+ 阶段）
-- **未来扩展决策保留**：G1+ 阶段可考虑（a）增量加 PyTorch 到 biof3-py-runtime；（b）建独立 `biof3-scvi-tools-runtime` 子集
+- **未来扩展决策保留**：G1+ 阶段可考虑（a）增量加 PyTorch 到 petri-py-runtime；（b）建独立 `petri-scvi-tools-runtime` 子集
 
 ## 平台
 

@@ -22,7 +22,7 @@ import {
 } from '../scripts/harness-file-index.mjs';
 
 function withTempDir(fn) {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'biof3-harness-index-'));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'petri-harness-index-'));
   try {
     return fn(dir);
   } finally {
@@ -80,7 +80,7 @@ test('indexDirectory builds metadata index and cache', () => {
     assert.equal(index.fileCount, 2);
     assert.equal(index.byRole.sample_metadata, 1);
     assert.equal(index.byKind.text, 1);
-    const cachePath = writeIndexCache(index, path.join(dir, '.biof3-harness-index.json'));
+    const cachePath = writeIndexCache(index, path.join(dir, '.petri-harness-index.json'));
     const cached = readIndexCache(cachePath);
     assert.equal(cached.fileCount, 2);
     assert.ok(cached.entries.some((entry) => entry.relativePath === 'groups.tsv'));
@@ -93,7 +93,7 @@ test('indexDirectory reuses unchanged cached entries and drops deleted files', (
     fs.writeFileSync(path.join(dir, 'keep.csv'), 'gene,log2FC,pvalue\nTP53,1,0.01\n');
     fs.writeFileSync(path.join(dir, 'nested', 'stale.tsv'), 'sample\tgroup\nS1\tA\n');
 
-    const cachePath = path.join(dir, '.biof3-harness-index.json');
+    const cachePath = path.join(dir, '.petri-harness-index.json');
     const initial = indexDirectory(dir, { hash: false });
     writeIndexCache(initial, cachePath);
 
@@ -175,12 +175,12 @@ test('createLocalHarnessPlatform maps local paths to canonical execution paths',
     fs.writeFileSync(path.join(projectDir, 'deg.csv'), 'gene,log2FC,pvalue\nTP53,1,0.01\n');
     const platform = createLocalHarnessPlatform({
       dataDir: dir,
-      pathMappings: [{ localRoot: dir, canonicalRoot: '/work/biof3' }],
+      pathMappings: [{ localRoot: dir, canonicalRoot: '/work/petri' }],
     });
 
     const localFile = path.join(projectDir, 'deg.csv');
-    assert.equal(platform.canonicalizePath(localFile), '/work/biof3/project-a/deg.csv');
-    assert.equal(platform.resolveCanonicalPath('/work/biof3/project-a/deg.csv'), localFile);
+    assert.equal(platform.canonicalizePath(localFile), '/work/petri/project-a/deg.csv');
+    assert.equal(platform.resolveCanonicalPath('/work/petri/project-a/deg.csv'), localFile);
 
     const scoped = indexHarnessScope({
       platform,
@@ -189,11 +189,11 @@ test('createLocalHarnessPlatform maps local paths to canonical execution paths',
       projectPath: projectDir,
       hash: false,
     });
-    assert.equal(scoped.scope.canonicalTarget, '/work/biof3/project-a');
-    assert.equal(scoped.index.canonicalRoot, '/work/biof3/project-a');
-    assert.equal(scoped.index.entries[0].canonicalPath, '/work/biof3/project-a/deg.csv');
-    assert.equal(scoped.promptSummary.canonicalRoot, '/work/biof3/project-a');
-    assert.equal(scoped.promptSummary.entries[0].canonicalPath, '/work/biof3/project-a/deg.csv');
+    assert.equal(scoped.scope.canonicalTarget, '/work/petri/project-a');
+    assert.equal(scoped.index.canonicalRoot, '/work/petri/project-a');
+    assert.equal(scoped.index.entries[0].canonicalPath, '/work/petri/project-a/deg.csv');
+    assert.equal(scoped.promptSummary.canonicalRoot, '/work/petri/project-a');
+    assert.equal(scoped.promptSummary.entries[0].canonicalPath, '/work/petri/project-a/deg.csv');
   });
 });
 
@@ -203,7 +203,7 @@ test('createHarnessExecutionContext exposes runtime readiness and canonical work
     fs.mkdirSync(projectDir, { recursive: true });
     const platform = createLocalHarnessPlatform({
       dataDir: dir,
-      pathMappings: [{ localRoot: dir, canonicalRoot: '/work/biof3' }],
+      pathMappings: [{ localRoot: dir, canonicalRoot: '/work/petri' }],
       runtimeChecks: {
         r: { ready: true, command: '/opt/R/bin/Rscript' },
         python: false,
@@ -223,7 +223,7 @@ test('createHarnessExecutionContext exposes runtime readiness and canonical work
     assert.equal(ctx.runtimeReady.ready, true);
     assert.equal(ctx.runtimeReady.command, '/opt/R/bin/Rscript');
     assert.equal(ctx.workDir, projectDir);
-    assert.equal(ctx.canonicalWorkDir, '/work/biof3/project-runtime');
+    assert.equal(ctx.canonicalWorkDir, '/work/petri/project-runtime');
     assert.equal(platform.checkRuntimeReady('python').ready, false);
   });
 });

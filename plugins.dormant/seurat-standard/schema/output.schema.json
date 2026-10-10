@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "biof3://plugins/seurat-standard/output.schema.json",
+  "$id": "petri://plugins/seurat-standard/output.schema.json",
   "title": "seurat-standard output schema",
   "description": "JSON schema for the 8 expected outputs from seurat-standard.R (files written to <jobDir>/output/).",
   "type": "object",

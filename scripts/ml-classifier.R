@@ -11,7 +11,7 @@
 #   - Metrics summary table
 #   - Trained model (.rds) for downstream SHAP
 #
-# BioF3 SCI visual style: theme_biof3(), biof3_palette(), ggsave_biof3()
+# Petri SCI visual style: theme_petri(), petri_palette(), ggsave_petri()
 # ============================================================
 
 suppressMessages({
@@ -41,7 +41,7 @@ job_dir <- args[1]
 output_dir <- file.path(job_dir, "output")
 dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
 
-source(file.path(job_dir, "_biof3-theme.R"))
+source(file.path(job_dir, "_petri-theme.R"))
 
 cat("[ml-classifier] Starting 4-algorithm comparison (SCI style)\n")
 
@@ -220,7 +220,7 @@ for (alg in alg_list) {
 # ROC curves plot
 # ============================================================
 cat("[ml-classifier] Plotting ROC curves...\n")
-roc_pal <- biof3_palette(length(alg_list))
+roc_pal <- petri_palette(length(alg_list))
 names(roc_pal) <- alg_list
 
 if (length(levels(labels_vec)) == 2) {
@@ -238,8 +238,8 @@ if (length(levels(labels_vec)) == 2) {
                                          c("lr", "svm", "rf", "xgb"))) +
     labs(title = "ROC Curves (5-fold CV)", x = "1 - Specificity (FPR)", y = "Sensitivity (TPR)", color = "Algorithm") +
     coord_equal() +
-    theme_biof3()
-  ggsave_biof3(p_roc, file.path(output_dir, "roc_curves"), width = 6, height = 5)
+    theme_petri()
+  ggsave_petri(p_roc, file.path(output_dir, "roc_curves"), width = 6, height = 5)
 }
 
 # ============================================================
@@ -321,8 +321,8 @@ if (length(imp_list) > 0) {
     scale_fill_manual(values = roc_pal[names(imp_list)]) +
     labs(title = "Feature Importance (top 20)", x = "Feature", y = "Normalized Importance", fill = "Algorithm") +
     coord_flip() +
-    theme_biof3()
-  ggsave_biof3(p_imp, file.path(output_dir, "feature_importance"), width = 7, height = 6)
+    theme_petri()
+  ggsave_petri(p_imp, file.path(output_dir, "feature_importance"), width = 7, height = 6)
 }
 
 # ============================================================

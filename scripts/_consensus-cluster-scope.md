@@ -6,7 +6,7 @@
 
 ## Version targeted
 
-- BioF3 R 容器: `R 4.5.x`
+- Petri R 容器: `R 4.5.x`
 - 关键包: `ConsensusClusterPlus` / `NMF` / `mclust` / `cluster`
 
 ## Canonical workflow source
@@ -35,7 +35,7 @@
 | 参数 | 默认值 | 来源 |
 |------|--------|------|
 | `max_k` | `8` | CCP 常用上限 |
-| `reps` | `50` | CCP 默认 1000，BioF3 降到 50 平衡速度 |
+| `reps` | `50` | CCP 默认 1000，Petri 降到 50 平衡速度 |
 | `pItem` | `0.8` | CCP 默认 |
 | `clusterAlg` | `hc` | CCP 默认 |
 | `distance` | `pearson` | CCP 默认 |

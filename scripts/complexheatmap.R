@@ -7,7 +7,7 @@
 # Reference:
 #   Gu Z. (2022). Complex heatmap visualization. iMeta 1(3):e43.
 #
-# 这是 BioF3 SCI 视觉风格规范 (theme_biof3 + ggsave_biof3 + save_grid_biof3)
+# 这是 Petri SCI 视觉风格规范 (theme_petri + ggsave_petri + save_grid_petri)
 # 的首个落地实例 — 全图双格式输出 (PNG + PDF), 直接发表水平.
 #
 # Steps (in-scope) — 标准热图工作流 5 步:
@@ -22,7 +22,7 @@
 #   - UpSet plot (独立工具)
 #   - density / interactive heatmap
 #
-# Default params (按官方 + BioF3 SCI 默认):
+# Default params (按官方 + Petri SCI 默认):
 #   z_score=TRUE
 #   cluster_rows=TRUE, cluster_columns=TRUE
 #   clustering_distance="pearson", clustering_method="ward.D2"
@@ -55,8 +55,8 @@ job_dir <- args[1]
 output_dir <- file.path(job_dir, "output")
 dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
 
-# ★ Load BioF3 SCI 主题 (tools.js 自动复制到 jobDir)
-source(file.path(job_dir, "_biof3-theme.R"))
+# ★ Load Petri SCI 主题 (tools.js 自动复制到 jobDir)
+source(file.path(job_dir, "_petri-theme.R"))
 
 cat("[complexheatmap] Starting pipeline\n")
 cat("[complexheatmap] R:", R.version.string, "\n")
@@ -136,7 +136,7 @@ if (length(anno_files) > 0) {
     # Build annotation: numeric → continuous; character/factor → discrete
     anno_args <- list()
     anno_colors <- list()
-    pal_cycle <- biof3_palette(20)
+    pal_cycle <- petri_palette(20)
     color_idx <- 1
     for (col in colnames(anno_raw)) {
       val <- anno_raw[[col]]
@@ -146,7 +146,7 @@ if (length(anno_files) > 0) {
         rng <- range(val, na.rm = TRUE)
         mid <- mean(rng)
         anno_colors[[col]] <- circlize::colorRamp2(c(rng[1], mid, rng[2]),
-                                                     biof3_palette_div(3))
+                                                     petri_palette_div(3))
       } else {
         val <- as.character(val)
         anno_args[[col]] <- val
@@ -194,7 +194,7 @@ if (!show_row_names_flag && n_rows > top_n_label) {
 }
 
 # ---- Color function ----
-col_fun <- biof3_heat_colors(mat, kind = if (color_scheme == "div") "div" else "seq")
+col_fun <- petri_heat_colors(mat, kind = if (color_scheme == "div") "div" else "seq")
 
 # ---- Build main heatmap ----
 ht_main_args <- list(
@@ -237,7 +237,7 @@ heat_h <- max(6, min(20, nrow(mat) * 0.05 + 4))
 cat(sprintf("[complexheatmap] Saving main heatmap %g × %g in (PNG + PDF)...\n", heat_w, heat_h))
 
 # Save main heatmap (this draw call also fixes the row/column order)
-save_grid_biof3(file.path(output_dir, "heatmap_main"),
+save_grid_petri(file.path(output_dir, "heatmap_main"),
                  width = heat_w, height = heat_h, expr = {
   ht_drawn <- draw(ht_main, merge_legend = TRUE,
                     heatmap_legend_side = "right",
@@ -263,7 +263,7 @@ write.csv(mat_clustered_out, file.path(output_dir, "matrix_clustered.csv"), row.
 # ---- Save unscaled heatmap (no z-score, raw values) ----
 if (z_score) {
   # Make a separate unscaled version
-  col_fun_raw <- biof3_heat_colors(mat_raw, kind = "seq")
+  col_fun_raw <- petri_heat_colors(mat_raw, kind = "seq")
   ht_unscaled <- Heatmap(mat_raw,
                           col = col_fun_raw,
                           cluster_rows = cluster_rows,
@@ -279,13 +279,13 @@ if (z_score) {
                           column_names_rot = 45,
                           heatmap_legend_param = list(title = "Value", legend_height = unit(3, "cm")),
                           top_annotation = top_annotation)
-  save_grid_biof3(file.path(output_dir, "heatmap_unscaled"),
+  save_grid_petri(file.path(output_dir, "heatmap_unscaled"),
                    width = heat_w, height = heat_h, expr = {
     draw(ht_unscaled, merge_legend = TRUE)
   })
 } else {
   # If z_score=FALSE, the main IS unscaled — produce a copy for consistency
-  save_grid_biof3(file.path(output_dir, "heatmap_unscaled"),
+  save_grid_petri(file.path(output_dir, "heatmap_unscaled"),
                    width = heat_w, height = heat_h, expr = {
     draw(ht_main, merge_legend = TRUE)
   })
@@ -295,7 +295,7 @@ if (z_score) {
 cat("[complexheatmap] Sample correlation matrix...\n")
 sample_cor <- cor(mat_raw, method = "pearson", use = "p")
 ht_cor <- Heatmap(sample_cor,
-                   col = colorRamp2(c(min(sample_cor, 0.5), 0.75, 1), biof3_palette_div(3)),
+                   col = colorRamp2(c(min(sample_cor, 0.5), 0.75, 1), petri_palette_div(3)),
                    cluster_rows = TRUE, cluster_columns = TRUE,
                    clustering_method_rows = "ward.D2",
                    clustering_method_columns = "ward.D2",
@@ -306,7 +306,7 @@ ht_cor <- Heatmap(sample_cor,
                    column_names_rot = 45,
                    heatmap_legend_param = list(title = "Pearson r"),
                    top_annotation = top_annotation)
-save_grid_biof3(file.path(output_dir, "correlation_heatmap"),
+save_grid_petri(file.path(output_dir, "correlation_heatmap"),
                  width = max(7, ncol(mat_raw) * 0.08 + 3),
                  height = max(6, ncol(mat_raw) * 0.08 + 3), expr = {
   draw(ht_cor, merge_legend = TRUE)
@@ -317,7 +317,7 @@ if (cluster_rows && nrow(mat) <= 200) {  # only draw if rows ≤ 200 (else illeg
   row_dist <- as.dist(1 - cor(t(mat), method = clustering_distance))
   if (clustering_distance == "euclidean") row_dist <- dist(mat)
   row_hc <- hclust(row_dist, method = clustering_method)
-  save_grid_biof3(file.path(output_dir, "dendrogram_rows"),
+  save_grid_petri(file.path(output_dir, "dendrogram_rows"),
                    width = 12, height = max(4, nrow(mat) * 0.04 + 2), expr = {
     par(mar = c(0, 4, 2, 1), cex = 0.5)
     plot(as.dendrogram(row_hc), horiz = FALSE,
@@ -328,7 +328,7 @@ if (cluster_columns) {
   col_dist <- as.dist(1 - cor(mat, method = clustering_distance))
   if (clustering_distance == "euclidean") col_dist <- dist(t(mat))
   col_hc <- hclust(col_dist, method = clustering_method)
-  save_grid_biof3(file.path(output_dir, "dendrogram_columns"),
+  save_grid_petri(file.path(output_dir, "dendrogram_columns"),
                    width = max(8, ncol(mat) * 0.1 + 2), height = 5, expr = {
     par(mar = c(8, 4, 2, 1), cex = 0.6)
     plot(as.dendrogram(col_hc), horiz = FALSE,

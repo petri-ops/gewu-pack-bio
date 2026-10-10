@@ -10,7 +10,7 @@
 # Output: 5 ranking tables + Venn consensus + method correlation heatmap
 #         + volcano plot (univariate) + consensus top-N table + summary
 #
-# BioF3 SCI visual style: theme_biof3(), biof3_palette(), ggsave_biof3()
+# Petri SCI visual style: theme_petri(), petri_palette(), ggsave_petri()
 # ============================================================
 
 suppressMessages({
@@ -40,7 +40,7 @@ job_dir <- args[1]
 output_dir <- file.path(job_dir, "output")
 dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
 
-source(file.path(job_dir, "_biof3-theme.R"))
+source(file.path(job_dir, "_petri-theme.R"))
 
 cat("[ml-feature-select] Starting 5-method comparison (SCI style)\n")
 
@@ -152,8 +152,8 @@ p_volc <- ggplot(uni_df, aes(log2FC, neg_log10_p, color = sig)) +
   geom_vline(xintercept = c(-fc_thresh, fc_thresh), linetype = "dashed", color = "gray40") +
   geom_hline(yintercept = -log10(sig_thresh), linetype = "dashed", color = "gray40") +
   labs(title = "Univariate Test Volcano", x = "log2 Fold Change", y = "-log10(p)", color = NULL) +
-  theme_biof3()
-ggsave_biof3(p_volc, file.path(output_dir, "volcano"), width = 6, height = 5)
+  theme_petri()
+ggsave_petri(p_volc, file.path(output_dir, "volcano"), width = 6, height = 5)
 
 # ============================================================
 # Method 3: mRMR (max relevance min redundancy)
@@ -327,7 +327,7 @@ write.csv(consensus_top, file.path(output_dir, "consensus_top_n.csv"), row.names
 # Venn Diagram (5-method overlap)
 # ============================================================
 cat("[ml-feature-select] Plotting Venn diagram...\n")
-venn_pal <- biof3_palette(5)
+venn_pal <- petri_palette(5)
 venn_obj <- venn.diagram(
   x = sets,
   filename = NULL,
@@ -343,7 +343,7 @@ venn_obj <- venn.diagram(
   cat.fontfamily = "sans"
 )
 
-save_grid_biof3(file.path(output_dir, "venn"), width = 8, height = 7, expr = {
+save_grid_petri(file.path(output_dir, "venn"), width = 8, height = 7, expr = {
   grid.draw(venn_obj)
 })
 
@@ -378,8 +378,8 @@ cor_df$method <- rownames(cor_df)
 write.csv(cor_df, file.path(output_dir, "method_correlation.csv"), row.names = FALSE)
 
 # Heatmap
-hm_pal <- biof3_palette_seq(100, option = "ylgn")
-save_grid_biof3(file.path(output_dir, "method_correlation"), width = 5.5, height = 4.5, expr = {
+hm_pal <- petri_palette_seq(100, option = "ylgn")
+save_grid_petri(file.path(output_dir, "method_correlation"), width = 5.5, height = 4.5, expr = {
   pheatmap(cor_mat,
            color = hm_pal,
            border_color = NA,

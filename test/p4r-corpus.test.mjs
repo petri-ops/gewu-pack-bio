@@ -17,12 +17,12 @@ import { test } from 'node:test';
 import { fileURLToPath } from 'node:url';
 import { findCoreRepo } from './helpers/core-repo.mjs';
 
-import { fingerprintRealDataRoot } from '../../biof3-desktop/scripts/g0-rs-p4r-capture.mjs';
-import { CORPUS_INPUTS, CORPUS_STEPS, generateCorpus } from '../../biof3-desktop/scripts/g0-rs-p4r-corpus.mjs';
+import { fingerprintRealDataRoot } from '../../petri-desktop/scripts/g0-rs-p4r-capture.mjs';
+import { CORPUS_INPUTS, CORPUS_STEPS, generateCorpus } from '../../petri-desktop/scripts/g0-rs-p4r-corpus.mjs';
 
 const REPO_ROOT = findCoreRepo(); // BLOCK-83 P4：p4r 语料链跑在核心仓执行器上
-const REPO_DB = path.join(REPO_ROOT, 'core', 'biof3-server', 'biof3.db');
-const REAL_DATA_ROOT = path.join(homedir(), 'Documents', 'BioF3-Local');
+const REPO_DB = path.join(REPO_ROOT, 'core', 'petri-server', 'petri.db');
+const REAL_DATA_ROOT = path.join(homedir(), 'Documents', 'Petri-Local');
 
 /** Report why the R-backed test cannot run, or null when it can. */
 function rRuntimeBlocker() {

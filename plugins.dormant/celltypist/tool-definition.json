@@ -123,10 +123,10 @@
     {
       "code": "runtime_not_ready",
       "title": "Python 运行时缺包",
-      "description": "biof3-py-runtime 未装 celltypist / scanpy / anndata / matplotlib 等核心包，或 Python 解释器不可达。",
+      "description": "petri-py-runtime 未装 celltypist / scanpy / anndata / matplotlib 等核心包，或 Python 解释器不可达。",
       "recoverable": true,
-      "suggestedFix": "先运行 install.json 触发 install manager pip install celltypist>=1.6；先安装 biof3-py-runtime 1.0.0+ (含 scanpy>=1.9, anndata>=0.9)。",
-      "detect": "ImportError: No module named celltypist \\| ModuleNotFoundError \\| biof3-py-runtime 缺少依赖"
+      "suggestedFix": "先运行 install.json 触发 install manager pip install celltypist>=1.6；先安装 petri-py-runtime 1.0.0+ (含 scanpy>=1.9, anndata>=0.9)。",
+      "detect": "ImportError: No module named celltypist \\| ModuleNotFoundError \\| petri-py-runtime 缺少依赖"
     },
     {
       "code": "empty_result",

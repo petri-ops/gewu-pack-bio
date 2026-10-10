@@ -8,7 +8,7 @@
 #   Jin S et al. (2025). CellChat for systematic analysis of cell-cell communication
 #   from single-cell transcriptomics. Nature Protocols.
 #
-# 第二个使用 BioF3 SCI 视觉风格规范的工具 (theme_biof3 + save_grid_biof3 双格式).
+# 第二个使用 Petri SCI 视觉风格规范的工具 (theme_petri + save_grid_petri 双格式).
 #
 # Steps (in-scope) — Single-Dataset Workflow:
 #   1. Load expression + meta
@@ -55,7 +55,7 @@ job_dir <- args[1]
 output_dir <- file.path(job_dir, "output")
 dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
 
-source(file.path(job_dir, "_biof3-theme.R"))
+source(file.path(job_dir, "_petri-theme.R"))
 
 cat("[cellchat] Starting pipeline\n")
 cat("[cellchat] CellChat:", as.character(packageVersion("CellChat")), "\n")
@@ -182,7 +182,7 @@ cell_types <- levels(cellchat@idents)
 groupSize <- as.numeric(table(cellchat@idents))
 
 # ---- Plot 1+2: Circle network (count + weight) ----
-save_grid_biof3(file.path(output_dir, "network_circle_count"),
+save_grid_petri(file.path(output_dir, "network_circle_count"),
                  width = 7, height = 7, expr = {
   par(xpd = TRUE)
   netVisual_circle(cellchat@net$count, vertex.weight = groupSize,
@@ -190,7 +190,7 @@ save_grid_biof3(file.path(output_dir, "network_circle_count"),
                    title.name = "Number of interactions")
 })
 
-save_grid_biof3(file.path(output_dir, "network_circle_weight"),
+save_grid_petri(file.path(output_dir, "network_circle_weight"),
                  width = 7, height = 7, expr = {
   par(xpd = TRUE)
   netVisual_circle(cellchat@net$weight, vertex.weight = groupSize,
@@ -199,7 +199,7 @@ save_grid_biof3(file.path(output_dir, "network_circle_weight"),
 })
 
 # ---- Plot 3: Communication heatmap ----
-save_grid_biof3(file.path(output_dir, "network_heatmap"),
+save_grid_petri(file.path(output_dir, "network_heatmap"),
                  width = 8, height = 6, expr = {
   print(netVisual_heatmap(cellchat, measure = "weight",
                            color.heatmap = "Reds",
@@ -208,10 +208,10 @@ save_grid_biof3(file.path(output_dir, "network_heatmap"),
 
 # ---- Plot 4: Top LR bubble ----
 # Use all sources × all targets (CellChat's bubble plot)
-ggsave_biof3(
+ggsave_petri(
   netVisual_bubble(cellchat, sources.use = NULL, targets.use = NULL,
                     remove.isolate = FALSE, return.data = FALSE) +
-    theme_biof3(base_size = 9) +
+    theme_petri(base_size = 9) +
     theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 9),
           axis.text.y = element_text(size = 9)),
   file.path(output_dir, "bubble_top_LR"),
@@ -222,15 +222,15 @@ ggsave_biof3(
 # ---- Plot 5: Signaling role scatter ----
 cellchat <- netAnalysis_computeCentrality(cellchat, slot.name = "netP")
 
-save_grid_biof3(file.path(output_dir, "signaling_role_scatter"),
+save_grid_petri(file.path(output_dir, "signaling_role_scatter"),
                  width = 7, height = 6, expr = {
   print(netAnalysis_signalingRole_scatter(cellchat) +
-          theme_biof3(base_size = 11))
+          theme_petri(base_size = 11))
 })
 
 # ---- Plot 6: Top pathway aggregate (chord) ----
 top_pathway <- cellchat@netP$pathways[1]
-save_grid_biof3(file.path(output_dir, "pathway_aggregate_top1"),
+save_grid_petri(file.path(output_dir, "pathway_aggregate_top1"),
                  width = 7, height = 7, expr = {
   par(xpd = TRUE)
   netVisual_aggregate(cellchat, signaling = top_pathway, layout = "chord")
@@ -238,11 +238,11 @@ save_grid_biof3(file.path(output_dir, "pathway_aggregate_top1"),
 
 # ---- Plot 7: Top pathway violin ----
 top_pathways_violin <- head(cellchat@netP$pathways, top_n_pathways)
-save_grid_biof3(file.path(output_dir, "pathway_violin_top"),
+save_grid_petri(file.path(output_dir, "pathway_violin_top"),
                  width = max(8, length(top_pathways_violin) * 2),
                  height = 6, expr = {
   print(plotGeneExpression(cellchat, signaling = top_pathway, enriched.only = FALSE) +
-          theme_biof3(base_size = 10))
+          theme_petri(base_size = 10))
 })
 
 # ---- Plot 8: Pathway count per cell type ----
@@ -265,12 +265,12 @@ pw_df <- data.frame(
 )
 p_pw <- ggplot(pw_df, aes(x = reorder(cell_type, -count), y = count, fill = direction)) +
   geom_col(position = position_dodge(width = 0.85), width = 0.75) +
-  scale_fill_manual(values = c(Outgoing = biof3_palette_div(3)[3], Incoming = biof3_palette_div(3)[1])) +
+  scale_fill_manual(values = c(Outgoing = petri_palette_div(3)[3], Incoming = petri_palette_div(3)[1])) +
   labs(x = NULL, y = "Number of pathways", fill = NULL,
        title = sprintf("Pathway count per cell type (%d total pathways)", n_pw)) +
-  theme_biof3() +
+  theme_petri() +
   theme(axis.text.x = element_text(angle = 30, hjust = 1))
-ggsave_biof3(p_pw, file.path(output_dir, "pathway_count_barplot"),
+ggsave_petri(p_pw, file.path(output_dir, "pathway_count_barplot"),
               width = max(8, length(cell_types) * 0.8 + 2), height = 5)
 
 # ============================================================

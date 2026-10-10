@@ -38,7 +38,7 @@
     },
     {
       "id": "runtime-not-ready",
-      "description": "biof3-py-runtime not provisioned — scanpy ImportError at runtime entry, exit code 4",
+      "description": "petri-py-runtime not provisioned — scanpy ImportError at runtime entry, exit code 4",
       "inputs": {
         "anndata_file": "demo-data/pbmc_3k_mini.h5ad"
       },

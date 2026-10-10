@@ -1,6 +1,6 @@
 # rsf-survival demo data
 
-TCGA-LIHC 子集(BioF3 ML W2-D 派生):
+TCGA-LIHC 子集(Petri ML W2-D 派生):
 - features.csv: top 200 高方差基因 × 365 肿瘤样本
 - clinical.csv: 365 样本, OS_event=1: 130 (35.6%)
 

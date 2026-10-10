@@ -6,7 +6,7 @@
   "fixtures": [
     {
       "id": "valid",
-      "description": "PBMC 3k-like h5ad fixture (270 cells × 100 highly variable genes) with `counts` layer + `batch` obs col — scvi-tools SCVI 训练 5 epochs → latent (270, 10) + normalized expression (270, 100) + UMAP + report. Requires scvi-tools>=1.0 + torch already installed in biof3-py-runtime venv (install.json 步骤执行).",
+      "description": "PBMC 3k-like h5ad fixture (270 cells × 100 highly variable genes) with `counts` layer + `batch` obs col — scvi-tools SCVI 训练 5 epochs → latent (270, 10) + normalized expression (270, 100) + UMAP + report. Requires scvi-tools>=1.0 + torch already installed in petri-py-runtime venv (install.json 步骤执行).",
       "inputs": {
         "anndata_file": "demo-data/pbmc_3k_mini.h5ad",
         "batch_key": "batch",
@@ -40,7 +40,7 @@
     },
     {
       "id": "runtime-not-ready",
-      "description": "biof3-py-runtime venv does not have scvi-tools or torch — ImportError at runtime entry, exit code 4",
+      "description": "petri-py-runtime venv does not have scvi-tools or torch — ImportError at runtime entry, exit code 4",
       "inputs": {
         "anndata_file": "demo-data/pbmc_3k_mini.h5ad"
       },
@@ -72,12 +72,12 @@
     "evidenceSource": "runtime-generated artifact-manifest.json + provenance.json"
   },
   "runtimeExtension": {
-    "strategy": "pip install in biof3-py-runtime venv (does NOT modify biof3-py-runtime artifact)",
+    "strategy": "pip install in petri-py-runtime venv (does NOT modify petri-py-runtime artifact)",
     "extraDependencies": [
       { "name": "scvi-tools", "version": ">=1.0", "testedVersion": "1.4.2" },
       { "name": "torch", "version": ">=2.0", "testedVersion": "2.13.0" }
     ],
     "device": "cpu",
-    "notes": "scvi-tools 与 torch 不在 biof3-py-runtime 基础栈中（PHASE 0 runtime inventory 已确认）。SUB-1.5 实施时段实测在 biof3-py-runtime venv 内部 `pip install scvi-tools torch` 成功（macOS arm64, 约 5min）。如 runtime 未扩展本插件会触发 runtime-not-ready 失败模式（fixture 标 skipOnSupportedPlatform=true）。COOL G1+ 阶段才会考虑把 scvi-tools 纳入 biof3-py-runtime 基础栈。"
+    "notes": "scvi-tools 与 torch 不在 petri-py-runtime 基础栈中（PHASE 0 runtime inventory 已确认）。SUB-1.5 实施时段实测在 petri-py-runtime venv 内部 `pip install scvi-tools torch` 成功（macOS arm64, 约 5min）。如 runtime 未扩展本插件会触发 runtime-not-ready 失败模式（fixture 标 skipOnSupportedPlatform=true）。COOL G1+ 阶段才会考虑把 scvi-tools 纳入 petri-py-runtime 基础栈。"
   }
 }

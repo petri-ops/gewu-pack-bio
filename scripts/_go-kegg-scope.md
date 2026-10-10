@@ -6,7 +6,7 @@
 
 ## Version targeted
 
-- BioF3 R 容器: `R 4.5.x`
+- Petri R 容器: `R 4.5.x`
 - 关键包: `clusterProfiler 4.18+` / `enrichplot 1.30+` / `ggplot2 4.0+`
 
 ## Canonical workflow source
@@ -38,7 +38,7 @@
 | `pvalueCutoff` | `0.05` | 官方默认 |
 | `qvalueCutoff` | `0.2` | 官方默认 |
 | `pAdjustMethod` | `BH` | 官方默认 |
-| `organism` | `hsa` | BioF3 默认人类 |
+| `organism` | `hsa` | Petri 默认人类 |
 | `ont` | `ALL (BP/MF/CC)` | 一次跑全 |
 
 ## Expected outputs

@@ -6,7 +6,7 @@
   "version": "1.0.0",
   "language": "r",
   "sourcePolicy": "builtin-canonical",
-  "description": "单细胞细胞-细胞通讯推断（R 包 CellChat 1.6+）：从 Seurat 对象出发做 CellChatDB 配体-受体库构建、通讯概率推断（computeCommunProb）、通路级通讯推断（computeCommunProbPathway），输出热图、弦图、气泡图与通路富集表。运行于 biof3-r-runtime (dev Electron 边界内)，CellChat 通过 BiocManager::install 在 biof3-r-runtime libPath 一次性安装（runtime 增量记录在 install.json）。",
+  "description": "单细胞细胞-细胞通讯推断（R 包 CellChat 1.6+）：从 Seurat 对象出发做 CellChatDB 配体-受体库构建、通讯概率推断（computeCommunProb）、通路级通讯推断（computeCommunProbPathway），输出热图、弦图、气泡图与通路富集表。运行于 petri-r-runtime (dev Electron 边界内)，CellChat 通过 BiocManager::install 在 petri-r-runtime libPath 一次性安装（runtime 增量记录在 install.json）。",
   "requiresBundle": "r-spatial",
   "requiresBundleVersion": "1.0.0",
   "packages": {

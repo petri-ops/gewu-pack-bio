@@ -15,6 +15,6 @@ consensus-cluster 工具应该 **不知道**已知标签的情况下找出最优
 
 ## 数据来源
 
-复用 ml-feature-select demo 的 vst_hvg5000 子集。原始数据:TCGA-LIHC(`~/biof3-data/tcga-lihc/`)
+复用 ml-feature-select demo 的 vst_hvg5000 子集。原始数据:TCGA-LIHC(`~/petri-data/tcga-lihc/`)
 
-本 demo 用于 BioF3 ML W3 module07 教程演示 + consensus-cluster 工具公开 demo。
+本 demo 用于 Petri ML W3 module07 教程演示 + consensus-cluster 工具公开 demo。

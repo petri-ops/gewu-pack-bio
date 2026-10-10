@@ -13,9 +13,9 @@
 #   5. dotplot / barplot / cnetplot / treeplot / heatplot / emapplot
 #   6. 中间数据保存 (ego_*.rds + *_data.csv) + HTML 报告
 #
-# 2026-05-25: 升级到 BioF3 SCI 视觉风格规范
-#   - dotplot / barplot / compareCluster: + theme_biof3() + ggsave_biof3() 双格式
-#   - cnetplot / treeplot / heatplot / emapplot: save_grid_biof3() 包装 (这些是 ggraph
+# 2026-05-25: 升级到 Petri SCI 视觉风格规范
+#   - dotplot / barplot / compareCluster: + theme_petri() + ggsave_petri() 双格式
+#   - cnetplot / treeplot / heatplot / emapplot: save_grid_petri() 包装 (这些是 ggraph
 #     复合对象，主题套上易破布局，保留 enrichplot 默认 + 双格式输出)
 #   - 配色: 保留 enrichplot 默认 viridis/red gradient (已合规且与 p 值/q 值映射对齐)
 # ============================================================
@@ -58,15 +58,15 @@ canonicalize_png <- function(file_path) {
   invisible(TRUE)
 }
 
-find_biof3_kegg_snapshot <- function(organism) {
-  candidates <- file.path(.libPaths(), ".biof3-data", paste0("kegg-", organism, ".rds"))
+find_petri_kegg_snapshot <- function(organism) {
+  candidates <- file.path(.libPaths(), ".petri-data", paste0("kegg-", organism, ".rds"))
   matches <- candidates[file.exists(candidates)]
   if (length(matches) == 0) return(NA_character_)
   matches[1]
 }
 
 run_kegg_ora <- function(gene_ids, organism, pvalue_cutoff, qvalue_cutoff) {
-  snapshot_path <- find_biof3_kegg_snapshot(organism)
+  snapshot_path <- find_petri_kegg_snapshot(organism)
   if (!is.na(snapshot_path)) {
     offline <- tryCatch({
       snapshot <- readRDS(snapshot_path)
@@ -104,8 +104,8 @@ job_dir <- args[1]
 output_dir <- file.path(job_dir, "output")
 dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
 
-# ★ Load BioF3 SCI 主题
-source(file.path(job_dir, "_biof3-theme.R"))
+# ★ Load Petri SCI 主题
+source(file.path(job_dir, "_petri-theme.R"))
 
 cat("[go-kegg] Starting pipeline (SCI style v2026-05-25)\n")
 
@@ -349,22 +349,22 @@ if (!is.null(ego_bp) && nrow(as.data.frame(ego_bp)) > 0) {
   n_show <- min(top_n, nrow(as.data.frame(ego_bp)))
   p1 <- dotplot(ego_bp, showCategory = n_show) +
     labs(title = "GO Biological Process") +
-    theme_biof3(base_size = 10) +
+    theme_petri(base_size = 10) +
     theme(axis.text.y = element_text(size = 9))
-  ggsave_biof3(p1, file.path(output_dir, "go_bp_dotplot"), width = 8, height = 7)
+  ggsave_petri(p1, file.path(output_dir, "go_bp_dotplot"), width = 8, height = 7)
 
   p2 <- barplot(ego_bp, showCategory = n_show) +
     labs(title = "GO-BP Top Enriched Terms") +
-    theme_biof3(base_size = 10) +
+    theme_petri(base_size = 10) +
     theme(axis.text.y = element_text(size = 9))
-  ggsave_biof3(p2, file.path(output_dir, "go_bp_barplot"), width = 8, height = 6)
+  ggsave_petri(p2, file.path(output_dir, "go_bp_barplot"), width = 8, height = 6)
 
-  # ---- 3-6: cnetplot / treeplot / heatplot / emapplot (ggraph 复合对象, 用 save_grid_biof3) ----
+  # ---- 3-6: cnetplot / treeplot / heatplot / emapplot (ggraph 复合对象, 用 save_grid_petri) ----
   tryCatch({
     p3 <- cnetplot(ego_bp, showCategory = min(5, nrow(as.data.frame(ego_bp))),
                    foldChange = NULL) +
       ggtitle("GO-BP Gene-Concept Network")
-    save_grid_biof3(file.path(output_dir, "go_bp_cnetplot"), width = 10, height = 8, expr = print(p3))
+    save_grid_petri(file.path(output_dir, "go_bp_cnetplot"), width = 10, height = 8, expr = print(p3))
   }, error = function(e) cat(sprintf("  cnetplot skipped: %s\n", e$message)))
 
   ego_bp_sim <- NULL
@@ -372,20 +372,20 @@ if (!is.null(ego_bp) && nrow(as.data.frame(ego_bp)) > 0) {
     ego_bp_sim <- pairwise_termsim(ego_bp)
     p4 <- treeplot(ego_bp_sim, showCategory = min(30, nrow(as.data.frame(ego_bp)))) +
       ggtitle("GO-BP Enrichment Tree")
-    save_grid_biof3(file.path(output_dir, "go_bp_treeplot"), width = 12, height = 8, expr = print(p4))
+    save_grid_petri(file.path(output_dir, "go_bp_treeplot"), width = 12, height = 8, expr = print(p4))
   }, error = function(e) cat(sprintf("  treeplot skipped: %s\n", e$message)))
 
   tryCatch({
     p5 <- heatplot(ego_bp, showCategory = min(15, nrow(as.data.frame(ego_bp)))) +
       ggtitle("GO-BP Enrichment Heatmap")
-    save_grid_biof3(file.path(output_dir, "go_bp_heatplot"), width = 12, height = 6, expr = print(p5))
+    save_grid_petri(file.path(output_dir, "go_bp_heatplot"), width = 12, height = 6, expr = print(p5))
   }, error = function(e) cat(sprintf("  heatplot skipped: %s\n", e$message)))
 
   if (!is.null(ego_bp_sim) && nrow(as.data.frame(ego_bp)) >= 5) {
     tryCatch({
       p6 <- emapplot(ego_bp_sim, showCategory = min(30, nrow(as.data.frame(ego_bp)))) +
         ggtitle("GO-BP Enrichment Map")
-      save_grid_biof3(file.path(output_dir, "go_bp_emapplot"), width = 10, height = 9, expr = print(p6))
+      save_grid_petri(file.path(output_dir, "go_bp_emapplot"), width = 10, height = 9, expr = print(p6))
     }, error = function(e) cat(sprintf("  emapplot skipped: %s\n", e$message)))
   }
 }
@@ -394,18 +394,18 @@ if (!is.null(ego_bp) && nrow(as.data.frame(ego_bp)) > 0) {
 if (!is.null(ego_mf) && nrow(as.data.frame(ego_mf)) > 0) {
   p <- dotplot(ego_mf, showCategory = min(top_n, nrow(as.data.frame(ego_mf)))) +
     labs(title = "GO Molecular Function") +
-    theme_biof3(base_size = 10) +
+    theme_petri(base_size = 10) +
     theme(axis.text.y = element_text(size = 9))
-  ggsave_biof3(p, file.path(output_dir, "go_mf_dotplot"), width = 8, height = 7)
+  ggsave_petri(p, file.path(output_dir, "go_mf_dotplot"), width = 8, height = 7)
 }
 
 # ---- 8: GO-CC dotplot ----
 if (!is.null(ego_cc) && nrow(as.data.frame(ego_cc)) > 0) {
   p <- dotplot(ego_cc, showCategory = min(top_n, nrow(as.data.frame(ego_cc)))) +
     labs(title = "GO Cellular Component") +
-    theme_biof3(base_size = 10) +
+    theme_petri(base_size = 10) +
     theme(axis.text.y = element_text(size = 9))
-  ggsave_biof3(p, file.path(output_dir, "go_cc_dotplot"), width = 8, height = 7)
+  ggsave_petri(p, file.path(output_dir, "go_cc_dotplot"), width = 8, height = 7)
 }
 
 # ---- 9-10: KEGG dotplot + barplot ----
@@ -413,15 +413,15 @@ if (!is.null(kegg_res) && nrow(as.data.frame(kegg_res)) > 0) {
   n_show <- min(top_n, nrow(as.data.frame(kegg_res)))
   p1 <- dotplot(kegg_res, showCategory = n_show) +
     labs(title = "KEGG Pathway Enrichment") +
-    theme_biof3(base_size = 10) +
+    theme_petri(base_size = 10) +
     theme(axis.text.y = element_text(size = 9))
-  ggsave_biof3(p1, file.path(output_dir, "kegg_dotplot"), width = 8, height = 7)
+  ggsave_petri(p1, file.path(output_dir, "kegg_dotplot"), width = 8, height = 7)
 
   p2 <- barplot(kegg_res, showCategory = n_show) +
     labs(title = "KEGG Top Pathways") +
-    theme_biof3(base_size = 10) +
+    theme_petri(base_size = 10) +
     theme(axis.text.y = element_text(size = 9))
-  ggsave_biof3(p2, file.path(output_dir, "kegg_barplot"), width = 8, height = 6)
+  ggsave_petri(p2, file.path(output_dir, "kegg_barplot"), width = 8, height = 6)
 }
 
 # ---- 11: compareCluster (Up vs Down) ----
@@ -436,9 +436,9 @@ if (!is.null(up_entrez) && !is.null(down_entrez) &&
     if (!is.null(cc_go) && nrow(as.data.frame(cc_go)) > 0) {
       p <- dotplot(cc_go, showCategory = min(10, nrow(as.data.frame(cc_go)))) +
         labs(title = "GO-BP: Up vs Down Regulated") +
-        theme_biof3(base_size = 10) +
+        theme_petri(base_size = 10) +
         theme(axis.text.y = element_text(size = 9))
-      ggsave_biof3(p, file.path(output_dir, "compare_up_down"), width = 9, height = 8)
+      ggsave_petri(p, file.path(output_dir, "compare_up_down"), width = 9, height = 8)
       write.csv(as.data.frame(cc_go), file.path(output_dir, "compare_cluster_results.csv"), row.names = FALSE)
     }
   }, error = function(e) cat(sprintf("  compareCluster skipped: %s\n", e$message)))

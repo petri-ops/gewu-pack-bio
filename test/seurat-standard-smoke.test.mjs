@@ -107,11 +107,11 @@ test('scripts/seurat-standard.R 存在且为合法 R 入口', () => {
   assert.ok(body.startsWith('#!/usr/bin/env Rscript'), 'should have shebang');
   assert.ok(
     body.includes('commandArgs') || body.includes('trailingOnly'),
-    'should honor BioF3 dispatcher contract'
+    'should honor Petri dispatcher contract'
   );
   assert.ok(
     body.includes('canonicalize_png') && body.includes('png::writePNG'),
-    'should canonicalize PNG via png::writePNG(png::readPNG(f), f) (BioF3 SCI theme convention)'
+    'should canonicalize PNG via png::writePNG(png::readPNG(f), f) (Petri SCI theme convention)'
   );
   assert.ok(
     body.includes('FindVariableFeatures') && body.includes('FindAllMarkers'),
@@ -194,7 +194,7 @@ test('placeholder PNG 存在且 > 200 bytes（hash rewrite 后稳定输出）', 
   );
 });
 
-test('demo RDS 存在（验证 BIOF3-R-RUNTIME 已生成 seurat 对象 fixture）', () => {
+test('demo RDS 存在（验证 PETRI-R-RUNTIME 已生成 seurat 对象 fixture）', () => {
   const path = resolve(pluginDir, 'demo-data/pbmc_3k_mini.rds');
   assert.ok(existsSync(path), 'demo-data/pbmc_3k_mini.rds missing');
   const stats = statSync(path);

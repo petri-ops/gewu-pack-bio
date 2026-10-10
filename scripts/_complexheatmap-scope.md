@@ -1,7 +1,7 @@
 # ComplexHeatmap 工具范围卡（步骤 0 落地）
 
 > tool-dev "步骤 0：工具范围与官方文档" 第三个落地实例
-> 作为 BioF3 SCI 视觉风格规范的首个工具
+> 作为 Petri SCI 视觉风格规范的首个工具
 
 ## Tool ID
 
@@ -9,7 +9,7 @@
 
 ## Version targeted
 
-- BioF3 R 容器: R 4.5.1
+- Petri R 容器: R 4.5.1
 - 关键包：
   - `ComplexHeatmap 2.24.1`
   - `circlize 0.4.17`
@@ -45,7 +45,7 @@
 
 > `_data.ts` description: "ComplexHeatmap 高级热图：z-score 标准化 + 行/列聚类 + sample annotation + 行分组。SCI 风格双格式输出（PNG + PDF）。不含: OncoPrint / UpSet / 突变可视化（用其他工具）。"
 
-## Default params (按官方推荐 + BioF3 SCI 默认)
+## Default params (按官方推荐 + Petri SCI 默认)
 
 | 参数 | 默认 | 来源 / 说明 |
 |------|------|-------|
@@ -120,7 +120,7 @@ anno_demo <- data.frame(
 ## 已读官方文档（T1）
 
 - [x] ComplexHeatmap Complete Reference 第 1-3 章（基础 Heatmap + Annotation + 颜色控制）
-- [x] BioF3 自己的教程 `docs/integration/module03.md`（多组学整合用 ComplexHeatmap）口径
+- [x] Petri 自己的教程 `docs/integration/module03.md`（多组学整合用 ComplexHeatmap）口径
 - [x] 容器版本验证：ComplexHeatmap 2.24.1 / circlize 0.4.17
 
 ## 已知风险
@@ -138,5 +138,5 @@ anno_demo <- data.frame(
 - 步骤 2: 加 `_data.ts` 工具定义
 - 步骤 3: 加 `routes/tools.js` 注册
 - 步骤 4: 加 `index.tsx` TOOL_COLORS / REPORT_URLS
-- 步骤 5: 编写 `complexheatmap.R`（用 `_biof3-theme.R`，做第一个 sci 风格落地）
+- 步骤 5: 编写 `complexheatmap.R`（用 `_petri-theme.R`，做第一个 sci 风格落地）
 - 步骤 6-14: 按流程走

@@ -10,7 +10,7 @@
 
 ## Version targeted
 
-- BioF3 R 容器: `R 4.5.1` (2025-06-13)
+- Petri R 容器: `R 4.5.1` (2025-06-13)
 - 关键包版本（已 `Rscript packageVersion()` 验证）:
   - `Seurat 5.4.0`
   - `SeuratObject 5.3.0`
@@ -25,7 +25,7 @@
 
 **标准数据集**: PBMC 3k (10X Genomics 公开发布，2,700 cells × 13,714 genes，可在 https://cf.10xgenomics.com/samples/cell/pbmc3k/pbmc3k_filtered_gene_bc_matrices.tar.gz 下载)
 
-> 注：BioF3 自己的 `docs/single-cell/module03.md` 教程也以 PBMC 3k 为标准数据集，工具与教程口径一致。
+> 注：Petri 自己的 `docs/single-cell/module03.md` 教程也以 PBMC 3k 为标准数据集，工具与教程口径一致。
 
 ## Steps (in-scope) — Canonical Workflow 9 步
 
@@ -63,14 +63,14 @@
 | `min.cells` | 3 | 官方 `CreateSeuratObject` |
 | `min.features` | 200 | 官方 `CreateSeuratObject` |
 | `mt_pattern` | `^MT-` | 官方 `PercentageFeatureSet`（人类）。⚠️ 鼠用 `^mt-` |
-| `nFeature_max` | 2500 | 官方 PBMC3k 教程 subset 上限 (BioF3 暴露给用户调) |
+| `nFeature_max` | 2500 | 官方 PBMC3k 教程 subset 上限 (Petri 暴露给用户调) |
 | `nFeature_min` | 200 | 同上 |
 | `percent_mt_max` | 5 | 同上 |
 | `normalization.method` | `LogNormalize` | 官方默认 |
 | `scale.factor` | 10000 | 官方默认 |
 | `selection.method` | `vst` | 官方默认 (FindVariableFeatures) |
 | `nfeatures` | 2000 | 官方默认 (FindVariableFeatures) |
-| `dims` | `1:10` | 官方默认。注：BioF3 docs/single-cell/module03 用 `1:20`（dataset-specific 选择）。工具默认跟官方，文档说明可调 |
+| `dims` | `1:10` | 官方默认。注：Petri docs/single-cell/module03 用 `1:20`（dataset-specific 选择）。工具默认跟官方，文档说明可调 |
 | `resolution` | 0.5 | 官方默认 (FindClusters) |
 | `only.pos` | TRUE | 官方默认 (FindAllMarkers) |
 | `top_n_markers` | 10 | 用于 DoHeatmap 展示 top markers (官方教程用 top10) |
@@ -123,8 +123,8 @@
 ## 已读官方文档（T1 检查清单）
 
 - [x] 官方主 vignette: https://satijalab.org/seurat/articles/pbmc3k_tutorial.html
-- [x] BioF3 容器版本验证: Seurat 5.4.0 / R 4.5.1
-- [x] BioF3 自己的教程 `docs/single-cell/module01-03` 对照口径
+- [x] Petri 容器版本验证: Seurat 5.4.0 / R 4.5.1
+- [x] Petri 自己的教程 `docs/single-cell/module01-03` 对照口径
 - [ ] (T2 用时查) Seurat v5 cheat sheet: https://satijalab.org/seurat/articles/seurat5_essential_commands.html
 
 ## 已知风险

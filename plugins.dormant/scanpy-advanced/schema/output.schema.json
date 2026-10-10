@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "biof3://plugins/scanpy-advanced/output.schema.json",
+  "$id": "petri://plugins/scanpy-advanced/output.schema.json",
   "title": "scanpy-advanced output schema",
   "description": "JSON schema for the 8 expected outputs from scanpy-advanced.py (files written to <jobDir>/output/).",
   "type": "object",

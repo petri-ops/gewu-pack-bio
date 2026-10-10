@@ -29,8 +29,8 @@ job_dir <- args[1]
 output_dir <- file.path(job_dir, "output")
 dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
 
-# ★ Load BioF3 SCI 主题 (W3-1 升级 2026-05-25)
-source(file.path(job_dir, "_biof3-theme.R"))
+# ★ Load Petri SCI 主题 (W3-1 升级 2026-05-25)
+source(file.path(job_dir, "_petri-theme.R"))
 
 params <- fromJSON(file.path(job_dir, "params.json"))
 train_ratio <- as.numeric(params$train_ratio %||% 0.7)
@@ -182,14 +182,14 @@ cat("Step 3: LASSO Cox regression...\n")
 cv_fit <- cv.glmnet(x_train, y_train, family = "cox", alpha = 1, nfolds = 10)
 
 tryCatch({
-  save_grid_biof3(file.path(output_dir, "lasso_cv"), width = 7, height = 5, expr = {
+  save_grid_petri(file.path(output_dir, "lasso_cv"), width = 7, height = 5, expr = {
     par(mar = c(4.5, 4.5, 2, 1), bty = "l")
     plot(cv_fit, main = "LASSO Cox Cross-Validation",
          cex.main = 1.1, cex.lab = 1.0, cex.axis = 0.9)
-    abline(v = log(cv_fit$lambda.min), col = biof3_palette_div(3)[3], lty = 2, lwd = 1.5)
-    abline(v = log(cv_fit$lambda.1se), col = biof3_palette_div(3)[1], lty = 2, lwd = 1.5)
+    abline(v = log(cv_fit$lambda.min), col = petri_palette_div(3)[3], lty = 2, lwd = 1.5)
+    abline(v = log(cv_fit$lambda.1se), col = petri_palette_div(3)[1], lty = 2, lwd = 1.5)
     legend("topright", legend = c("lambda.min", "lambda.1se"),
-           col = c(biof3_palette_div(3)[3], biof3_palette_div(3)[1]),
+           col = c(petri_palette_div(3)[3], petri_palette_div(3)[1]),
            lty = 2, lwd = 1.5, bty = "n", cex = 0.95)
   })
 }, error = function(e) cat("  LASSO CV plot failed:", e$message, "\n"))
@@ -272,7 +272,7 @@ logrank <- survdiff(Surv(time, event) ~ group, data = risk_df)
 logrank_p <- 1 - pchisq(logrank$chisq, df = 1)
 
 tryCatch({
-  km_pal <- biof3_palette(2)  # NPG 蓝-红
+  km_pal <- petri_palette(2)  # NPG 蓝-红
   p <- ggsurvplot(fit_km, data = risk_df,
                   pval = TRUE, pval.method = TRUE,
                   risk.table = TRUE, risk.table.height = 0.25,
@@ -280,8 +280,8 @@ tryCatch({
                   legend.labs = c(paste0("Low Risk (n=", n_low, ")"), paste0("High Risk (n=", n_high, ")")),
                   xlab = "Time", ylab = "Survival Probability",
                   title = "LASSO Cox Risk Score - KM Curve",
-                  ggtheme = theme_biof3())
-  save_grid_biof3(file.path(output_dir, "km_curve"),
+                  ggtheme = theme_petri())
+  save_grid_petri(file.path(output_dir, "km_curve"),
                    width = 8, height = 7, expr = print(p))
 }, error = function(e) cat("  KM plot failed:", e$message, "\n"))
 
@@ -309,8 +309,8 @@ tryCatch({
                      marker = risk_df$risk_score, cause = 1, times = valid_times, iid = TRUE)
   aucs <- roc_res$AUC
 
-  roc_pal <- c(biof3_palette_div(3)[3], biof3_palette_div(3)[1], biof3_palette()[3])  # 红/蓝/绿
-  save_grid_biof3(file.path(output_dir, "roc_curve"),
+  roc_pal <- c(petri_palette_div(3)[3], petri_palette_div(3)[1], petri_palette()[3])  # 红/蓝/绿
+  save_grid_petri(file.path(output_dir, "roc_curve"),
                    width = 6.5, height = 6, expr = {
     par(mar = c(4.5, 4.5, 2, 1), bty = "l")
     plot(roc_res, time = valid_times[1], col = roc_pal[1], lwd = 2,
@@ -333,21 +333,21 @@ tryCatch({
   risk_sorted <- risk_df[order(risk_df$risk_score), ]
   risk_sorted$rank <- 1:nrow(risk_sorted)
 
-  triple_pal <- biof3_palette(2)  # NPG 蓝/红 (Low/High)
+  triple_pal <- petri_palette(2)  # NPG 蓝/红 (Low/High)
 
   p1 <- ggplot(risk_sorted, aes(x = rank, y = risk_score, color = group)) +
     geom_point(size = 1) +
     scale_color_manual(values = c(Low = triple_pal[1], High = triple_pal[2])) +
     geom_hline(yintercept = risk_cutoff, linetype = "dashed", color = "gray40") +
     labs(x = "Patients (sorted)", y = "Risk Score", title = "Risk Score Distribution") +
-    theme_biof3() + theme(legend.position = "none")
+    theme_petri() + theme(legend.position = "none")
 
-  status_pal <- c("0" = biof3_palette()[3], "1" = biof3_palette_div(3)[3])  # 绿活 / 红死
+  status_pal <- c("0" = petri_palette()[3], "1" = petri_palette_div(3)[3])  # 绿活 / 红死
   p2 <- ggplot(risk_sorted, aes(x = rank, y = time, color = factor(event))) +
     geom_point(size = 1) +
     scale_color_manual(values = status_pal, labels = c("Alive", "Dead"), name = NULL) +
     labs(x = "Patients (sorted)", y = "Survival Time", title = "Survival Status") +
-    theme_biof3() + theme(legend.position = "top")
+    theme_petri() + theme(legend.position = "top")
 
   top_sig <- head(sig_table$gene, min(10, nrow(sig_table)))
   heat_mat <- as.matrix(expr[top_sig, risk_sorted$sample])
@@ -358,16 +358,16 @@ tryCatch({
   heat_df <- expand.grid(gene = rownames(heat_mat_z), sample = 1:ncol(heat_mat_z))
   heat_df$value <- as.vector(heat_mat_z)
 
-  div_pal <- biof3_palette_div(3)  # 蓝-白-红
+  div_pal <- petri_palette_div(3)  # 蓝-白-红
   p3 <- ggplot(heat_df, aes(x = sample, y = gene, fill = value)) +
     geom_tile() +
     scale_fill_gradient2(low = div_pal[1], mid = "white", high = div_pal[3], midpoint = 0) +
     labs(x = "Patients (sorted)", y = NULL, title = "Signature Genes (Z-score)") +
-    theme_biof3() +
+    theme_petri() +
     theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
 
   suppressMessages(library(gridExtra))
-  save_grid_biof3(file.path(output_dir, "risk_triple"),
+  save_grid_petri(file.path(output_dir, "risk_triple"),
                    width = 8, height = 10, expr = {
     grid.arrange(p1, p2, p3, ncol = 1, heights = c(1, 1, 1.2))
   })
@@ -376,7 +376,7 @@ tryCatch({
 # Coefficient bar plot (ggplot 系)
 tryCatch({
   sig_table$direction <- ifelse(sig_table$coefficient > 0, "Risk", "Protective")
-  coef_div <- biof3_palette_div(3)
+  coef_div <- petri_palette_div(3)
   p <- ggplot(sig_table, aes(x = reorder(gene, coefficient), y = coefficient, fill = direction)) +
     geom_col(width = 0.7) +
     scale_fill_manual(values = c(Risk = coef_div[3], Protective = coef_div[1])) +
@@ -384,10 +384,10 @@ tryCatch({
     labs(x = NULL, y = "LASSO Coefficient",
          title = paste0("Signature: ", nrow(sig_table), " Genes"),
          subtitle = "Red = Risk Factor, Blue = Protective") +
-    theme_biof3() +
+    theme_petri() +
     theme(legend.position = "top",
           plot.subtitle = element_text(size = 10, color = "gray40"))
-  ggsave_biof3(p, file.path(output_dir, "coef_barplot"),
+  ggsave_petri(p, file.path(output_dir, "coef_barplot"),
                 width = 7, height = max(4, nrow(sig_table) * 0.4))
 }, error = function(e) cat("  Coef plot failed:", e$message, "\n"))
 

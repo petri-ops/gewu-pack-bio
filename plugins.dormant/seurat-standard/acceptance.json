@@ -39,7 +39,7 @@
     },
     {
       "id": "runtime-not-ready",
-      "description": "biof3-r-runtime not provisioned — Seurat loadNamespace fails, exit code 4",
+      "description": "petri-r-runtime not provisioned — Seurat loadNamespace fails, exit code 4",
       "inputs": {
         "matrix_file": "demo-data/pbmc_3k_mini.rds"
       },

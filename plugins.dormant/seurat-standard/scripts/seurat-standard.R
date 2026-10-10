@@ -6,7 +6,7 @@
 #   https://satijalab.org/seurat/articles/pbmc3k_tutorial.html
 #
 # 步骤（与既有 core/r-server/tool-scripts/seurat-standard.R 同源；本文件是
-# plugin 八件套版，作为 builtin-canonical plugin 暴露给 BioF3 调度器，
+# plugin 八件套版，作为 builtin-canonical plugin 暴露给 Petri 调度器，
 # 原 core/r-server/tool-scripts/seurat-standard.R 保留向后兼容）：
 #   1. Load（10X 三件套 / CSV / TSV / MTX / H5 自动探测）→ CreateSeuratObject
 #   2. QC + filter（percent.mt + nFeature_RNA）
@@ -24,10 +24,10 @@
 #   - Auto cell-type annotation (SingleR 等)
 #   - Doublet detection
 #
-# 契约（BioF3 调度器）:
+# 契约（Petri 调度器）:
 #   - commandArgs[1] = job_dir
 #   - 读 params.json（jsonlite）
-#   - source _biof3-theme.R（tools.js 自动复制到 jobDir）
+#   - source _petri-theme.R（tools.js 自动复制到 jobDir）
 #   - 输出全部写入 job_dir/output/
 #   - 8 件套输出（与 tool-definition.json 对齐）：
 #     seurat_obj.rds / markers_table.csv / qc_metrics.csv / umap_clusters.png
@@ -44,13 +44,13 @@
 # Preflight: 用 tryCatch 包裹 Seurat 加载，让 runtime-not-ready 能被映射为 exit 4
 ensure_seurat_ready <- function() {
   if (!requireNamespace("Seurat", quietly = TRUE)) {
-    stop("[seurat-standard] biof3-r-runtime missing dependency: Seurat not installed")
+    stop("[seurat-standard] petri-r-runtime missing dependency: Seurat not installed")
   }
   if (!requireNamespace("SeuratObject", quietly = TRUE)) {
-    stop("[seurat-standard] biof3-r-runtime missing dependency: SeuratObject not installed")
+    stop("[seurat-standard] petri-r-runtime missing dependency: SeuratObject not installed")
   }
   if (!requireNamespace("patchwork", quietly = TRUE)) {
-    stop("[seurat-standard] biof3-r-runtime missing dependency: patchwork not installed")
+    stop("[seurat-standard] petri-r-runtime missing dependency: patchwork not installed")
   }
 }
 
@@ -108,24 +108,24 @@ if (!dir.exists(job_dir)) {
 output_dir <- file.path(job_dir, "output")
 dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
 
-# Load BioF3 SCI theme (tools.js 自动塞到 jobDir)
-theme_path <- file.path(job_dir, "_biof3-theme.R")
+# Load Petri SCI theme (tools.js 自动塞到 jobDir)
+theme_path <- file.path(job_dir, "_petri-theme.R")
 if (file.exists(theme_path)) {
   source(theme_path)
 } else {
-  cat("[seurat-standard] _biof3-theme.R missing — falling back to theme_classic()\n", file = stderr())
-  theme_biof3 <- function(base_size = 10, base_family = "") {
+  cat("[seurat-standard] _petri-theme.R missing — falling back to theme_classic()\n", file = stderr())
+  theme_petri <- function(base_size = 10, base_family = "") {
     ggplot2::theme_classic(base_size = base_size, base_family = base_family) +
       ggplot2::theme(panel.border = ggplot2::element_rect(fill = NA, linewidth = 0.6))
   }
-  biof3_palette <- function(n) {
+  petri_palette <- function(n) {
     if (n <= 10) {
       RColorBrewer::brewer.pal(max(3, n), "Set1")[1:n]
     } else {
       scales::hue_pal()(n)
     }
   }
-  ggsave_biof3 <- function(plot, path, width = 6, height = 4, limitsize = TRUE) {
+  ggsave_petri <- function(plot, path, width = 6, height = 4, limitsize = TRUE) {
     ggplot2::ggsave(paste0(path, ".png"), plot = plot, width = width, height = height,
                     dpi = 300, limitsize = limitsize)
     invisible(TRUE)
@@ -262,7 +262,7 @@ cat("[seurat-standard] Step 2: Creating Seurat object + QC metrics...\n")
 if (exists("obj") && "Seurat" %in% class(obj)) {
   cat("[seurat-standard]   Using pre-loaded Seurat object from RDS\n")
 } else {
-  obj <- CreateSeuratObject(counts = counts, project = "biof3",
+  obj <- CreateSeuratObject(counts = counts, project = "petri",
                             min.cells = 3, min.features = min_features)
 }
 obj[["percent.mt"]] <- PercentageFeatureSet(obj, pattern = mt_pattern)
@@ -270,18 +270,18 @@ obj[["percent.mt"]] <- PercentageFeatureSet(obj, pattern = mt_pattern)
 # QC violin (3-panel) via patchwork
 p_qc_violin <- VlnPlot(obj, features = c("nFeature_RNA", "nCount_RNA", "percent.mt"),
                        ncol = 3, pt.size = 0.1) &
-  theme_biof3(base_size = 10) &
+  theme_petri(base_size = 10) &
   theme(plot.title = element_text(size = 11), legend.position = "none")
-ggsave_biof3(p_qc_violin, file.path(output_dir, "qc_violin"),
+ggsave_petri(p_qc_violin, file.path(output_dir, "qc_violin"),
              width = 11, height = 4)
 
 # QC scatter (patchwork)
 plot1 <- FeatureScatter(obj, feature1 = "nCount_RNA", feature2 = "percent.mt") +
-  NoLegend() + ggtitle("Count vs % MT") + theme_biof3(base_size = 10)
+  NoLegend() + ggtitle("Count vs % MT") + theme_petri(base_size = 10)
 plot2 <- FeatureScatter(obj, feature1 = "nCount_RNA", feature2 = "nFeature_RNA") +
-  NoLegend() + ggtitle("Count vs nFeature") + theme_biof3(base_size = 10)
+  NoLegend() + ggtitle("Count vs nFeature") + theme_petri(base_size = 10)
 p_qc_scatter <- plot1 + plot2
-ggsave_biof3(p_qc_scatter, file.path(output_dir, "qc_scatter"),
+ggsave_petri(p_qc_scatter, file.path(output_dir, "qc_scatter"),
              width = 10, height = 4)
 
 # QC metrics table
@@ -363,9 +363,9 @@ obj <- FindVariableFeatures(obj, selection.method = "vst", nfeatures = nfeatures
 top10 <- head(VariableFeatures(obj), 10)
 p_hvg_base <- VariableFeaturePlot(obj)
 p_hvg <- LabelPoints(plot = p_hvg_base, points = top10, repel = TRUE) +
-  theme_biof3(base_size = 10) +
+  theme_petri(base_size = 10) +
   theme(legend.position = "bottom")
-ggsave_biof3(p_hvg, file.path(output_dir, "hvg_plot"), width = 8, height = 6)
+ggsave_petri(p_hvg, file.path(output_dir, "hvg_plot"), width = 8, height = 6)
 
 # HVG table
 hvg_df <- HVFInfo(obj)
@@ -388,20 +388,20 @@ obj <- RunPCA(obj, features = VariableFeatures(obj), verbose = FALSE)
 
 # PCA DimPlot
 p_pca <- DimPlot(obj, reduction = "pca") + NoLegend() +
-  ggtitle("PCA DimPlot") + theme_biof3(base_size = 10)
-ggsave_biof3(p_pca, file.path(output_dir, "pca_dimplot"), width = 7, height = 6)
+  ggtitle("PCA DimPlot") + theme_petri(base_size = 10)
+ggsave_petri(p_pca, file.path(output_dir, "pca_dimplot"), width = 7, height = 6)
 
 # PCA dim loadings
 p_load <- VizDimLoadings(obj, dims = 1:2, reduction = "pca") +
-  theme_biof3(base_size = 10) +
+  theme_petri(base_size = 10) +
   theme(legend.position = "right")
-ggsave_biof3(p_load, file.path(output_dir, "pca_dim_loadings"),
+ggsave_petri(p_load, file.path(output_dir, "pca_dim_loadings"),
              width = 8, height = 6)
 
 # Elbow plot
 p_elbow <- ElbowPlot(obj, ndims = max(20, dims_val + 5)) +
-  theme_biof3(base_size = 10)
-ggsave_biof3(p_elbow, file.path(output_dir, "elbow_plot"), width = 6, height = 4)
+  theme_petri(base_size = 10)
+ggsave_petri(p_elbow, file.path(output_dir, "elbow_plot"), width = 6, height = 4)
 
 # PCA stdev CSV
 pca_stdev <- data.frame(
@@ -435,12 +435,12 @@ n_clusters <- length(levels(Idents(obj)))
 cat(sprintf("[seurat-standard]   Found %d clusters\n", n_clusters))
 
 # UMAP clusters PNG
-cluster_pal <- biof3_palette(n_clusters)
+cluster_pal <- petri_palette(n_clusters)
 p_umap <- DimPlot(obj, reduction = "umap", label = TRUE, pt.size = 0.5,
                    cols = cluster_pal) +
   NoLegend() + ggtitle(sprintf("UMAP — %d clusters", n_clusters)) +
-  theme_biof3(base_size = 10)
-ggsave_biof3(p_umap, file.path(output_dir, "umap_clusters"), width = 7, height = 6)
+  theme_petri(base_size = 10)
+ggsave_petri(p_umap, file.path(output_dir, "umap_clusters"), width = 7, height = 6)
 
 # UMAP coords + cluster
 umap_coords <- data.frame(
@@ -473,7 +473,7 @@ if (length(top_marker_genes) > 1) {
     NoLegend() +
     theme(axis.text.y = element_text(size = 9))
   heat_h <- max(8, min(20, length(top_marker_genes) * 0.12))
-  ggsave_biof3(p_heat, file.path(output_dir, "markers_heatmap"),
+  ggsave_petri(p_heat, file.path(output_dir, "markers_heatmap"),
                width = 11, height = heat_h, limitsize = FALSE)
 }
 
@@ -488,15 +488,15 @@ top6 <- unique(top6)
 
 if (length(top6) >= 1) {
   p_vln <- VlnPlot(obj, features = top6, ncol = 3, pt.size = 0) &
-    theme_biof3(base_size = 9) &
+    theme_petri(base_size = 9) &
     theme(legend.position = "none")
-  ggsave_biof3(p_vln, file.path(output_dir, "markers_violin"),
+  ggsave_petri(p_vln, file.path(output_dir, "markers_violin"),
                width = 11, height = 7)
 
   p_feat <- FeaturePlot(obj, features = top6, ncol = 3,
                         reduction = "umap", order = TRUE) &
-    theme_biof3(base_size = 9)
-  ggsave_biof3(p_feat, file.path(output_dir, "feature_plot"),
+    theme_petri(base_size = 9)
+  ggsave_petri(p_feat, file.path(output_dir, "feature_plot"),
                width = 11, height = 7)
 }
 

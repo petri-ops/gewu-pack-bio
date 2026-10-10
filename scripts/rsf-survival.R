@@ -10,7 +10,7 @@
 #   - Risk score triple plot (KM + scatter + heatmap)
 #   - Trained model (.rds)
 #
-# BioF3 SCI visual style: theme_biof3(), biof3_palette(), ggsave_biof3()
+# Petri SCI visual style: theme_petri(), petri_palette(), ggsave_petri()
 # ============================================================
 
 suppressMessages({
@@ -39,7 +39,7 @@ job_dir <- args[1]
 output_dir <- file.path(job_dir, "output")
 dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
 
-source(file.path(job_dir, "_biof3-theme.R"))
+source(file.path(job_dir, "_petri-theme.R"))
 
 cat("[rsf-survival] Starting RSF pipeline (SCI style)\n")
 
@@ -190,8 +190,8 @@ if (nrow(vimp_top) > 0) {
     geom_col(fill = "#0f766e", width = 0.7) +
     labs(title = sprintf("VIMP (top %d)", top_n_features), x = "Feature", y = "Permutation Importance") +
     coord_flip() +
-    theme_biof3()
-  ggsave_biof3(p_vimp, file.path(output_dir, "vimp"), width = 6, height = 7)
+    theme_petri()
+  ggsave_petri(p_vimp, file.path(output_dir, "vimp"), width = 6, height = 7)
 }
 
 # ============================================================
@@ -220,15 +220,15 @@ roc_data <- do.call(rbind, lapply(names(roc_results), function(nm) {
   data.frame(FPR = r$fp, TPR = r$tp, time = paste0(r$time_point, "yr"), stringsAsFactors = FALSE)
 }))
 
-roc_pal <- biof3_palette(length(time_points))
+roc_pal <- petri_palette(length(time_points))
 p_troc <- ggplot(roc_data, aes(x = FPR, y = TPR, color = time)) +
   geom_line(linewidth = 0.8) +
   geom_abline(slope = 1, intercept = 0, linetype = "dashed", color = "gray50") +
   scale_color_manual(values = setNames(roc_pal, paste0(time_points, "yr"))) +
   labs(title = "Time-dependent ROC", x = "1 - Specificity (FPR)", y = "Sensitivity (TPR)", color = "Time") +
   coord_equal() +
-  theme_biof3()
-ggsave_biof3(p_troc, file.path(output_dir, "time_roc"), width = 6, height = 5)
+  theme_petri()
+ggsave_petri(p_troc, file.path(output_dir, "time_roc"), width = 6, height = 5)
 
 # ROC summary table
 roc_summary <- data.frame(
@@ -257,13 +257,13 @@ for (feat in top4) {
     geom_line(color = "#0f766e", linewidth = 0.8) +
     geom_rug(sides = "b", alpha = 0.3) +
     labs(title = feat, x = "Feature value", y = "Predicted mortality") +
-    theme_biof3()
+    theme_petri()
   pd_plots[[feat]] <- p_pd
 }
 
 # Combine 4 PD plots into one figure
 library(gridExtra)
-save_grid_biof3(file.path(output_dir, "partial_dependence"), width = 10, height = 8, expr = {
+save_grid_petri(file.path(output_dir, "partial_dependence"), width = 10, height = 8, expr = {
   grid.arrange(grobs = lapply(pd_plots, ggplotGrob), ncol = 2,
                top = textGrob("Partial Dependence (top 4 VIMP features)", gp = gpar(fontsize = 14, fontface = "bold")))
 })
@@ -297,7 +297,7 @@ p_scatter <- ggplot(risk_df, aes(x = reorder(sample, risk), y = risk, color = gr
   geom_point(size = 1.5, alpha = 0.7) +
   scale_color_manual(values = c(High = "#ef4444", Low = "#10b981")) +
   labs(title = "Risk Score Distribution", x = "Sample (ordered)", y = "Risk score") +
-  theme_biof3() +
+  theme_petri() +
   theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
 
 # Risk heatmap (sample x top 10 features, colored by expression)
@@ -316,12 +316,12 @@ if (length(top10) > 0) {
     geom_tile() +
     scale_fill_gradient2(low = "#3b82f6", mid = "white", high = "#ef4444", midpoint = 0) +
     labs(title = "Top 10 Feature Expression (by risk)", x = "Sample (ordered by risk)", y = NULL, fill = "Z-score") +
-    theme_biof3() +
+    theme_petri() +
     theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
 }
 
 # Save combined triple plot
-save_grid_biof3(file.path(output_dir, "risk_triple"), width = 12, height = 10, expr = {
+save_grid_petri(file.path(output_dir, "risk_triple"), width = 12, height = 10, expr = {
   if (exists("p_km") && exists("p_scatter") && exists("p_heat")) {
     km_plot <- p_km$plot + theme(legend.position = "bottom")
     grid.arrange(

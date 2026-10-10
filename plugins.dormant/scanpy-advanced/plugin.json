@@ -6,7 +6,7 @@
   "version": "1.0.0",
   "language": "python",
   "sourcePolicy": "builtin-canonical",
-  "description": "Scanpy 1.9+ 单细胞标准高级流程: QC / normalize / HVG / PCA / UMAP / Leiden / marker genes。完全运行于 biof3-py-runtime (dev Electron 边界内)。",
+  "description": "Scanpy 1.9+ 单细胞标准高级流程: QC / normalize / HVG / PCA / UMAP / Leiden / marker genes。完全运行于 petri-py-runtime (dev Electron 边界内)。",
   "packages": {
     "python": {
       "scanpy": ">=1.9",

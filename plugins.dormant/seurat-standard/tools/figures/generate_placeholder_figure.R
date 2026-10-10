@@ -10,7 +10,7 @@
 #   - 确定性: 不依赖 random / 时间戳
 #
 # 运行:
-#   /path/to/biof3-r-runtime/bin/Rscript generate_placeholder_figure.R
+#   /path/to/petri-r-runtime/bin/Rscript generate_placeholder_figure.R
 # ============================================================
 
 if (!requireNamespace("png", quietly = TRUE)) {

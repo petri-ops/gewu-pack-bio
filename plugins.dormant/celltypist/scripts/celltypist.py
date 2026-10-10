@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """celltypist — Celltypist 1.6+ cell type annotation 主脚本.
 
-主流程 (BioF3 调度器契约):
+主流程 (Petri 调度器契约):
   1. preflight: 校验 job_dir 输入文件 (h5ad)
   2. 读入 AnnData
   3. QC: sc.pp.filter_cells / filter_genes (min_genes / min_cells)
@@ -16,13 +16,13 @@
   7. 落盘 predictions.csv / probabilities.csv / confusion_matrix.csv /
      annotated.h5ad / umap_annotation.png / umap_confidence.png / report.html
 
-契约 (BioF3 调度器):
+契约 (Petri 调度器):
   - sys.argv[1] = job_dir (含 params.json + input file)
   - 输出全部写入 job_dir/output/
   - PNG 通过 PIL.Image.save 重写以稳定 hash (与 R png::writePNG 同义)
 
 G0 阶段纪律:
-  - 仅以 dev Electron 边界内 Python runtime 跑 celltypist 1.6+ (biof3-py-runtime +
+  - 仅以 dev Electron 边界内 Python runtime 跑 celltypist 1.6+ (petri-py-runtime +
     install.json 触发 pip install celltypist>=1.6)
   - 不触发 packaged / Provider / GA / dist staleness (G1+)
   - celltypist 不可用时使用 deterministic scanpy-based heuristic fallback
@@ -96,7 +96,7 @@ def _canonicalize_png(path: Path) -> None:
 
 
 def _read_params(job_dir: Path) -> dict:
-    """读取 BioF3 调度器塞进 job_dir 的 params.json."""
+    """读取 Petri 调度器塞进 job_dir 的 params.json."""
     params_path = job_dir / "params.json"
     if not params_path.exists():
         return {}
@@ -366,7 +366,7 @@ def _render_umap_annotation(adata, output_path: Path, color_col: str, title: str
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="celltypist plugin entry")
-    parser.add_argument("job_dir", help="BioF3 Job 目录")
+    parser.add_argument("job_dir", help="Petri Job 目录")
     args = parser.parse_args()
     job_dir = Path(args.job_dir).resolve()
 
@@ -404,7 +404,7 @@ def main() -> int:
         matplotlib.use("Agg")
         import matplotlib.pyplot as plt  # noqa: F401
     except ImportError as exc:
-        msg = f"[celltypist] biof3-py-runtime 缺少依赖: {exc}"
+        msg = f"[celltypist] petri-py-runtime 缺少依赖: {exc}"
         print(msg, file=sys.stderr)
         _report_progress(100, f"runtime-not-ready: {msg}", job_dir)
         (output_dir / "error.txt").write_text(msg, encoding="utf-8")
@@ -585,7 +585,7 @@ def main() -> int:
         "<li><code>umap_confidence.png</code> — UMAP colored by conf_score</li>"
         "</ul>"
         "<p style=\"color:#666;font-size:12px;margin-top:24px;\">"
-        "G0 dev Electron 边界内 verified · biof3-py-runtime + celltypist ≥1.6 (PyPI bootstrap) · "
+        "G0 dev Electron 边界内 verified · petri-py-runtime + celltypist ≥1.6 (PyPI bootstrap) · "
         "PHASE 1 BLOCK-11 SUB-1.3</p>"
         "</body></html>"
     )

@@ -1,6 +1,6 @@
 # celltypist
 
-> **科学子问题**: 在给定 AnnData 输入下，Celltypist 1.6+ 自动 + 手动 cell type annotation 能否在 biof3-py-runtime (dev Electron 边界内) 跑通 Model.predict + majority voting？
+> **科学子问题**: 在给定 AnnData 输入下，Celltypist 1.6+ 自动 + 手动 cell type annotation 能否在 petri-py-runtime (dev Electron 边界内) 跑通 Model.predict + majority voting？
 
 ## 职责
 
@@ -57,8 +57,8 @@ Celltypist 接收 `scanpy-advanced.outputs.preprocessed.h5ad`（或任意上游 
 
 **dev Electron 边界内 verified**（G0 阶段）：
 
-- biof3-py-runtime v1.0.0 已装 `scanpy>=1.9` + `anndata>=0.9` + `numpy/pandas/scipy/matplotlib/seaborn/Pillow`（见 `resources/built-in-plugins/py-runtime-requirements.txt`）
-- celltypist 本体（PyPI ~10MB）**不在** biof3-py-runtime；install.json 触发 `pip install celltypist>=1.6` 局部补装（**不**动 biof3-py-runtime 主体）
+- petri-py-runtime v1.0.0 已装 `scanpy>=1.9` + `anndata>=0.9` + `numpy/pandas/scipy/matplotlib/seaborn/Pillow`（见 `resources/built-in-plugins/py-runtime-requirements.txt`）
+- celltypist 本体（PyPI ~10MB）**不在** petri-py-runtime；install.json 触发 `pip install celltypist>=1.6` 局部补装（**不**动 petri-py-runtime 主体）
 - celltypist 不可用 / model 缺失时自动走 scanpy-based heuristic fallback（`fallback_used=1`），保证 valid fixture 始终跑通
 - 离线可执行；产出 progress.json 驱动 UI 进度条
 
@@ -66,7 +66,7 @@ Celltypist 接收 `scanpy-advanced.outputs.preprocessed.h5ad`（或任意上游 
 
 ## Python 包依赖
 
-- scanpy ≥ 1.9（biof3-py-runtime 声明）
+- scanpy ≥ 1.9（petri-py-runtime 声明）
 - anndata ≥ 0.9
 - numpy ≥ 1.24
 - pandas ≥ 2.0
@@ -84,7 +84,7 @@ Celltypist 接收 `scanpy-advanced.outputs.preprocessed.h5ad`（或任意上游 
 ## 关联 Skill
 
 - **PHASE 1 SUB-1.6**：`sc-analysis-standard` skill 在 SUB-1.6 子批才创建，**不动**（单工作包串行纪律）
-- 本插件 standalone 可被任意 `biof3-py-runtime` Python 调用链直接消费
+- 本插件 standalone 可被任意 `petri-py-runtime` Python 调用链直接消费
 
 ## 模型选择
 

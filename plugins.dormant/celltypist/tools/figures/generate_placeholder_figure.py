@@ -8,7 +8,7 @@ Output:
     resources/built-in-plugins/celltypist/tools/figures/annotation_placeholder.png
 
 Run:
-    /Applications/anaconda3/envs/biof3-py-runtime/bin/python3 tools/figures/generate_placeholder_figure.py
+    /Applications/anaconda3/envs/petri-py-runtime/bin/python3 tools/figures/generate_placeholder_figure.py
 
 Idempotent: re-running produces byte-identical output (modulo the read+save
 hash-rewrite loop), so the file's sha256 stays stable for Result Studio

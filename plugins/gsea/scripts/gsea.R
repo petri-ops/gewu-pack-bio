@@ -11,10 +11,10 @@
 #   4. dotplot / waterfall / running score / ridge / emapplot / cnetplot / treeplot
 #   5. 中间数据 (gsea_res.rds) + HTML 报告
 #
-# 2026-05-25: 升级到 BioF3 SCI 视觉风格规范
-#   - dotplot / waterfall (ggplot 系): + theme_biof3() + ggsave_biof3()
-#   - running_score / ridgeplot / cnetplot / emapplot / treeplot (enrichplot 复合): save_grid_biof3()
-#   - waterfall 配色: biof3_palette_div(2 极) 红激活 / 蓝抑制
+# 2026-05-25: 升级到 Petri SCI 视觉风格规范
+#   - dotplot / waterfall (ggplot 系): + theme_petri() + ggsave_petri()
+#   - running_score / ridgeplot / cnetplot / emapplot / treeplot (enrichplot 复合): save_grid_petri()
+#   - waterfall 配色: petri_palette_div(2 极) 红激活 / 蓝抑制
 # ============================================================
 
 # ---- 缺包守卫（BLOCK-150 ⑦；对照 deg-standardizer 运行时检查范式：缺什么+怎么补）----
@@ -46,15 +46,15 @@ if (!exists("%||%")) {
   `%||%` <- function(a, b) if (is.null(a) || (length(a) == 0 && !is.list(a))) b else a
 }
 
-find_biof3_kegg_snapshot <- function(organism) {
-  candidates <- file.path(.libPaths(), ".biof3-data", paste0("kegg-", organism, ".rds"))
+find_petri_kegg_snapshot <- function(organism) {
+  candidates <- file.path(.libPaths(), ".petri-data", paste0("kegg-", organism, ".rds"))
   matches <- candidates[file.exists(candidates)]
   if (length(matches) == 0) return(NA_character_)
   matches[1]
 }
 
 run_kegg_gsea <- function(gene_list, organism, min_size, max_size) {
-  snapshot_path <- find_biof3_kegg_snapshot(organism)
+  snapshot_path <- find_petri_kegg_snapshot(organism)
   if (!is.na(snapshot_path)) {
     offline <- tryCatch({
       snapshot <- readRDS(snapshot_path)
@@ -94,8 +94,8 @@ job_dir <- args[1]
 output_dir <- file.path(job_dir, "output")
 dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
 
-# ★ Load BioF3 SCI 主题
-source(file.path(job_dir, "_biof3-theme.R"))
+# ★ Load Petri SCI 主题
+source(file.path(job_dir, "_petri-theme.R"))
 
 cat("[gsea] Starting pipeline (SCI style v2026-05-25)\n")
 
@@ -269,9 +269,9 @@ cat("[gsea] Generating plots...\n")
 tryCatch({
   p <- dotplot(gsea_res, showCategory = min(20, n_enriched)) +
     labs(title = paste("GSEA", gene_set, "Dotplot")) +
-    theme_biof3(base_size = 10) +
+    theme_petri(base_size = 10) +
     theme(axis.text.y = element_text(size = 9))
-  ggsave_biof3(p, file.path(output_dir, "gsea_dotplot"), width = 8, height = 7)
+  ggsave_petri(p, file.path(output_dir, "gsea_dotplot"), width = 8, height = 7)
 }, error = function(e) cat(sprintf("  dotplot skipped: %s\n", e$message)))
 
 # ---- 2. NES Waterfall (ggplot 系，自建) ----
@@ -283,25 +283,25 @@ tryCatch({
   plot_df$Direction <- ifelse(plot_df$NES > 0, "Activated", "Suppressed")
   plot_df$Description <- factor(plot_df$Description, levels = plot_df$Description[order(plot_df$NES)])
 
-  pal <- biof3_palette_div(3)  # 蓝-白-红 → 取 1（蓝）和 3（红）
+  pal <- petri_palette_div(3)  # 蓝-白-红 → 取 1（蓝）和 3（红）
   p <- ggplot(plot_df, aes(x = NES, y = Description, fill = Direction)) +
     geom_col(width = 0.7) +
     scale_fill_manual(values = c(Activated = pal[3], Suppressed = pal[1])) +
     geom_vline(xintercept = 0, color = "gray30", linewidth = 0.4) +
     labs(x = "Normalized Enrichment Score (NES)", y = NULL, title = "GSEA NES Waterfall") +
-    theme_biof3() +
+    theme_petri() +
     theme(legend.position = "top",
           axis.text.y = element_text(size = 9))
-  ggsave_biof3(p, file.path(output_dir, "gsea_waterfall"), width = 9, height = 7)
+  ggsave_petri(p, file.path(output_dir, "gsea_waterfall"), width = 9, height = 7)
 }, error = function(e) cat(sprintf("  waterfall skipped: %s\n", e$message)))
 
-# ---- 3. Running Score (top 3，gseaplot2 复合对象，用 save_grid_biof3) ----
+# ---- 3. Running Score (top 3，gseaplot2 复合对象，用 save_grid_petri) ----
 tryCatch({
   top_ids <- head(gsea_res@result$ID, 3)
   for (i in seq_along(top_ids)) {
     pp <- gseaplot2(gsea_res, geneSetID = top_ids[i],
                      title = gsea_res@result$Description[i])
-    save_grid_biof3(file.path(output_dir, paste0("running_score_", i)),
+    save_grid_petri(file.path(output_dir, paste0("running_score_", i)),
                      width = 8, height = 6, expr = print(pp))
   }
 }, error = function(e) cat(sprintf("  running score skipped: %s\n", e$message)))
@@ -310,19 +310,19 @@ tryCatch({
 tryCatch({
   p <- ridgeplot(gsea_res, showCategory = min(15, n_enriched)) +
     labs(title = paste("GSEA", gene_set, "Ridge Plot")) +
-    theme_biof3(base_size = 10) +
+    theme_petri(base_size = 10) +
     theme(axis.text.y = element_text(size = 9))
-  ggsave_biof3(p, file.path(output_dir, "gsea_ridge"), width = 9, height = 8)
+  ggsave_petri(p, file.path(output_dir, "gsea_ridge"), width = 9, height = 8)
 }, error = function(e) cat(sprintf("  ridge skipped: %s\n", e$message)))
 
-# ---- 5. Emapplot (enrichplot ggraph 复合, 用 save_grid_biof3) ----
+# ---- 5. Emapplot (enrichplot ggraph 复合, 用 save_grid_petri) ----
 gsea_sim <- NULL
 if (n_enriched >= 5) {
   tryCatch({
     gsea_sim <- pairwise_termsim(gsea_res)
     p <- emapplot(gsea_sim, showCategory = min(30, n_enriched)) +
       ggtitle(paste("GSEA", gene_set, "Enrichment Map"))
-    save_grid_biof3(file.path(output_dir, "gsea_emapplot"), width = 10, height = 9, expr = print(p))
+    save_grid_petri(file.path(output_dir, "gsea_emapplot"), width = 10, height = 9, expr = print(p))
   }, error = function(e) cat(sprintf("  emapplot skipped: %s\n", e$message)))
 }
 
@@ -330,7 +330,7 @@ if (n_enriched >= 5) {
 tryCatch({
   p <- cnetplot(gsea_res, showCategory = min(5, n_enriched), foldChange = entrez_list) +
     ggtitle(paste("GSEA", gene_set, "Gene-Concept Network"))
-  save_grid_biof3(file.path(output_dir, "gsea_cnetplot"), width = 10, height = 8, expr = print(p))
+  save_grid_petri(file.path(output_dir, "gsea_cnetplot"), width = 10, height = 8, expr = print(p))
 }, error = function(e) cat(sprintf("  cnetplot skipped: %s\n", e$message)))
 
 # ---- 7. Treeplot ----
@@ -339,7 +339,7 @@ if (n_enriched >= 10) {
     if (is.null(gsea_sim)) gsea_sim <- pairwise_termsim(gsea_res)
     p <- treeplot(gsea_sim, showCategory = min(30, n_enriched)) +
       ggtitle(paste("GSEA", gene_set, "Tree"))
-    save_grid_biof3(file.path(output_dir, "gsea_treeplot"), width = 12, height = 8, expr = print(p))
+    save_grid_petri(file.path(output_dir, "gsea_treeplot"), width = 12, height = 8, expr = print(p))
   }, error = function(e) cat(sprintf("  treeplot skipped: %s\n", e$message)))
 }
 

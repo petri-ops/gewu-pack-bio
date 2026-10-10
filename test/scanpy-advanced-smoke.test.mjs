@@ -106,7 +106,7 @@ test('scripts/scanpy-advanced.py 存在且为合法 Python 入口', () => {
   assert.ok(body.startsWith('#!/usr/bin/env python3'), 'should have shebang');
   assert.ok(
     body.includes('sys.argv[1]') || body.includes('commandArgs'),
-    'should honor BioF3 dispatcher contract'
+    'should honor Petri dispatcher contract'
   );
   assert.ok(
     body.includes('_canonicalize_png') && body.includes('Pillow'),

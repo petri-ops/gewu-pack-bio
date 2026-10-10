@@ -27,8 +27,8 @@ job_dir <- args[1]
 output_dir <- file.path(job_dir, "output")
 dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
 
-# ★ Load BioF3 SCI 主题 (W3-2 升级 2026-05-25)
-source(file.path(job_dir, "_biof3-theme.R"))
+# ★ Load Petri SCI 主题 (W3-2 升级 2026-05-25)
+source(file.path(job_dir, "_petri-theme.R"))
 
 params <- fromJSON(file.path(job_dir, "params.json"))
 method <- params$method %||% "ssgsea"
@@ -146,7 +146,7 @@ tryCatch({
   bar_df$Sample <- factor(bar_df$Sample, levels = colnames(gsva_norm))
 
   n_cells_bar <- length(unique(bar_df$CellType))
-  bar_pal <- biof3_palette(n_cells_bar)  # 自动 ramp 到 N 个免疫细胞类型
+  bar_pal <- petri_palette(n_cells_bar)  # 自动 ramp 到 N 个免疫细胞类型
 
   p <- ggplot(bar_df, aes(x = Sample, y = Score, fill = CellType)) +
     geom_bar(stat = "identity", position = "fill", width = 0.9) +
@@ -154,12 +154,12 @@ tryCatch({
     scale_fill_manual(values = bar_pal) +
     labs(x = NULL, y = "Relative Proportion",
          title = "Immune Cell Composition (ssGSEA)", fill = "Cell Type") +
-    theme_biof3() +
+    theme_petri() +
     theme(axis.text.x = element_text(angle = 90, hjust = 1, size = 9),
           legend.text = element_text(size = 9),
           legend.key.size = unit(0.4, "cm"))
 
-  ggsave_biof3(p, file.path(output_dir, "barplot_composition"),
+  ggsave_petri(p, file.path(output_dir, "barplot_composition"),
                 width = max(8, ncol(gsva_norm) * 0.15 + 4), height = 7)
 }, error = function(e) cat("  Barplot failed:", e$message, "\n"))
 
@@ -171,17 +171,17 @@ tryCatch({
   cor_df <- melt(cor_mat)
   colnames(cor_df) <- c("CellType1", "CellType2", "Correlation")
 
-  div_pal <- biof3_palette_div(3)  # 蓝-白-红
+  div_pal <- petri_palette_div(3)  # 蓝-白-红
   p <- ggplot(cor_df, aes(x = CellType1, y = CellType2, fill = Correlation)) +
     geom_tile() +
     scale_fill_gradient2(low = div_pal[1], mid = "white", high = div_pal[3],
                          midpoint = 0, limits = c(-1, 1)) +
     labs(title = "Immune Cell Type Correlation (Spearman)", x = NULL, y = NULL) +
-    theme_biof3() +
+    theme_petri() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 9),
           axis.text.y = element_text(size = 9))
 
-  ggsave_biof3(p, file.path(output_dir, "correlation_heatmap"), width = 10, height = 9)
+  ggsave_petri(p, file.path(output_dir, "correlation_heatmap"), width = 10, height = 9)
 }, error = function(e) cat("  Correlation heatmap failed:", e$message, "\n"))
 
 # ============================================================
@@ -201,18 +201,18 @@ if (!is.null(group_info)) {
       box_df <- box_df[box_df$CellType %in% top_cells, ]
 
       n_groups <- length(unique(box_df$Group))
-      group_pal <- biof3_palette(max(2, n_groups))
+      group_pal <- petri_palette(max(2, n_groups))
 
       p <- ggplot(box_df, aes(x = CellType, y = Score, fill = Group)) +
         geom_boxplot(outlier.size = 0.5, width = 0.7) +
         scale_fill_manual(values = group_pal) +
         labs(x = NULL, y = "ssGSEA Score",
              title = "Immune Infiltration: Group Comparison") +
-        theme_biof3() +
+        theme_petri() +
         theme(axis.text.x = element_text(angle = 45, hjust = 1, size = 9),
               legend.position = "top")
 
-      ggsave_biof3(p, file.path(output_dir, "boxplot_group"), width = 10, height = 6)
+      ggsave_petri(p, file.path(output_dir, "boxplot_group"), width = 10, height = 6)
     }
   }, error = function(e) cat("  Group boxplot failed:", e$message, "\n"))
 }
@@ -227,15 +227,15 @@ tryCatch({
     MeanScore = mean_scores
   )
 
-  lolli_color <- biof3_palette()[3]  # NPG 第 3 色 (NPG 绿)
+  lolli_color <- petri_palette()[3]  # NPG 第 3 色 (NPG 绿)
   p <- ggplot(lollipop_df, aes(x = MeanScore, y = CellType)) +
     geom_segment(aes(x = 0, xend = MeanScore, y = CellType, yend = CellType),
                  color = "gray90", linewidth = 0.8) +
     geom_point(size = 3, color = lolli_color) +
     labs(x = "Mean ssGSEA Score", y = NULL, title = "Immune Cell Infiltration Level") +
-    theme_biof3()
+    theme_petri()
 
-  ggsave_biof3(p, file.path(output_dir, "lollipop_scores"),
+  ggsave_petri(p, file.path(output_dir, "lollipop_scores"),
                 width = 8, height = max(5, nrow(gsva_res) * 0.3))
 }, error = function(e) cat("  Lollipop failed:", e$message, "\n"))
 

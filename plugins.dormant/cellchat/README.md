@@ -1,6 +1,6 @@
 # cellchat
 
-> **科学子问题**: 在给定 Seurat 对象（带细胞类型注释）下，CellChat 能否在 biof3-r-runtime (dev Electron 边界内) 跑通讯概率推断 → 通路级通讯 → 通讯结果表 + 热图 + 弦图 + 气泡图？
+> **科学子问题**: 在给定 Seurat 对象（带细胞类型注释）下，CellChat 能否在 petri-r-runtime (dev Electron 边界内) 跑通讯概率推断 → 通路级通讯 → 通讯结果表 + 热图 + 弦图 + 气泡图？
 
 ## 职责
 
@@ -52,7 +52,7 @@ scanpy-advanced / seurat → cellchat → (future: 下游 netAnalysis_* 复用 c
 
 ## 运行时
 
-- **R runtime**: biof3-r-runtime v1.0.0（R 4.5.2 + Seurat 5.5.1 + Bioconductor 3.22）
+- **R runtime**: petri-r-runtime v1.0.0（R 4.5.2 + Seurat 5.5.1 + Bioconductor 3.22）
 - **额外 R 包**: CellChat 1.6+（Bioconductor 包）+ igraph / ComplexHeatmap / circlize / NMF / ggalluvial / BiocManager
 - **安装**: `Rscript -e 'BiocManager::install("CellChat", ask=FALSE, update=FALSE)'`（一次性，~120MB）
 - **数据库**: `CellChatDB.human` / `CellChatDB.mouse` / `CellChatDB.zebrafish` 已随 CellChat 包内置，运行时无需联网
@@ -61,7 +61,7 @@ scanpy-advanced / seurat → cellchat → (future: 下游 netAnalysis_* 复用 c
 
 ## 已知边界
 
-- **CellChat 本体不在 biof3-r-runtime 显式清单**（r-runtime-packages.txt 26 包）：通过 `install.json` 中的 BiocManager::install 一次性补齐；如安装失败（如离线 CRAN 镜像阻塞）acceptance.json 中 runtime-not-ready fixture 保持 `skipOnSupportedPlatform:true`，插件仍可 8 件套合规但运行时 blocked
+- **CellChat 本体不在 petri-r-runtime 显式清单**（r-runtime-packages.txt 26 包）：通过 `install.json` 中的 BiocManager::install 一次性补齐；如安装失败（如离线 CRAN 镜像阻塞）acceptance.json 中 runtime-not-ready fixture 保持 `skipOnSupportedPlatform:true`，插件仍可 8 件套合规但运行时 blocked
 - **compute_hierarchy = true 时执行 selectK（NMF rank selection）+ identifyCommunicationPatterns**：CPU-heavy，2-5 min on PBMC 3k 默认 fixture
 - **chord_diagram.png 仅画 top-1 pathway**：避免长 list 让 chord 不可读；如需多 pathway 可后续扩展 chord_grid
 - **bubble_plot 限定 top-20 pathways**：避免 sources × targets × pathways 笛卡尔爆
@@ -70,5 +70,5 @@ scanpy-advanced / seurat → cellchat → (future: 下游 netAnalysis_* 复用 c
 ## 相关文档
 
 - `docs/block-11-phase-1-batch-plan.md` §3.4（cellchat 工作包规划）
-- `docs/block-11-bioSkills-runtime-inventory.md` §5 / §7（biof3-r-runtime 已装包清单 + PHASE 1-4 runtime 扩展需求）
+- `docs/block-11-bioSkills-runtime-inventory.md` §5 / §7（petri-r-runtime 已装包清单 + PHASE 1-4 runtime 扩展需求）
 - `docs/block-11-bioSkills-implementation-patterns.md` §3-6（plugin / environment / tool-definition / acceptance 模板）

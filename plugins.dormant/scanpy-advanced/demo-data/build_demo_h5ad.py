@@ -8,7 +8,7 @@ This script is intentionally small + deterministic:
 Output path: resources/built-in-plugins/scanpy-advanced/demo-data/pbmc_3k_mini.h5ad
 
 Run:
-    # From BioF3 repo root, with biof3-py-runtime scanpy available
+    # From Petri repo root, with petri-py-runtime scanpy available
     python resources/built-in-plugins/scanpy-advanced/demo-data/build_demo_h5ad.py
 
 Idempotent: re-running overwrites the same sha256-stable file (modulo Pillow PNG canonicalization
@@ -29,7 +29,7 @@ def build() -> Path:
         import anndata as ad
         import pandas as pd
     except ImportError as exc:
-        print(f"[demo-data build] biof3-py-runtime missing dependency: {exc}", file=sys.stderr)
+        print(f"[demo-data build] petri-py-runtime missing dependency: {exc}", file=sys.stderr)
         print("[demo-data build] Run within an environment with anndata installed.", file=sys.stderr)
         sys.exit(1)
 

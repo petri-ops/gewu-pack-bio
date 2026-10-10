@@ -11,16 +11,16 @@
   7. Marker genes (sc.tl.rank_genes_groups)
   8. 落盘: figures + tables + report.html
 
-契约 (BioF3 调度器):
+契约 (Petri 调度器):
   - sys.argv[1] = job_dir (含 params.json + input file)
   - 输出全部写入 job_dir/output/
   - PNG 通过 PIL.Image.save 重写以稳定 hash (与 R png::writePNG 同义)
 
 G0 阶段纪律:
-  - 仅以 dev Electron 边界内 Python runtime 跑 scanpy 1.9+ (biof3-py-runtime)
+  - 仅以 dev Electron 边界内 Python runtime 跑 scanpy 1.9+ (petri-py-runtime)
   - 不触发 packaged / Provider / GA / dist staleness (G1+)
   - 不引 pip 安装：scanpy / anndata / matplotlib / seaborn / pandas / numpy
-    全部依赖 biof3-py-runtime 已装 (见 py-runtime-requirements.txt)
+    全部依赖 petri-py-runtime 已装 (见 py-runtime-requirements.txt)
 """
 
 from __future__ import annotations
@@ -62,7 +62,7 @@ def _canonicalize_png(path: Path) -> None:
 
 
 def _read_params(job_dir: Path) -> dict:
-    """读取 BioF3 调度器塞进 job_dir 的 params.json.
+    """读取 Petri 调度器塞进 job_dir 的 params.json.
 
     关键字段 (与 tool-definition.json 对齐):
       - min_genes (int, default 200)
@@ -93,7 +93,7 @@ def _find_h5ad(job_dir: Path) -> Path | None:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description="scanpy-advanced plugin entry")
-    parser.add_argument("job_dir", help="BioF3 Job 目录")
+    parser.add_argument("job_dir", help="Petri Job 目录")
     args = parser.parse_args()
     job_dir = Path(args.job_dir).resolve()
 
@@ -132,7 +132,7 @@ def main() -> int:
         matplotlib.use("Agg")
         import matplotlib.pyplot as plt  # noqa: F401
     except ImportError as exc:
-        msg = f"[scanpy-advanced] biof3-py-runtime 缺少依赖: {exc}"
+        msg = f"[scanpy-advanced] petri-py-runtime 缺少依赖: {exc}"
         print(msg, file=sys.stderr)
         _report_progress(100, f"runtime-not-ready: {msg}", job_dir)
         (output_dir / "error.txt").write_text(msg, encoding="utf-8")
@@ -297,7 +297,7 @@ def main() -> int:
         "<li><code>hvg_plot.png</code> — Highly variable genes</li>"
         "</ul>"
         "<p style=\"color:#666;font-size:12px;margin-top:24px;\">"
-        "G0 dev Electron 边界内 verified · biof3-py-runtime scanpy ≥1.9 · "
+        "G0 dev Electron 边界内 verified · petri-py-runtime scanpy ≥1.9 · "
         "PHASE 1 BLOCK-11 SUB-1.1</p>"
         "</body></html>"
     )

@@ -6,7 +6,7 @@
 # Output: variance explained heatmap / top weights / factor scatter /
 #         factor correlation / data overview / factor scores table
 #
-# BioF3 SCI visual style: theme_biof3(), biof3_palette(), ggsave_biof3()
+# Petri SCI visual style: theme_petri(), petri_palette(), ggsave_petri()
 # ============================================================
 
 suppressMessages({
@@ -35,7 +35,7 @@ job_dir <- args[1]
 output_dir <- file.path(job_dir, "output")
 dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
 
-source(file.path(job_dir, "_biof3-theme.R"))
+source(file.path(job_dir, "_petri-theme.R"))
 
 cat("[mo-mofa] Starting MOFA2 multi-omics analysis (SCI style)\n")
 
@@ -147,8 +147,8 @@ write.csv(var_df, file.path(output_dir, "variance_table.csv"), row.names = FALSE
 cat("[mo-mofa] Plotting variance explained heatmap...\n")
 var_mat <- get_variance_explained(mofa_model, per_factor = TRUE)$R2PerFactor
 if (!is.null(var_mat) && ncol(var_mat) > 0) {
-  hm_pal <- biof3_palette_seq(100, option = "ylgn")
-  save_grid_biof3(file.path(output_dir, "variance_heatmap"), width = 7, height = 5, expr = {
+  hm_pal <- petri_palette_seq(100, option = "ylgn")
+  save_grid_petri(file.path(output_dir, "variance_heatmap"), width = 7, height = 5, expr = {
     pheatmap(var_mat,
              color = hm_pal,
              border_color = NA,
@@ -174,8 +174,8 @@ p_total <- ggplot(total_df, aes(x = reorder(view, r2), y = r2)) +
   geom_col(fill = "#0f766e", width = 0.7) +
   labs(title = "Total Variance Explained per View", x = "View", y = "R² (%)") +
   coord_flip() +
-  theme_biof3()
-ggsave_biof3(p_total, file.path(output_dir, "variance_total"), width = 5.5, height = 4)
+  theme_petri()
+ggsave_petri(p_total, file.path(output_dir, "variance_total"), width = 5.5, height = 4)
 
 # ============================================================
 # Plot 3: Top weights per factor
@@ -205,9 +205,9 @@ if (length(weights_list) > 0) {
     facet_grid(view ~ factor, scales = "free_y") +
     labs(title = "Top Weights per Factor", x = "Feature", y = "Weight", fill = "Factor") +
     coord_flip() +
-    theme_biof3() +
+    theme_petri() +
     theme(strip.text = element_text(size = 9))
-  ggsave_biof3(p_weights, file.path(output_dir, "top_weights"), width = 10, height = 8)
+  ggsave_petri(p_weights, file.path(output_dir, "top_weights"), width = 10, height = 8)
 }
 
 # ============================================================
@@ -230,14 +230,14 @@ p_scatter <- ggplot(scatter_df, aes(x = F1, y = F2)) +
   geom_point(size = 2, alpha = 0.7, color = "#0f766e") +
   geom_text_repel(aes(label = sample), size = 2.5, max.overlaps = 10, color = "black") +
   labs(title = "Factor Scatter (F1 vs F2)", x = "Factor 1", y = "Factor 2") +
-  theme_biof3()
+  theme_petri()
 
 if (!is.null(groups)) {
   p_scatter <- p_scatter + aes(color = group) +
-    scale_color_manual(values = biof3_palette(length(unique(groups)))) +
+    scale_color_manual(values = petri_palette(length(unique(groups)))) +
     labs(color = "Group")
 }
-ggsave_biof3(p_scatter, file.path(output_dir, "factor_scatter"), width = 6.5, height = 5)
+ggsave_petri(p_scatter, file.path(output_dir, "factor_scatter"), width = 6.5, height = 5)
 
 # ============================================================
 # Plot 5: Factor correlation
@@ -245,8 +245,8 @@ ggsave_biof3(p_scatter, file.path(output_dir, "factor_scatter"), width = 6.5, he
 cat("[mo-mofa] Plotting factor correlation...\n")
 fac_mat <- as.matrix(factors_wide[, -1])
 cor_fac <- cor(fac_mat, use = "pairwise.complete.obs")
-hm_pal2 <- biof3_palette_div(100)
-save_grid_biof3(file.path(output_dir, "factor_cor"), width = 6, height = 5, expr = {
+hm_pal2 <- petri_palette_div(100)
+save_grid_petri(file.path(output_dir, "factor_cor"), width = 6, height = 5, expr = {
   pheatmap(cor_fac,
            color = hm_pal2,
            border_color = NA,
@@ -277,9 +277,9 @@ p_overview <- ggplot(overview_df, aes(x = view, y = features, fill = view)) +
   geom_col(width = 0.6) +
   geom_text(aes(label = paste0(samples, " samples\n", missing_pct, "% NA")), vjust = -0.2, size = 3) +
   labs(title = "Data Overview", x = "View", y = "Features", fill = "View") +
-  theme_biof3() +
+  theme_petri() +
   theme(axis.text.x = element_text(angle = 30, hjust = 1))
-ggsave_biof3(p_overview, file.path(output_dir, "data_overview"), width = 5.5, height = 4.5)
+ggsave_petri(p_overview, file.path(output_dir, "data_overview"), width = 5.5, height = 4.5)
 
 # ============================================================
 # Summary

@@ -1,6 +1,6 @@
 # seurat-standard
 
-> **科学子问题**: 在给定 10X 三件套 / CSV / TSV / MTX / H5 输入下，单细胞 RNA-seq 标准 Seurat 流程能否在 biof3-r-runtime (dev Electron 边界内) 跑通 QC → Normalize → HVG → Scale → PCA → Cluster → UMAP → Markers？
+> **科学子问题**: 在给定 10X 三件套 / CSV / TSV / MTX / H5 输入下，单细胞 RNA-seq 标准 Seurat 流程能否在 petri-r-runtime (dev Electron 边界内) 跑通 QC → Normalize → HVG → Scale → PCA → Cluster → UMAP → Markers？
 
 ## 职责
 
@@ -26,7 +26,7 @@ sample-metadata-validator → seurat-standard → (future: cellchat / singleR / 
 
 ## 复用既有 ground truth
 
-本插件的 R 脚本 `scripts/seurat-standard.R` 与既有 `core/biof3-server/tool-scripts/seurat-standard.R` 同源，遵循 `core/biof3-server/tool-scripts/_seurat-standard-scope.md` 步骤 0 的全部 in-scope 步骤（9 步）+ out-of-scope 边界声明。**原 `core/biof3-server/tool-scripts/seurat-standard.R` 保留**作为向后兼容；本插件是独立拷贝，作为 builtin-canonical plugin 暴露给 BioF3 调度器。
+本插件的 R 脚本 `scripts/seurat-standard.R` 与既有 `core/petri-server/tool-scripts/seurat-standard.R` 同源，遵循 `core/petri-server/tool-scripts/_seurat-standard-scope.md` 步骤 0 的全部 in-scope 步骤（9 步）+ out-of-scope 边界声明。**原 `core/petri-server/tool-scripts/seurat-standard.R` 保留**作为向后兼容；本插件是独立拷贝，作为 builtin-canonical plugin 暴露给 Petri 调度器。
 
 ## 输入
 
@@ -76,7 +76,7 @@ sample-metadata-validator → seurat-standard → (future: cellchat / singleR / 
 
 **dev Electron 边界内 verified**（G0 阶段）：
 
-- biof3-r-runtime v1.0.0 已装 `Seurat>=5.0.0` + `SeuratObject>=5.0.0` + `ggplot2` + `patchwork` + `dplyr` + `Matrix` + `jsonlite` + `base64enc` + `png`（见 `resources/built-in-plugins/r-runtime-packages.txt`）
+- petri-r-runtime v1.0.0 已装 `Seurat>=5.0.0` + `SeuratObject>=5.0.0` + `ggplot2` + `patchwork` + `dplyr` + `Matrix` + `jsonlite` + `base64enc` + `png`（见 `resources/built-in-plugins/r-runtime-packages.txt`）
 - 不依赖额外 R 包安装（PHASE 1 SUB-1.2 任务边界内 runtime **不扩展**）
 - 离线可执行；产出 progress.json 驱动 UI 进度条
 
@@ -84,7 +84,7 @@ sample-metadata-validator → seurat-standard → (future: cellchat / singleR / 
 
 ## R 包依赖
 
-- Seurat ≥ 5.0.0（biof3-r-runtime 声明）
+- Seurat ≥ 5.0.0（petri-r-runtime 声明）
 - SeuratObject ≥ 5.0.0
 - ggplot2 ≥ 3.4.0
 - patchwork ≥ 1.3.0（VlnPlot / FeaturePlot 拼图）
@@ -102,7 +102,7 @@ sample-metadata-validator → seurat-standard → (future: cellchat / singleR / 
 ## 关联 Skill
 
 - **PHASE 1 SUB-1.6**：`sc-analysis-standard` skill 在 SUB-1.6 子批才创建，**不动**（单工作包串行纪律）
-- 本插件 standalone 可被任意 `biof3-r-runtime` R 调用链直接消费
+- 本插件 standalone 可被任意 `petri-r-runtime` R 调用链直接消费
 
 ## 注意
 

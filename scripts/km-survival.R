@@ -11,11 +11,11 @@
 #   5. time-dependent ROC (1/3/5 year)
 #   6. expression distribution
 #
-# 2026-05-25: 升级到 BioF3 SCI 视觉风格规范
-#   - ggsurvplot (survminer 复合): save_grid_biof3() (含 risk table 子图)
-#   - forest_plot / expression_dist (ggplot 系): theme_biof3 + ggsave_biof3
-#   - timeROC (base R plot): save_grid_biof3
-#   - 配色: biof3_palette(2) Low/High; biof3_palette_div() ROC 多线条
+# 2026-05-25: 升级到 Petri SCI 视觉风格规范
+#   - ggsurvplot (survminer 复合): save_grid_petri() (含 risk table 子图)
+#   - forest_plot / expression_dist (ggplot 系): theme_petri + ggsave_petri
+#   - timeROC (base R plot): save_grid_petri
+#   - 配色: petri_palette(2) Low/High; petri_palette_div() ROC 多线条
 # ============================================================
 
 suppressMessages({
@@ -34,8 +34,8 @@ job_dir <- args[1]
 output_dir <- file.path(job_dir, "output")
 dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
 
-# ★ Load BioF3 SCI 主题
-source(file.path(job_dir, "_biof3-theme.R"))
+# ★ Load Petri SCI 主题
+source(file.path(job_dir, "_petri-theme.R"))
 
 cat("[km] Starting pipeline (SCI style v2026-05-25)\n")
 
@@ -182,7 +182,7 @@ n_low <- sum(surv_data$group == "Low")
 cat(sprintf("  High: %d, Low: %d\n", n_high, n_low))
 
 # ============================================================
-# KM Survival Curve (survminer 复合, 用 save_grid_biof3)
+# KM Survival Curve (survminer 复合, 用 save_grid_petri)
 # ============================================================
 cat("[km] Fitting KM model...\n")
 
@@ -192,7 +192,7 @@ logrank_p <- 1 - pchisq(logrank$chisq, df = 1)
 
 cat(sprintf("  Log-rank p: %.2e\n", logrank_p))
 
-km_pal <- biof3_palette(2)  # NPG 前 2 色 (蓝-红)
+km_pal <- petri_palette(2)  # NPG 前 2 色 (蓝-红)
 
 tryCatch({
   km_p <- ggsurvplot(fit, data = surv_data,
@@ -203,8 +203,8 @@ tryCatch({
                                   paste0(gene, " High (n=", n_high, ")")),
                   xlab = "Time", ylab = "Survival Probability",
                   title = paste0("Kaplan-Meier Curve: ", gene),
-                  ggtheme = theme_biof3())
-  save_grid_biof3(file.path(output_dir, "km_curve"),
+                  ggtheme = theme_petri())
+  save_grid_petri(file.path(output_dir, "km_curve"),
                    width = 8, height = 7, expr = print(km_p))
 }, error = function(e) cat(sprintf("  KM plot failed: %s\n", e$message)))
 
@@ -236,7 +236,7 @@ tryCatch({
   forest_df <- data.frame(
     variable = gene, hr = hr, lower = hr_lower, upper = hr_upper, p = cox_p
   )
-  forest_color <- if (hr > 1) biof3_palette_div(3)[3] else biof3_palette_div(3)[1]  # 红=风险, 蓝=保护
+  forest_color <- if (hr > 1) petri_palette_div(3)[3] else petri_palette_div(3)[1]  # 红=风险, 蓝=保护
   p <- ggplot(forest_df, aes(x = hr, y = variable)) +
     geom_point(size = 4, color = forest_color) +
     geom_errorbarh(aes(xmin = lower, xmax = upper), height = 0.2, color = forest_color, linewidth = 0.6) +
@@ -245,13 +245,13 @@ tryCatch({
     labs(x = "Hazard Ratio (95% CI)", y = NULL,
          title = paste0("Cox Regression: ", gene),
          subtitle = sprintf("HR = %.3f (%.3f-%.3f), p = %.2e", hr, hr_lower, hr_upper, cox_p)) +
-    theme_biof3() +
+    theme_petri() +
     theme(plot.subtitle = element_text(size = 10, color = "gray40"))
-  ggsave_biof3(p, file.path(output_dir, "forest_plot"), width = 7, height = 3.5)
+  ggsave_petri(p, file.path(output_dir, "forest_plot"), width = 7, height = 3.5)
 }, error = function(e) cat(sprintf("  Forest plot failed: %s\n", e$message)))
 
 # ============================================================
-# Time-dependent ROC (base R, 用 save_grid_biof3)
+# Time-dependent ROC (base R, 用 save_grid_petri)
 # ============================================================
 cat("[km] Time-dependent ROC...\n")
 
@@ -289,8 +289,8 @@ tryCatch({
   aucs <<- roc_res$AUC
   cat(sprintf("  AUCs: %s\n", paste(sprintf("%.3f", aucs), collapse = ", ")))
 
-  roc_pal <- c(biof3_palette_div(3)[3], biof3_palette_div(3)[1], biof3_palette()[3])  # 红/蓝/绿
-  save_grid_biof3(file.path(output_dir, "roc_curve"),
+  roc_pal <- c(petri_palette_div(3)[3], petri_palette_div(3)[1], petri_palette()[3])  # 红/蓝/绿
+  save_grid_petri(file.path(output_dir, "roc_curve"),
                    width = 6.5, height = 6, expr = {
     par(mar = c(4.5, 4.5, 2, 1), bty = "l")
     plot(roc_res, time = valid_times[1], col = roc_pal[1], lwd = 2,
@@ -312,7 +312,7 @@ tryCatch({
 # Expression distribution (ggplot 系)
 # ============================================================
 tryCatch({
-  dist_pal <- biof3_palette(2)  # 与 KM 同色
+  dist_pal <- petri_palette(2)  # 与 KM 同色
   p <- ggplot(surv_data, aes(x = gene_expr, fill = group)) +
     geom_histogram(bins = 30, alpha = 0.75, position = "identity") +
     geom_vline(xintercept = cutoff_val, linetype = "dashed", color = "gray30", linewidth = 0.7) +
@@ -320,10 +320,10 @@ tryCatch({
     labs(x = paste0(gene, " Expression"), y = "Count",
          title = paste0("Expression Distribution: ", gene),
          subtitle = paste0("Cutoff = ", round(cutoff_val, 3), " (", cutoff_method, ")")) +
-    theme_biof3() +
+    theme_petri() +
     theme(legend.position = "top",
           plot.subtitle = element_text(size = 10, color = "gray40"))
-  ggsave_biof3(p, file.path(output_dir, "expression_dist"), width = 7, height = 5)
+  ggsave_petri(p, file.path(output_dir, "expression_dist"), width = 7, height = 5)
 }, error = function(e) cat(sprintf("  Distribution plot failed: %s\n", e$message)))
 
 # ============================================================

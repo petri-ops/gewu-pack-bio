@@ -6,7 +6,7 @@
   "version": "1.0.0",
   "language": "python",
   "sourcePolicy": "builtin-canonical",
-  "description": "Celltypist 1.6+ 自动 + 手动 cell type annotation: Model.predict + over_clustering 多数投票。运行于 biof3-py-runtime (dev Electron 边界内)，celltypist 本体 PyPI 未装，需 install.json 触发 bootstrap。",
+  "description": "Celltypist 1.6+ 自动 + 手动 cell type annotation: Model.predict + over_clustering 多数投票。运行于 petri-py-runtime (dev Electron 边界内)，celltypist 本体 PyPI 未装，需 install.json 触发 bootstrap。",
   "packages": {
     "python": {
       "scanpy": ">=1.9",

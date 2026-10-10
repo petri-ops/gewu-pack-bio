@@ -38,7 +38,7 @@
     },
     {
       "id": "runtime-not-ready",
-      "description": "biof3-py-runtime without celltypist installed (celltypist ImportError) — preflight detects missing celltypist and exits 4. Only valid when celltypist is not available.",
+      "description": "petri-py-runtime without celltypist installed (celltypist ImportError) — preflight detects missing celltypist and exits 4. Only valid when celltypist is not available.",
       "inputs": {
         "anndata_file": "demo-data/pbmc_3k_mini.h5ad"
       },

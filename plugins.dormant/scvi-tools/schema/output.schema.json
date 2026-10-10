@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "biof3://plugins/scvi-tools/output.schema.json",
+  "$id": "petri://plugins/scvi-tools/output.schema.json",
   "title": "scvi-tools output schema",
   "description": "JSON schema for the 8 expected outputs from scvi-tools.py (files written to <jobDir>/output/).",
   "type": "object",

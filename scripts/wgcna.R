@@ -20,14 +20,14 @@
 #   - Tutorial III consensus network (多数据集)
 #   - module preservation analysis
 #   - bicor robust correlation (默认 pearson)
-#   - GO 富集 (用 BioF3 GO/KEGG 工具下游)
+#   - GO 富集 (用 Petri GO/KEGG 工具下游)
 #   - CytoScape 网络导出
 #
 # Default params (官方 / Tutorial I 推荐):
 #   power=auto (R²≥0.85 最小)
 #   networkType="signed", TOMType="signed"
 #   minModuleSize=30, mergeCutHeight=0.25
-#   maxBlockSize=5000 (BioF3 限定)
+#   maxBlockSize=5000 (Petri 限定)
 #   randomSeed=54321 (官方)
 #
 # Input (job_dir/):
@@ -59,8 +59,8 @@ job_dir <- args[1]
 output_dir <- file.path(job_dir, "output")
 dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
 
-# ★ Load BioF3 SCI 主题 (W3-4 升级 2026-05-25)
-source(file.path(job_dir, "_biof3-theme.R"))
+# ★ Load Petri SCI 主题 (W3-4 升级 2026-05-25)
+source(file.path(job_dir, "_petri-theme.R"))
 
 cat("[wgcna] Starting WGCNA pipeline\n")
 cat("[wgcna] R:", R.version.string, "\n")
@@ -139,13 +139,13 @@ if (n_bad_genes > 0 || n_bad_samples > 0) {
 
 # Sample dendrogram (visual check for outliers)
 sample_tree <- hclust(dist(datExpr), method = "average")
-save_grid_biof3(file.path(output_dir, "sample_dendrogram"),
+save_grid_petri(file.path(output_dir, "sample_dendrogram"),
                  width = 9, height = 5, expr = {
   par(cex = 0.6, mar = c(0, 4, 2, 0))
   plot(sample_tree, main = "Sample clustering — check for outliers",
        xlab = "", sub = "", cex.lab = 1.2, cex.axis = 1.0, cex.main = 1.2)
   abline(h = mean(sample_tree$height) + 3 * sd(sample_tree$height),
-         col = biof3_palette_div(3)[3], lty = 2)
+         col = petri_palette_div(3)[3], lty = 2)
 })
 
 # Save QC summary table
@@ -189,12 +189,12 @@ if (!is.null(user_power)) {
 cat(sprintf("  Chosen power: %s\n", power_source))
 
 # Plot soft threshold (2-panel: SFT R² vs power, mean connectivity vs power)
-save_grid_biof3(file.path(output_dir, "soft_threshold"),
+save_grid_petri(file.path(output_dir, "soft_threshold"),
                  width = 11, height = 4.5, expr = {
   par(mfrow = c(1, 2), bty = "l")
   cex1 <- 0.9
-  red_c  <- biof3_palette_div(3)[3]
-  blue_c <- biof3_palette_div(3)[1]
+  red_c  <- petri_palette_div(3)[3]
+  blue_c <- petri_palette_div(3)[1]
   plot(sft_results$Power, -sign(sft_results$slope) * sft_results$SFT.R.sq,
        xlab = "Soft Threshold (power)", ylab = "Scale Free Topology Model Fit, signed R²",
        type = "n", main = "Scale independence")
@@ -250,7 +250,7 @@ module_assignment <- data.frame(
 write.csv(module_assignment, file.path(output_dir, "module_assignment.csv"), row.names = FALSE)
 
 # Plot gene dendrogram + module colors
-save_grid_biof3(file.path(output_dir, "gene_dendrogram"),
+save_grid_petri(file.path(output_dir, "gene_dendrogram"),
                  width = 9, height = 5, expr = {
   plotDendroAndColors(net$dendrograms[[1]], moduleColors[net$blockGenes[[1]]],
                       "Module colors",
@@ -269,9 +269,9 @@ p_mod_size <- ggplot(mod_sizes, aes(x = moduleColors, y = Freq, fill = moduleCol
   scale_fill_identity() +
   labs(x = "Module", y = "Number of genes",
        title = sprintf("Module sizes (%d modules + grey)", n_modules)) +
-  theme_biof3() +
+  theme_petri() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
-ggsave_biof3(p_mod_size, file.path(output_dir, "module_size_barplot"),
+ggsave_petri(p_mod_size, file.path(output_dir, "module_size_barplot"),
               width = max(8, nrow(mod_sizes) * 0.4), height = 5)
 
 # ============================================================
@@ -299,7 +299,7 @@ write.csv(mtp_df, file.path(output_dir, "module_trait_pvalue.csv"), row.names = 
 text_matrix <- paste0(signif(moduleTraitCor, 2), "\n(", signif(moduleTraitPvalue, 1), ")")
 dim(text_matrix) <- dim(moduleTraitCor)
 
-save_grid_biof3(file.path(output_dir, "module_trait_heatmap"),
+save_grid_petri(file.path(output_dir, "module_trait_heatmap"),
                  width = max(7, ncol(datTraits) * 0.7 + 2),
                  height = max(5, nrow(MEs) * 0.25 + 2), expr = {
   par(mar = c(6, 9, 3, 3))
@@ -332,10 +332,10 @@ if (length(top_mods) > 0) {
     facet_wrap(~ module, scales = "free_y", ncol = 1) +
     scale_fill_manual(values = setNames(gsub("ME", "", top_mods), top_mods)) +
     labs(x = "Sample", y = "Module Eigengene", title = "Top 4 Module Eigengenes per sample") +
-    theme_biof3() +
+    theme_petri() +
     theme(axis.text.x = element_blank(), axis.ticks.x = element_blank(),
           legend.position = "none")
-  ggsave_biof3(p_me, file.path(output_dir, "module_eigengenes"),
+  ggsave_petri(p_me, file.path(output_dir, "module_eigengenes"),
                 width = 12, height = 2 * length(top_mods) + 1)
 }
 
@@ -374,9 +374,9 @@ if (nrow(hub_subset) > 0) {
     scale_fill_manual(values = setNames(hub_plot_modules, hub_plot_modules)) +
     labs(x = NULL, y = "Intramodular connectivity (kWithin)",
          title = "Top 10 hub genes per top-correlated module") +
-    theme_biof3() +
+    theme_petri() +
     theme(legend.position = "none")
-  ggsave_biof3(p_hub, file.path(output_dir, "hub_gene_table"),
+  ggsave_petri(p_hub, file.path(output_dir, "hub_gene_table"),
                 width = 11, height = 7)
 }
 
@@ -423,8 +423,8 @@ p_scatter <- ggplot(gs_mm_data, aes(x = abs(MM), y = abs(GS))) +
                        top_module_color, top_trait,
                        cor(abs(MM_top), abs(GS[genes_in_top]), use = "p"),
                        sum(genes_in_top))) +
-  theme_biof3()
-ggsave_biof3(p_scatter, file.path(output_dir, "gs_mm_scatter"),
+  theme_petri()
+ggsave_petri(p_scatter, file.path(output_dir, "gs_mm_scatter"),
               width = 7, height = 6)
 
 # ============================================================

@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "biof3://plugins/scvi-tools/input.schema.json",
+  "$id": "petri://plugins/scvi-tools/input.schema.json",
   "title": "scvi-tools input schema",
-  "description": "JSON schema for params.json passed to scvi-tools.py via BioF3 dispatcher. Compatible with biof3-py-runtime scanpy>=1.9 + scvi-tools>=1.0 + torch>=2.0 (CPU).",
+  "description": "JSON schema for params.json passed to scvi-tools.py via Petri dispatcher. Compatible with petri-py-runtime scanpy>=1.9 + scvi-tools>=1.0 + torch>=2.0 (CPU).",
   "type": "object",
   "additionalProperties": true,
   "required": ["anndata_file"],

@@ -3,8 +3,8 @@
 // 锁定两点：
 //  1. deseq2-report-template.html 必须包含 7 张图的 <img> 锚点 URL（deseq2.R 的 gsub
 //     按这些 URL 替换为 base64）以及 9 个摘要占位符 {{...}}，否则报告仍是空壳。
-//  2. deseq2.R 不得再硬编码 POSIX 路径 /opt/biof3-biof3-server/...（Windows/macOS app
-//     bundle 均不存在）；改用宿主注入的 BIOF3_BUILT_IN_PLUGINS_DIR 兜底，并实际做
+//  2. deseq2.R 不得再硬编码 POSIX 路径 /opt/petri-petri-server/...（Windows/macOS app
+//     bundle 均不存在）；改用宿主注入的 PETRI_BUILT_IN_PLUGINS_DIR 兜底，并实际做
 //     摘要 token 替换。
 
 import test from 'node:test';
@@ -36,7 +36,7 @@ const EXPECTED_IMG_URLS = [
   'volcano.png',
   'ma_plot.png',
   'heatmap_top50.png', // 注意：R 脚本 img_files 用此 key（映射到 heatmap.png 文件）
-].map((n) => `https://biof3.com/api/r/tools/demo/deseq2/${n}`);
+].map((n) => `https://petri.com/api/r/tools/demo/deseq2/${n}`);
 
 test('report template embeds all 7 plot <img> anchors', () => {
   for (const url of EXPECTED_IMG_URLS) {
@@ -67,15 +67,15 @@ test('report template declares the DEG results-table token', () => {
 // ── 2. R 脚本：无 POSIX 硬编码 + 平台安全兜底 + token 替换 ──
 test('deseq2.R does NOT hardcode POSIX /opt path', () => {
   assert.ok(
-    !script.includes('/opt/biof3-biof3-server'),
-    'deseq2.R must not hardcode the POSIX /opt/biof3-biof3-server path (broken on Windows/macOS bundle)'
+    !script.includes('/opt/petri-petri-server'),
+    'deseq2.R must not hardcode the POSIX /opt/petri-petri-server path (broken on Windows/macOS bundle)'
   );
 });
 
-test('deseq2.R uses platform-safe BIOF3_BUILT_IN_PLUGINS_DIR fallback', () => {
+test('deseq2.R uses platform-safe PETRI_BUILT_IN_PLUGINS_DIR fallback', () => {
   assert.ok(
-    script.includes('BIOF3_BUILT_IN_PLUGINS_DIR'),
-    'deseq2.R should resolve missing template via BIOF3_BUILT_IN_PLUGINS_DIR env (set by main.js)'
+    script.includes('PETRI_BUILT_IN_PLUGINS_DIR'),
+    'deseq2.R should resolve missing template via PETRI_BUILT_IN_PLUGINS_DIR env (set by main.js)'
   );
   assert.ok(
     script.includes('file.path(built_in_dir, "deseq2", "deseq2-report-template.html")'),
@@ -106,7 +106,7 @@ test('deseq2.R injects the DEG results table', () => {
 // 的 demo URL 呈现为虚线占位框 + 缺位说明文案。
 test('report template carries CSS fallback for unsubstituted demo plot URLs', () => {
   assert.ok(
-    template.includes('img[src^="https://biof3.com/"]'),
+    template.includes('img[src^="https://petri.com/"]'),
     'template missing the attribute-selector fallback for unsubstituted demo plot URLs'
   );
   assert.ok(

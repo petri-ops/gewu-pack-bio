@@ -16,7 +16,7 @@ function parseCsv(text) {
 }
 
 function runVolcano(csv, params = {}) {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'biof3-chf0-volcano-'));
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'petri-chf0-volcano-'));
   const table = path.join(root, 'deg.csv');
   fs.writeFileSync(table, csv);
   fs.writeFileSync(path.join(root, 'params.json'), JSON.stringify({
@@ -44,7 +44,7 @@ function runVolcano(csv, params = {}) {
 }
 
 function runPca(exprCsv, groupCsv = null) {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'biof3-chf0-pca-'));
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'petri-chf0-pca-'));
   const expr = path.join(root, 'expr.csv');
   fs.writeFileSync(expr, exprCsv);
   const params = { expr_matrix: expr };
