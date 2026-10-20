@@ -21,7 +21,8 @@
       "table",
       "report"
     ],
-    "skills": "skills/"
+    "skills": "skills/",
+    "promptFragments": "promptFragments/"
   },
   "requires": {
     "core": ">=0.0.1-rc.7",
