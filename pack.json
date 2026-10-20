@@ -20,7 +20,8 @@
       "plot",
       "table",
       "report"
-    ]
+    ],
+    "skills": "skills/"
   },
   "requires": {
     "core": ">=0.0.1-rc.7",
